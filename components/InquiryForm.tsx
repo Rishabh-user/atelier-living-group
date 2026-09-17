@@ -186,8 +186,9 @@ export default function InquiryForm({
   ariaLabel: string;
 }) {
   const config = VARIANTS[variant];
-  // Deterministic ids: useId() mismatches between server and client under
-  // vinext 1.0.0-beta.2. Each variant appears at most once per page.
+  // Deterministic ids rather than useId(). Each variant appears at most once
+  // per page, so these are unique, and stable ids keep the aria-describedby
+  // wiring readable in the DOM.
   const uid = `alg-${variant}`;
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");

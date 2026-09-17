@@ -1,6 +1,10 @@
-import { getDb } from "@/db";
+import { getDb, isDatabaseConfigured } from "@/db";
 import { inquiries } from "@/db/schema";
 import { sql } from "drizzle-orm";
+
+// Submissions must never be cached or statically evaluated.
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 const SOURCES = ["hero", "consultation", "footer"] as const;
 type Source = (typeof SOURCES)[number];
@@ -50,7 +54,7 @@ function json(body: unknown, status: number): Response {
 }
 
 /**
- * Creates the table on first use so local Miniflare D1 works without a
+ * Creates the table on first use so a fresh libSQL database works without a
  * separate migration step. Production schema still comes from
  * `drizzle/0000_*.sql`; this matches it exactly and is a no-op once applied.
  */
@@ -113,6 +117,21 @@ export async function POST(request: Request): Promise<Response> {
     return json(
       { ok: false, errors, message: "Please correct the highlighted fields." },
       422,
+    );
+  }
+
+  if (!isDatabaseConfigured()) {
+    console.error(
+      "inquiry received but no database is configured (TURSO_DATABASE_URL unset)",
+      { source, name, email, phone, projectType },
+    );
+    return json(
+      {
+        ok: false,
+        message:
+          "We could not save that request right now. Please call 678-637-3262 and we will take the details directly.",
+      },
+      503,
     );
   }
 

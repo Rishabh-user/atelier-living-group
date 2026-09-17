@@ -1,100 +1,83 @@
-# vinext-starter
+# Atelier Living Group
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+Marketing site for Atelier Living Group — exclusive Poggenpohl dealer for
+Atlanta and Georgia. Next.js App Router, deployed on Vercel.
 
 ## Prerequisites
 
 - Node.js `>=22.13.0`
 
-## Quick Start
+## Quick start
 
 ```bash
 npm install
+cp .env.example .env.local   # then fill in TURSO_DATABASE_URL
 npm run dev
-npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+For local development a file database is enough:
 
-## Included Shape
-
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
-
-The user ID is stable for the same user on the same Site and different across Sites. Email and name are intended for display or contact purposes.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```
+TURSO_DATABASE_URL=file:./local.db
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+## Shape
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+- `app/` — routes. Six pages (`/`, `/services`, `/showroom`, `/poggenpohl`,
+  `/process`, `/contact`) plus `app/api/inquiry/route.ts`.
+- `content/site.ts` — all copy and data in one file. **Imported by a client
+  component, so it must not read Node-only globals at the top level.**
+- `components/` — shared UI; `components/ui/` is shadcn/ui.
+- `db/` — Drizzle schema and the libSQL client.
+- `drizzle/` — generated SQL migrations.
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+## Database
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+Consultation form submissions are stored in a **libSQL (Turso)** database.
+The schema is SQLite, so `drizzle/0000_*.sql` applies as-is.
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+Create one and wire it up:
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+```bash
+turso db create atelier-living-group
+turso db show --url atelier-living-group     # -> TURSO_DATABASE_URL
+turso db tokens create atelier-living-group  # -> TURSO_AUTH_TOKEN
+```
 
-## Useful Commands
+The API route creates the `inquiries` table on first write if it is missing, so
+no manual migration step is required to get going.
 
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+If `TURSO_DATABASE_URL` is unset the site still builds and renders; the forms
+return a 503 with a phone-number fallback and log the submission server-side,
+rather than failing silently.
 
-## Learn More
+## Deploying to Vercel
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+1. Import the GitHub repo at [vercel.com/new](https://vercel.com/new). Vercel
+   detects Next.js automatically — no `vercel.json` is needed.
+2. Add environment variables under **Settings → Environment Variables**:
+   - `TURSO_DATABASE_URL`
+   - `TURSO_AUTH_TOKEN`
+   - `NEXT_PUBLIC_SITE_URL` (your production domain)
+3. Deploy.
+
+After the domain is final, update `public/robots.txt` and `public/sitemap.xml`
+— they carry the origin literally and are not templated.
+
+## Scripts
+
+| Script | Purpose |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm start` | Serve the production build |
+| `npm run lint` | ESLint |
+| `npm run db:generate` | Regenerate SQL from `db/schema.ts` |
+
+## History
+
+This project was originally scaffolded on `vinext`, which compiles to a
+Cloudflare Worker and used Cloudflare D1. It was ported to standard Next.js so
+it could run on Vercel: the Worker entry point, the Vite/Cloudflare build
+plugins and the D1 binding were removed, and the data layer moved to libSQL.
+The page markup and styling were unchanged by that port.
