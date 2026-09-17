@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "images:compress": "node scripts/compress-images.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
@@ -39,6 +40,7 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "16.4.0",
+    "sharp": "^0.35.4",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
     "typescript-eslint": "8.59.3"

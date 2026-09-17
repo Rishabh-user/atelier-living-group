@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from "lucide-react";
 
 import InquiryForm from "@/components/InquiryForm";
-import PageHero from "@/components/PageHero";
+import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import {
   address,
+  contactBanner,
+  contactSteps,
   hours,
-  images,
   phone,
   phoneHref,
   serviceAreas,
@@ -24,15 +25,26 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Contact"
+      <PageBanner
+        crumb="Contact"
         title="Start the conversation."
         intro="Tell us about the residence and what you are planning. We reply within one business day, and the first conversation carries no obligation."
-        image={images.modo}
-        imageAlt="Poggenpohl +MODO kitchen with handleless fronts and horizontal planes"
+        tag="Terminus Showroom — Buckhead, Atlanta"
+        shots={contactBanner}
+        actions={
+          <>
+            <Button asChild variant="default" size="wide">
+              <a href="#enquiry">Send an enquiry</a>
+            </Button>
+            <Button asChild variant="outline" size="wide">
+              <a href={phoneHref}>Call {phone}</a>
+            </Button>
+          </>
+        }
       />
 
-      <section className="section-pad">
+      {/* ------------------------------------------------ Form + details */}
+      <section className="section-pad" id="enquiry">
         <div className="shell contact-grid">
           <Reveal className="contact-form-col">
             <h2>Request a private consultation</h2>
@@ -114,6 +126,29 @@ export default function ContactPage() {
               </div>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* --------------------------------------------- What happens next */}
+      <section className="contact-next section-pad" aria-label="What happens next">
+        <div className="shell">
+          <Reveal>
+            <div className="section-heading">
+              <p className="eyebrow dark">After you send</p>
+              <h2>What happens next.</h2>
+            </div>
+          </Reveal>
+          <ol className="contact-steps">
+            {contactSteps.map((step, i) => (
+              <Reveal as="li" key={step.number} delay={i * 80}>
+                <span className="contact-step-number" aria-hidden="true">
+                  {step.number}
+                </span>
+                <h3>{step.title}</h3>
+                <p>{step.copy}</p>
+              </Reveal>
+            ))}
+          </ol>
         </div>
       </section>
     </>

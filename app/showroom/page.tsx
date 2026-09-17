@@ -3,7 +3,7 @@ import { ArrowUpRight, Clock, MapPin, Phone } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
 import Counter from "@/components/Counter";
-import PageHero from "@/components/PageHero";
+import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,7 @@ import {
   hours,
   images,
   materials,
+  showroomBanner,
   phone,
   phoneHref,
   showroomHighlights,
@@ -26,15 +27,25 @@ export const metadata: Metadata = {
 export default function ShowroomPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Showroom"
+      <PageBanner
+        crumb="Showroom"
         title="Seven kitchens, one quiet room in Buckhead."
         intro="The Terminus showroom is where the decisions actually get made: finishes in real light, drawers that open, proportions you can stand inside."
-        image={images.experience}
-        imageAlt="Poggenpohl showroom display with cabinetry, finishes and material samples"
+        tag="3280 Peachtree Rd NE, Suite 125 — Buckhead, Atlanta"
+        shots={showroomBanner}
+        actions={
+          <>
+            <Button asChild variant="default" size="wide">
+              <a href="#visit">Plan your visit</a>
+            </Button>
+            <Button asChild variant="outline" size="wide">
+              <a href={phoneHref}>Call {phone}</a>
+            </Button>
+          </>
+        }
       />
 
-      <section className="section-pad">
+      <section className="section-pad" id="visit">
         <div className="shell visit-grid">
           <Reveal className="visit-facts">
             <h2>Plan your visit</h2>

@@ -43,18 +43,152 @@ export const hours = [
 ];
 
 export const images = {
-  hero: "https://www.poggenpohl.com/media/01/ce/58/1690611272/intro-Medium-SEGMENTO_diamondgrey_neroassoluto_caleidoscope_11.webp",
-  modo: "https://www.poggenpohl.com/media/d2/42/62/1690613877/home-plusmodo-optimized_1920x1920.jpg",
+  hero: "/images/hero.webp",
+  modo: "/images/modo.jpg",
   segmento:
-    "https://www.poggenpohl.com/media/e8/f2/9e/1690613895/home_segmento-optimzed_1920x1920.jpg",
-  venovo: "https://www.poggenpohl.com/media/39/ce/07/1660224383/1_Venovo.jpg",
+    "/images/segmento.jpg",
+  venovo: "/images/venovo.jpg",
   material:
-    "https://www.poggenpohl.com/media/fd/1d/f9/1690530923/pp-teaser-entdecken-square_1920x1920.jpeg",
+    "/images/material.jpg",
   experience:
-    "https://www.poggenpohl.com/media/b2/21/c8/1690525170/pp-teaser-erleben-square_1920x1920.jpeg",
-  plan: "https://www.poggenpohl.com/media/68/bb/b9/1690525184/pp-teaser-planen-square_1920x1920.jpeg",
-  taglio: "https://www.poggenpohl.com/media/87/ee/69/1758364225/TAGLIO_002.jpg",
+    "/images/experience.jpg",
+  plan: "/images/plan.jpg",
+  taglio: "/images/taglio.jpg",
+  alvolo: "/images/alvolo.jpg",
+  oneA:
+    "/images/oneA.jpg",
+  segmentoDetail:
+    "/images/segmentoDetail.webp",
+  venovoHome:
+    "/images/venovoHome.jpg",
+  worktops:
+    "/images/worktops.jpg",
+  fronts:
+    "/images/fronts.jpg",
+  showroomA: "/images/showroomA.jpg",
+  showroomB: "/images/showroomB.jpg",
+  showroomC: "/images/showroomC.jpg",
+  servicesA: "/images/servicesA.jpg",
+  servicesB: "/images/servicesB.jpg",
+  servicesC: "/images/servicesC.jpg",
+  poggenpohlA: "/images/poggenpohlA.jpg",
+  poggenpohlB: "/images/poggenpohlB.jpg",
+  poggenpohlC: "/images/poggenpohlC.jpg",
 };
+
+/**
+ * Banner bands. Each page gets its own three, so no image appears in two
+ * banners, and none of them repeat the imagery used inside the pages.
+ */
+export const showroomBanner = [
+  {
+    src: images.showroomA,
+    alt: "Poggenpohl +SEGMENTO kitchen installed in a Munich residence",
+  },
+  {
+    src: images.showroomB,
+    alt: "Poggenpohl +SEGMENTO cabinetry and island in a Munich residence",
+  },
+  {
+    src: images.showroomC,
+    alt: "Poggenpohl cabinetry and island seen from the living space",
+  },
+];
+
+export const poggenpohlBanner = [
+  {
+    src: images.poggenpohlA,
+    alt: "Lit Poggenpohl vitrine with glass shelves and walnut interior",
+  },
+  {
+    src: images.poggenpohlB,
+    alt: "Poggenpohl +MODO kitchen with stone island and green onyx wall",
+  },
+  {
+    src: images.poggenpohlC,
+    alt: "Poggenpohl bar cabinet with onyx back panel and wine storage",
+  },
+];
+
+export const servicesBanner = [
+  {
+    src: images.servicesA,
+    alt: "Poggenpohl surface and material samples",
+  },
+  {
+    src: images.servicesB,
+    alt: "Door samples and finish chips laid out for comparison",
+  },
+  {
+    src: images.servicesC,
+    alt: "Poggenpohl interior accessories and drawer organisation",
+  },
+];
+
+/** Three-image band across the top of the contact page. */
+export const contactBanner = [
+  {
+    src: images.alvolo,
+    alt: "Poggenpohl ALVOLO kitchen with sculpted cabinetry fronts",
+  },
+  {
+    src: images.worktops,
+    alt: "Poggenpohl worktop surfaces in stone and composite",
+  },
+  {
+    src: images.oneA,
+    alt: "Poggenpohl x ONE-A kitchen architecture",
+  },
+];
+
+/**
+ * Three-image band across the top of the process page. Deliberately not the
+ * same three as the contact banner, and not the phase images used further
+ * down the page, so nothing repeats.
+ */
+export const processBanner = [
+  {
+    src: images.fronts,
+    alt: "Poggenpohl cabinetry fronts in a range of finishes",
+  },
+  {
+    src: images.segmentoDetail,
+    alt: "Poggenpohl +SEGMENTO kitchen framed in diamond grey and nero assoluto",
+  },
+  {
+    src: images.venovoHome,
+    alt: "Poggenpohl +VENOVO elements arranged as free-standing furniture",
+  },
+];
+
+/** Deliverables listed beside the phases on the process page. */
+export const processDeliverables = [
+  "Measured drawings and elevations",
+  "A complete written specification",
+  "Cabinetry, finish and hardware schedules",
+  "Appliance and services coordination",
+  "Trade and builder communication",
+  "Installation oversight and walkthrough",
+];
+
+/** Set expectations on the contact page about what happens after sending. */
+export const contactSteps = [
+  {
+    number: "01",
+    title: "We read it properly.",
+    copy: "Your message goes to the person who will actually handle the project, not a shared inbox queue.",
+  },
+  {
+    number: "02",
+    title: "We reply within one business day.",
+    copy: "Usually with a question or two about the residence, the architecture and your timeline.",
+  },
+  {
+    number: "03",
+    title: "We book the showroom.",
+    copy: "A private, unhurried session in Buckhead with the displays and finish library set up for your project.",
+  },
+];
 
 export const navLinks = [
   { href: "/services", label: "Services" },

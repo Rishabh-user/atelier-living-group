@@ -3,10 +3,18 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
-import PageHero from "@/components/PageHero";
+import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
-import { faqs, images, journey } from "@/content/site";
+import {
+  faqs,
+  images,
+  journey,
+  phone,
+  phoneHref,
+  processBanner,
+  processDeliverables,
+} from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Our Design-Build Process",
@@ -18,49 +26,59 @@ export const metadata: Metadata = {
 export default function ProcessPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Process"
+      <PageBanner
+        crumb="Process"
         title="Inspire. Experience. Plan."
         intro="Three phases, in order, with nothing skipped. The pace is deliberate because the decisions are expensive to reverse once cabinetry is in production."
-        image={images.plan}
-        imageAlt="Kitchen planning drawings, elevations and material selections"
+        tag="From first conversation to final walkthrough"
+        shots={processBanner}
+        actions={
+          <>
+            <Button asChild variant="default" size="wide">
+              <a href="#phase-01">Start at phase one</a>
+            </Button>
+            <Button asChild variant="outline" size="wide">
+              <a href={phoneHref}>Call {phone}</a>
+            </Button>
+          </>
+        }
       />
 
+      {/* --------------------------------------------------- The phases */}
       <section className="section-pad">
         <div className="shell">
           <ol className="phase-list">
             {journey.map((step) => (
-              <Reveal as="li" className="phase" key={step.label}>
-                <div className="phase-head">
+              <Reveal
+                as="li"
+                className="phase"
+                key={step.label}
+                id={`phase-${step.number}`}
+              >
+                <div className="phase-media">
+                  <img
+                    src={step.image}
+                    alt={`${step.label} phase of the Atelier Living Group design-build process`}
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span className="phase-number" aria-hidden="true">
                     {step.number}
                   </span>
-                  <div>
-                    <p className="step-label">{step.label}</p>
-                    <h2>{step.title}</h2>
-                  </div>
                 </div>
 
-                <div className="phase-body">
-                  <div className="phase-media">
-                    <img
-                      src={step.image}
-                      alt={`${step.label} phase of the Atelier Living Group design-build process`}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <div className="phase-copy">
-                    <p className="phase-lede">{step.copy}</p>
-                    <ul className="tick-list">
-                      {step.detail.map((item) => (
-                        <li key={item}>
-                          <ArrowRight aria-hidden="true" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                <div className="phase-copy">
+                  <p className="step-label">{step.label}</p>
+                  <h2>{step.title}</h2>
+                  <p className="phase-lede">{step.copy}</p>
+                  <ul className="tick-list">
+                    {step.detail.map((item) => (
+                      <li key={item}>
+                        <ArrowRight aria-hidden="true" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </Reveal>
             ))}
@@ -68,28 +86,38 @@ export default function ProcessPage() {
         </div>
       </section>
 
-      <section className="seo-band section-pad" aria-label="What to expect">
-        <div className="shell seo-band-grid">
-          <div>
-            <p className="eyebrow dark">What to expect</p>
-            <h2>Clear decisions, taken in the right order.</h2>
-          </div>
-          <div className="service-list grid-tiles">
-            <span>One studio, start to finish</span>
-            <span>Private showroom sessions</span>
-            <span>Measured drawings and elevations</span>
-            <span>Complete written specification</span>
-            <span>Trade and builder coordination</span>
-            <span>Installation oversight</span>
-          </div>
-          <p className="seo-band-note">
-            Timelines vary with the residence and the scope of construction. We
-            will give you an honest programme at the end of the first phase,
-            before any cabinetry is ordered.
-          </p>
+      {/* ----------------------------------------------- What you receive */}
+      <section className="area-section section-pad" aria-label="What you receive">
+        <div className="shell area-grid">
+          <Reveal>
+            <p className="eyebrow dark">What you receive</p>
+            <h2>Documents your trades can actually build from.</h2>
+            <p>
+              Timelines vary with the residence and the scope of construction.
+              We will give you an honest programme at the end of phase one,
+              before any cabinetry is ordered.
+            </p>
+          </Reveal>
+          <Reveal delay={120}>
+            <ul className="tick-list on-dark">
+              {processDeliverables.map((item) => (
+                <li key={item}>
+                  <ArrowRight aria-hidden="true" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Button asChild variant="light" size="wide" className="mt-9">
+              <Link scroll={false} href="/services">
+                See what we do
+                <ArrowRight />
+              </Link>
+            </Button>
+          </Reveal>
         </div>
       </section>
 
+      {/* -------------------------------------------------------- FAQ */}
       <section className="faq section-pad">
         <div className="shell">
           <Reveal>
@@ -106,14 +134,6 @@ export default function ProcessPage() {
               </Reveal>
             ))}
           </div>
-          <Reveal>
-            <Button asChild variant="outline" size="wide" className="mt-10">
-              <Link href="/services">
-                See what we do
-                <ArrowRight />
-              </Link>
-            </Button>
-          </Reveal>
         </div>
       </section>
 

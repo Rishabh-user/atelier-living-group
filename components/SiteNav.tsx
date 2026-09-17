@@ -22,6 +22,10 @@ import { useIsomorphicLayoutEffect } from "@/lib/use-isomorphic-layout-effect";
  *
  * The initial read runs in a layout effect so a deep link paints the correct
  * bar immediately instead of flashing the transparent hero treatment first.
+ *
+ * Links carry scroll={false}: the App Router's own focus-and-scroll walks the
+ * new page's top-level siblings and scrollIntoView()s one of them, which on
+ * /contact landed 639px down the page. StartAtTop does the reset instead.
  */
 export default function SiteNav() {
   const pathname = usePathname();
@@ -116,7 +120,7 @@ export default function SiteNav() {
       data-scrolled={scrolled || menuOpen ? "true" : "false"}
       aria-label="Primary navigation"
     >
-      <Link className="brand" href="/">
+      <Link className="brand" href="/" scroll={false}>
         <img
           src="/alg-mark.png"
           alt="Atelier Living Group"
@@ -131,6 +135,7 @@ export default function SiteNav() {
           <Link
             key={link.href}
             href={link.href}
+            scroll={false}
             aria-current={isActive(link.href) ? "page" : undefined}
           >
             {link.label}
@@ -157,6 +162,7 @@ export default function SiteNav() {
           <Link
             key={link.href}
             href={link.href}
+            scroll={false}
             aria-current={isActive(link.href) ? "page" : undefined}
             onClick={() => setMenuOpen(false)}
           >

@@ -19,11 +19,14 @@ export default function Reveal({
   className,
   as: Tag = "div",
   delay = 0,
+  id,
 }: {
   children: React.ReactNode;
   className?: string;
   as?: "div" | "section" | "article" | "li";
   delay?: number;
+  /** Anchor target, for in-page links. */
+  id?: string;
 }) {
   const ref = React.useRef<HTMLElement>(null);
 
@@ -78,6 +81,7 @@ export default function Reveal({
     <Tag
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ref={ref as any}
+      id={id}
       className={cn("alg-reveal", className)}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >

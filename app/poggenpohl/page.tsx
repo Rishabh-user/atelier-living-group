@@ -3,10 +3,16 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
-import PageHero from "@/components/PageHero";
+import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
-import { concepts, images } from "@/content/site";
+import {
+  concepts,
+  images,
+  phone,
+  phoneHref,
+  poggenpohlBanner,
+} from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Poggenpohl Dealer for Atlanta & Georgia",
@@ -18,12 +24,22 @@ export const metadata: Metadata = {
 export default function PoggenpohlPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Poggenpohl"
+      <PageBanner
+        crumb="Poggenpohl"
         title="German kitchen architecture, exclusively for Georgia."
         intro="Poggenpohl has built kitchens in Herford since 1892. Atelier Living Group is its exclusive representative for Atlanta and the wider Georgia market."
-        image={images.taglio}
-        imageAlt="Poggenpohl TAGLIO kitchen with sculptural cabinetry and stone surfaces"
+        tag="Made in Herford since 1892 — represented in Buckhead"
+        shots={poggenpohlBanner}
+        actions={
+          <>
+            <Button asChild variant="default" size="wide">
+              <a href="#concepts">The three concepts</a>
+            </Button>
+            <Button asChild variant="outline" size="wide">
+              <a href={phoneHref}>Call {phone}</a>
+            </Button>
+          </>
+        }
       />
 
       <section className="pullquote" aria-label="Poggenpohl statement">
@@ -41,7 +57,7 @@ export default function PoggenpohlPage() {
       </section>
 
       {/* Concepts alternate sides so the page reads as a sequence of rooms. */}
-      <section className="section-pad">
+      <section className="section-pad" id="concepts">
         <div className="shell">
           <Reveal>
             <div className="section-heading">
@@ -106,7 +122,7 @@ export default function PoggenpohlPage() {
               </li>
             </ul>
             <Button asChild variant="light" size="wide" className="mt-9">
-              <Link href="/showroom">
+              <Link scroll={false} href="/showroom">
                 Visit the showroom
                 <ArrowRight />
               </Link>

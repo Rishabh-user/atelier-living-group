@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Geist, Geist_Mono } from "next/font/google";
 
 import SiteFooter from "@/components/SiteFooter";
 import SiteNav from "@/components/SiteNav";
+import StartAtTop from "@/components/StartAtTop";
 import { siteUrl } from "@/content/site";
 import "./globals.css";
 
@@ -14,6 +15,19 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+/**
+ * Display serif. Replaces "Times New Roman", which is a system default and
+ * read as an unstyled document rather than a considered brand face.
+ * 600 is carried so smaller headings do not go thin.
+ */
+const displaySerif = Cormorant_Garamond({
+  variable: "--font-display-serif",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -51,11 +65,18 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    // Font variables go on <html>, not <body>: globals.css composes --serif
+    // and --sans on :root, and a var() there cannot see a custom property
+    // defined one level below it.
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} ${displaySerif.variable}`}
+    >
+      <body className="antialiased">
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <StartAtTop />
         <SiteNav />
         <main id="main">{children}</main>
         <SiteFooter />

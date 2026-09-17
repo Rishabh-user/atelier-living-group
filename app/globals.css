@@ -60,7 +60,9 @@
   --hairline: 1px;
 
   /* Type */
-  --serif: "Times New Roman", Times, serif;
+  /* Cormorant Garamond, loaded in layout.tsx. Times New Roman is a system
+     default and read as an unstyled document rather than a brand face. */
+  --serif: var(--font-display-serif), "Times New Roman", Times, serif;
   --sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   --micro: 11px;
   --track: 0.18em;
@@ -169,6 +171,9 @@
   }
 
   html {
+    /* Only affects in-page anchor jumps (#enquiry, #phase-01). Route changes
+       are unaffected: links carry scroll={false} and StartAtTop resets with
+       behavior: "instant". */
     scroll-behavior: smooth;
     /* Fixed nav must not cover anchor targets. */
     scroll-padding-top: calc(var(--nav-h) + 24px);
@@ -261,9 +266,16 @@ h2,
 h3 {
   color: var(--ink);
   font-family: var(--serif);
-  font-weight: 400;
+  /* 500 rather than 400: Cormorant is a light face and 400 reads washed out
+     against the sans body copy. */
+  font-weight: 500;
   letter-spacing: 0;
   text-wrap: balance;
+}
+
+/* Small headings need the heavier cut to hold their own next to 15-17px sans. */
+h3 {
+  font-weight: 600;
 }
 
 .eyebrow {
@@ -272,6 +284,10 @@ h3 {
   line-height: 1.6;
   margin: 0 0 var(--s4);
   text-transform: uppercase;
+}
+
+.section-heading .eyebrow {
+  margin-bottom: 0;
 }
 
 .eyebrow.dark {
@@ -299,12 +315,25 @@ h3 {
 /* Eyebrow stacked above the headline, both hard left. The previous
    0.34fr/1fr split started every headline roughly a third across the page,
    which read as mis-centred rather than editorial. */
+/* A fixed narrow rail for the label instead of 0.34fr. The fractional column
+   scaled with the viewport and pushed headlines ~420px in at desktop, which
+   read as mis-centred rather than editorial. */
 .section-heading {
   display: grid;
-  gap: var(--s4) var(--gap);
-  grid-template-columns: minmax(0, 0.34fr) minmax(0, 1fr);
-  margin-bottom: var(--s7);
-  align-items: start;
+  gap: var(--s3) clamp(20px, 2.5vw, 40px);
+  grid-template-columns: minmax(0, 148px) minmax(0, 1fr);
+  margin-bottom: var(--s6);
+  align-items: baseline;
+}
+
+.section-heading h2 {
+  max-width: 22ch;
+}
+
+.section-heading > :last-child > p {
+  margin-bottom: 0;
+  margin-top: var(--s3);
+  max-width: 62ch;
 }
 
 .section-heading > :last-child > p:last-child {
@@ -1775,53 +1804,6 @@ h3 {
    Inner page hero
    ============================================================ */
 
-.page-hero {
-  background: var(--off-white);
-  padding-top: var(--nav-h);
-}
-
-.page-hero-media {
-  position: relative;
-  height: clamp(280px, 42svh, 460px);
-}
-
-.page-hero-media img {
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
-
-.page-hero-shade {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.05));
-  inset: 0;
-  position: absolute;
-}
-
-/* Not zero: with the full --section-y above it, a flush bottom edge puts the
-   h1 descenders hard against whatever band follows. */
-.page-hero-body {
-  padding-bottom: var(--s7);
-}
-
-.page-hero-grid {
-  display: grid;
-  gap: var(--s5) clamp(34px, 6vw, 96px);
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
-  align-items: end;
-}
-
-.page-hero h1 {
-  font-size: clamp(34px, 4.6vw, 70px);
-  line-height: 1.02;
-  margin: 0;
-}
-
-.page-hero-intro {
-  font-size: 17px;
-  line-height: 1.75;
-  margin: 0;
-}
-
 .crumbs {
   align-items: center;
   color: var(--sage);
@@ -1841,44 +1823,106 @@ h3 {
    Services page
    ============================================================ */
 
-.service-index {
+/* Jump list. Five offerings is enough that people want to pick one rather
+   than scroll all of them. */
+.service-nav-band {
+  background: var(--ivory);
+  padding: var(--s6) var(--edge);
+}
+
+.service-jumplist {
   display: grid;
-  gap: clamp(56px, 7vw, 110px);
+  gap: var(--hairline);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.service-row {
-  display: grid;
-  gap: var(--s4) clamp(28px, 4vw, 64px);
-  grid-template-columns: auto minmax(0, 0.9fr) minmax(0, 1.1fr);
-  align-items: start;
+.service-jumplist a {
+  align-items: baseline;
+  background: var(--off-white);
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  height: 100%;
+  letter-spacing: 0.04em;
+  padding: var(--s4) var(--s3);
+  transition: background-color 0.2s ease;
 }
 
-.service-row-number {
-  color: var(--stone);
+.service-jumplist a:hover {
+  background: var(--sand);
+}
+
+.service-jumplist a span {
+  color: var(--champagne);
   font-family: var(--serif);
-  font-size: clamp(28px, 3vw, 44px);
-  line-height: 1;
+  font-size: 19px;
+}
+
+/* --- The five rows ------------------------------------------------ */
+
+.service-index {
+  display: grid;
+  gap: clamp(56px, 7vw, 104px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Alternating sides, both columns centred. The previous layout paired a tall
+   4:5 portrait with ~370px of copy, leaving roughly 280px of void beside
+   every one of the five rows. */
+.service-row {
+  align-items: center;
+  display: grid;
+  gap: clamp(28px, 4vw, 72px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  scroll-margin-top: calc(var(--nav-h) + 32px);
+}
+
+.service-row:nth-child(even) .service-row-media {
+  order: 2;
 }
 
 .service-row-media img {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 16 / 11;
   object-fit: cover;
   width: 100%;
 }
 
-.service-row-body h2 {
-  font-size: clamp(26px, 2.8vw, 40px);
-  line-height: 1.08;
+.service-row-eyebrow {
+  align-items: baseline;
+  display: flex;
+  gap: 14px;
   margin-bottom: var(--s3);
 }
 
-.service-row-body > p {
-  line-height: 1.75;
+.service-row-number {
+  color: var(--champagne);
+  font-family: var(--serif);
+  font-size: clamp(26px, 2.4vw, 36px);
+  line-height: 1;
 }
 
+.service-row-eyebrow .step-label {
+  margin: 0;
+}
+
+.service-row-body h2 {
+  font-size: clamp(25px, 2.9vw, 38px);
+  line-height: 1.1;
+  margin-bottom: var(--s3);
+  max-width: 20ch;
+}
+
+.service-row-lede {
+  line-height: 1.75;
+  margin-bottom: 0;
+}
+
+/* Shared with /process and /poggenpohl. */
 .tick-list {
   display: grid;
   gap: var(--s2);
@@ -1888,11 +1932,11 @@ h3 {
 }
 
 .tick-list li {
+  align-items: start;
   display: grid;
+  font-size: 15px;
   gap: 12px;
   grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  font-size: 15px;
   line-height: 1.6;
 }
 
@@ -1905,6 +1949,49 @@ h3 {
 
 .tick-list.on-dark li {
   color: var(--off-white);
+}
+
+/* The band is shared with the homepage, where a two-column split suits a long
+   heading. Here the heading is short and the tiles are tall, so the split left
+   a few hundred pixels of void on one side or the other. Stacking it
+   removes the void entirely. */
+.service-capabilities .seo-band-grid {
+  gap: var(--s5);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.service-capabilities .service-list {
+  --cols: 3;
+}
+
+/* Seven tiles over three columns leaves one short; the last runs the row. */
+.service-capabilities .service-list span:last-child {
+  grid-column: 1 / -1;
+}
+
+/* Full width so its rule lines up with the tile grid above it. */
+.service-capabilities .seo-band-note {
+  grid-column: 1;
+}
+
+@media (max-width: 1024px) {
+  .service-jumplist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .service-row:nth-child(even) .service-row-media {
+    order: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .service-jumplist {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* ============================================================
@@ -2075,46 +2162,62 @@ h3 {
 
 .phase-list {
   display: grid;
-  gap: clamp(64px, 8vw, 128px);
+  gap: clamp(64px, 8vw, 120px);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.phase-head {
-  align-items: start;
-  border-top: 1px solid var(--line);
+/* Image one side, copy the other, alternating. Both columns are vertically
+   centred, so a short tick-list no longer leaves a tall void beside a
+   full-height image. */
+.phase {
+  align-items: center;
   display: grid;
-  gap: var(--s4);
-  grid-template-columns: auto minmax(0, 1fr);
-  margin-bottom: var(--s5);
-  padding-top: var(--s4);
+  gap: clamp(28px, 4vw, 72px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
-.phase-number {
-  color: var(--champagne);
-  font-family: var(--serif);
-  font-size: clamp(44px, 5vw, 78px);
-  line-height: 0.8;
+.phase:nth-child(even) .phase-media {
+  order: 2;
 }
 
-.phase-head h2 {
-  font-size: clamp(26px, 3.2vw, 46px);
-  line-height: 1.06;
-  margin: 0;
-}
-
-.phase-body {
-  display: grid;
-  gap: clamp(28px, 4vw, 64px);
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  align-items: start;
+.phase-media {
+  position: relative;
 }
 
 .phase-media img {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   width: 100%;
+}
+
+/* The numeral sits on the image corner rather than above the heading, which
+   keeps the copy column purely typographic. */
+/* Ink plate, not off-white: against the off-white page an off-white badge
+   read as a notch bitten out of the image corner rather than a marker.
+   Matches the .offset-tag treatment on the homepage. */
+.phase-number {
+  background: var(--ink);
+  color: var(--champagne);
+  font-family: var(--serif);
+  font-size: clamp(30px, 3vw, 46px);
+  line-height: 1;
+  padding: var(--s3) var(--s4) var(--s2);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.phase-copy h2 {
+  font-size: clamp(26px, 3.2vw, 42px);
+  line-height: 1.08;
+  margin-bottom: var(--s3);
+  max-width: 18ch;
+}
+
+.phase-copy .step-label {
+  margin-bottom: var(--s2);
 }
 
 .phase-lede {
@@ -2123,8 +2226,18 @@ h3 {
   margin-bottom: 0;
 }
 
+@media (max-width: 1024px) {
+  .phase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .phase:nth-child(even) .phase-media {
+    order: 0;
+  }
+}
+
 /* ============================================================
-   Contact page
+   Inner-page image banner (shared: /contact, /process)
    ============================================================ */
 
 .contact-grid {
@@ -2209,13 +2322,6 @@ h3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .service-row {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .service-row-media {
-    grid-column: 2;
-  }
 }
 
 @media (max-width: 1024px) {
@@ -2223,9 +2329,7 @@ h3 {
   .pin-grid,
   .visit-grid,
   .concept-panel,
-  .phase-body,
-  .contact-grid,
-  .page-hero-grid {
+  .contact-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -2295,22 +2399,12 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .service-row {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .pin-steps {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .service-row-media,
   .pin-step img {
     grid-column: 1;
-  }
-
-  .phase-head {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--s2);
   }
 }
 
@@ -2331,5 +2425,164 @@ h3 {
 
   .pullquote blockquote {
     max-width: none;
+  }
+}
+
+/* ============================================================
+   Inner-page image banner (shared: /contact, /process)
+   ============================================================ */
+
+.page-banner {
+  background: var(--off-white);
+  padding-top: var(--nav-h);
+}
+
+/* Three plates rather than one wide image: the middle one is the widest so
+   the band reads as a composition instead of a filmstrip. */
+.page-banner-band {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.3fr) minmax(0, 0.85fr);
+  gap: var(--hairline);
+  height: clamp(300px, 44svh, 500px);
+  position: relative;
+}
+
+.page-banner-band figure {
+  margin: 0;
+  overflow: hidden;
+}
+
+.page-banner-band img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.page-banner-scrim {
+  background: linear-gradient(
+    0deg,
+    rgba(17, 17, 17, 0.58),
+    rgba(17, 17, 17, 0.08) 52%
+  );
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.page-banner-tag {
+  bottom: var(--s4);
+  color: var(--off-white);
+  font-size: var(--micro);
+  left: var(--edge);
+  letter-spacing: 0.2em;
+  margin: 0;
+  position: absolute;
+  right: var(--edge);
+  text-transform: uppercase;
+}
+
+/* Not zero. With no bottom padding the title and CTAs sit flush against
+   whatever band follows - obvious on /poggenpohl, where a coloured pull quote
+   starts immediately and the h1 descenders touched its edge. */
+.page-banner-body {
+  padding-bottom: var(--s7);
+}
+
+.page-banner-grid {
+  align-items: end;
+  display: grid;
+  gap: var(--s5) clamp(34px, 6vw, 96px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+}
+
+.page-banner h1 {
+  font-size: clamp(34px, 4.6vw, 70px);
+  line-height: 1.02;
+  margin: 0;
+}
+
+.page-banner-intro p {
+  font-size: 17px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.page-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: var(--s4);
+}
+
+/* --- What happens next ------------------------------------------- */
+
+.contact-next {
+  background: var(--ivory);
+}
+
+.contact-steps {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-steps > li {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s4);
+}
+
+.contact-step-number {
+  color: var(--champagne);
+  display: block;
+  font-family: var(--serif);
+  font-size: 34px;
+  line-height: 1;
+  margin-bottom: var(--s3);
+}
+
+.contact-steps h3 {
+  font-size: clamp(20px, 1.7vw, 25px);
+  line-height: 1.14;
+  margin-bottom: var(--s2);
+}
+
+.contact-steps p {
+  line-height: 1.65;
+  margin-bottom: 0;
+}
+
+@media (max-width: 1024px) {
+  .page-banner-grid {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 860px) {
+  /* Two plates side by side; the third would be a slit at this width. */
+  .page-banner-band {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    height: clamp(240px, 34svh, 340px);
+  }
+
+  .page-banner-band figure[data-slot="2"] {
+    display: none;
+  }
+
+  .contact-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .page-banner-band {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-banner-band figure[data-slot="1"] {
+    display: none;
   }
 }

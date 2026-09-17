@@ -37,7 +37,7 @@ export default function SiteFooter() {
             </address>
             <nav aria-label="Footer navigation" className="footer-nav">
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
+                <Link key={link.href} href={link.href} scroll={false}>
                   {link.label}
                 </Link>
               ))}
