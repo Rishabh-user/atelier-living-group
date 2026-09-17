@@ -1,0 +1,2335 @@
+@import "tailwindcss";
+
+/* Explicit sources. Tailwind v4 auto-detects by walking up from this file,
+   which already covers app/; declaring both keeps utility generation stable
+   for components/ and independent of that heuristic. */
+@source "../app";
+@source "../components";
+
+/* ============================================================
+   Design tokens
+   ============================================================ */
+
+:root {
+  /* Palette */
+  --ink: #111111;
+  --poggenpohl-black: #282828;
+  --off-white: #f7f5f1;
+  --ivory: #f3f0e1;
+  --sand: #e6e2da;
+  --stone: #b8aea1;
+  --sage: #485553;
+  --champagne: #b59a72;
+  --raspberry: #af383d;
+  --text: #383630;
+
+  /* Was referenced as var(--line, ...) but never defined. */
+  --line: #dcd5c8;
+  --line-dark: rgba(247, 245, 241, 0.24);
+
+  /* Feedback */
+  --error: #a3282d;
+  --success: #2f5d40;
+
+  /* Layout: one gutter and one max width for the whole site, so every
+     section starts and ends on the same vertical lines. */
+  --maxw: 1440px;
+  --gutter: clamp(24px, 5vw, 96px);
+  /* Horizontal inset for every full-bleed band. Below --maxw it is just the
+     gutter; above it, it grows so the content column stays centred at --maxw.
+     The percentage resolves against each element's own containing block, so
+     one token keeps the nav, hero and every section on the same edge. */
+  --edge: max(var(--gutter), calc((100% - var(--maxw)) / 2));
+  /* Height of the fixed bar, used to offset sticky elements and inner-page
+     heroes that would otherwise sit underneath it. SiteNav overwrites this
+     with the measured value; this is the pre-hydration fallback. */
+  --nav-h: clamp(96px, 7.4vw, 104px);
+  --section-y: clamp(72px, 9vw, 132px);
+
+  /* Spacing scale */
+  --s1: 8px;
+  --s2: 12px;
+  --s3: 18px;
+  --s4: 26px;
+  --s5: 36px;
+  --s6: 52px;
+  --s7: 72px;
+
+  /* Grid rhythm */
+  --gap: clamp(20px, 2.4vw, 34px);
+  --hairline: 1px;
+
+  /* Type */
+  --serif: "Times New Roman", Times, serif;
+  --sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --micro: 11px;
+  --track: 0.18em;
+
+  /* ----------------------------------------------------------
+     shadcn/ui semantic tokens, mapped onto the ALG palette.
+     Radius is 0 throughout: this brand is square-edged, and the
+     stock shadcn rounding fights the serif/hairline identity.
+     ---------------------------------------------------------- */
+  --background: var(--off-white);
+  --foreground: var(--text);
+  --card: var(--off-white);
+  --card-foreground: var(--text);
+  --popover: var(--off-white);
+  --popover-foreground: var(--text);
+  --primary: var(--ink);
+  --primary-foreground: var(--off-white);
+  --secondary: var(--sand);
+  --secondary-foreground: var(--ink);
+  --muted: var(--sand);
+  --muted-foreground: var(--sage);
+  --accent: var(--champagne);
+  --accent-foreground: var(--ink);
+  --destructive: var(--error);
+  --destructive-foreground: var(--off-white);
+  --border: var(--line);
+  --input: rgba(17, 17, 17, 0.34);
+  --ring: var(--champagne);
+  --radius: 0px;
+}
+
+/* Inverted surface for the footer, so the same shadcn components render
+   correctly on the dark band without bespoke overrides.
+   Deliberately NOT called `.dark`: the page already uses `class="eyebrow dark"`
+   in a dozen places, which would drag these tokens into those subtrees. */
+.surface-dark {
+  --background: var(--ink);
+  --foreground: var(--off-white);
+  --card: var(--ink);
+  --card-foreground: var(--off-white);
+  --popover: var(--poggenpohl-black);
+  --popover-foreground: var(--off-white);
+  --primary: var(--off-white);
+  --primary-foreground: var(--ink);
+  --secondary: rgba(247, 245, 241, 0.1);
+  --secondary-foreground: var(--off-white);
+  --muted: rgba(247, 245, 241, 0.1);
+  --muted-foreground: var(--stone);
+  --accent: var(--champagne);
+  --accent-foreground: var(--ink);
+  --destructive: #e2777b;
+  --destructive-foreground: var(--ink);
+  --border: var(--line-dark);
+  --input: rgba(247, 245, 241, 0.34);
+  --ring: var(--champagne);
+}
+
+/* Expose the tokens above as Tailwind utilities (bg-background,
+   text-muted-foreground, border-border, ring-ring, ...). */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand colours as utilities too, for the design work. */
+  --color-ink: var(--ink);
+  --color-off-white: var(--off-white);
+  --color-ivory: var(--ivory);
+  --color-sand: var(--sand);
+  --color-stone: var(--stone);
+  --color-sage: var(--sage);
+  --color-champagne: var(--champagne);
+  --color-raspberry: var(--raspberry);
+
+  --font-serif: var(--serif);
+  --font-sans: var(--sans);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+}
+
+/* Base resets live in @layer base so Tailwind's @layer utilities can win.
+   Unlayered CSS outranks every layer, so a bare `font: inherit` here would
+   silently beat text-[11px] on every shadcn component. */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Fixed nav must not cover anchor targets. */
+    scroll-padding-top: calc(var(--nav-h) + 24px);
+  }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+  body {
+    margin: 0;
+    background: var(--off-white);
+    color: var(--text);
+    font-family: var(--sans);
+    /* Long unbroken words were forcing "1fr" tracks to different widths. */
+    overflow-wrap: break-word;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+
+  /* Visible keyboard focus. The original rules set outline:none with no
+     replacement, which left the site unusable by keyboard. */
+  :focus-visible {
+    outline: 2px solid var(--champagne);
+    outline-offset: 3px;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   Shared primitives
+   ============================================================ */
+
+/* Every full-width band uses this so content across different
+   background colours lines up on the same left/right edge. */
+.section-pad {
+  padding: var(--section-y) var(--edge);
+}
+
+.shell {
+  margin-inline: auto;
+  max-width: var(--maxw);
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.eyebrow {
+  font-size: var(--micro);
+  letter-spacing: 0.2em;
+  line-height: 1.6;
+  margin: 0 0 var(--s4);
+  text-transform: uppercase;
+}
+
+.eyebrow.dark {
+  color: var(--sage);
+}
+
+.step-label {
+  color: var(--raspberry);
+  font-size: var(--micro);
+  letter-spacing: 0.22em;
+  margin: 0 0 var(--s2);
+  text-transform: uppercase;
+}
+
+.section-label {
+  color: var(--sage);
+  font-size: var(--micro);
+  letter-spacing: 0.22em;
+  margin-bottom: var(--s4);
+  text-transform: uppercase;
+}
+
+/* Section heading: label column + headline column, on the same
+   baseline grid as the card decks below it. */
+/* Eyebrow stacked above the headline, both hard left. The previous
+   0.34fr/1fr split started every headline roughly a third across the page,
+   which read as mis-centred rather than editorial. */
+.section-heading {
+  display: grid;
+  gap: var(--s4) var(--gap);
+  grid-template-columns: minmax(0, 0.34fr) minmax(0, 1fr);
+  margin-bottom: var(--s7);
+  align-items: start;
+}
+
+.section-heading > :last-child > p:last-child {
+  margin-bottom: 0;
+}
+
+.section-heading > :last-child > :last-child {
+  margin-bottom: 0;
+}
+
+.section-heading.narrow {
+  max-width: 1040px;
+}
+
+.thesis h2,
+.section-heading h2,
+.split-copy h2,
+.editorial h2,
+.consultation-panel h2 {
+  font-size: clamp(32px, 4.2vw, 62px);
+  line-height: 1.04;
+  margin-bottom: 0;
+}
+
+/* Kept for the inner pages, which still use these blocks. */
+.offset-copy h2,
+.pin-sticky h2 {
+  font-size: clamp(29px, 3.3vw, 46px);
+  line-height: 1.1;
+  margin-bottom: var(--s4);
+  max-width: 20ch;
+}
+
+.thesis p,
+.split-copy p,
+.consultation-panel p {
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+/* Card decks. minmax(0, …) is the fix for the uneven "1fr" columns:
+   without it a track can never shrink below its longest word. */
+.grid-deck {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+}
+
+/* Hairline decks keep the original 1px-seam look. */
+.grid-tiles {
+  display: grid;
+  gap: var(--hairline);
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+}
+
+/* ============================================================
+   Navigation
+   ============================================================ */
+
+.site-nav {
+  align-items: center;
+  backdrop-filter: blur(16px);
+  /* Over the dark hero. The gradient fades out at the bottom, which only
+     works while there is a dark image behind it. */
+  background: linear-gradient(180deg, rgba(17, 17, 17, 0.62), rgba(17, 17, 17, 0));
+  border-bottom: 1px solid transparent;
+  color: white;
+  display: flex;
+  gap: var(--s5);
+  justify-content: space-between;
+  left: 0;
+  padding: var(--s2) var(--edge);
+  position: fixed;
+  /* Anchors the mobile drawer, which hangs off the bottom edge. */
+  right: 0;
+  top: 0;
+  z-index: 20;
+}
+
+/* The scrolled state is set in a layout effect, so the first paint is already
+   correct and this only animates genuine scroll transitions. */
+.site-nav,
+.site-nav .brand img {
+  transition: background-color 0.28s ease, border-color 0.28s ease,
+    color 0.28s ease, box-shadow 0.28s ease, filter 0.28s ease;
+}
+
+/* Past the hero the page behind is off-white, so white-on-transparent is
+   unreadable and page text shows through the fade. Switch to a solid
+   surface with ink text. */
+.site-nav[data-scrolled="true"] {
+  background: rgba(247, 245, 241, 0.94);
+  border-bottom-color: var(--line);
+  box-shadow: 0 10px 34px rgba(17, 17, 17, 0.07);
+  color: var(--ink);
+}
+
+/* The mark artwork is dark, so it is inverted to sit on the hero. On the
+   light scrolled bar it must go back to its natural colour. */
+.site-nav[data-scrolled="true"] .brand img {
+  filter: none;
+}
+
+.site-nav[data-scrolled="true"] .nav-phone {
+  border-color: rgba(17, 17, 17, 0.42) !important;
+  border-bottom-color: rgba(17, 17, 17, 0.42) !important;
+}
+
+.site-nav[data-scrolled="true"] .nav-phone:hover {
+  background: rgba(17, 17, 17, 0.06);
+}
+
+.brand {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: clamp(12px, 1.2vw, 18px);
+  font-size: clamp(12px, 1.08vw, 16px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* The mark is 260x205. The original rule forced 52x38 (a different ratio),
+   which both squashed it and rendered it too small to read. Now sized to
+   read as the primary brand element, with the true aspect ratio kept. */
+.brand img {
+  filter: invert(1);
+  height: auto;
+  width: clamp(92px, 8.8vw, 95px);
+  aspect-ratio: 260 / 205;
+}
+
+.brand span {
+  white-space: nowrap;
+}
+
+.nav-links {
+  align-items: center;
+  display: flex;
+  gap: clamp(14px, 1.9vw, 32px);
+  font-size: clamp(12px, 0.95vw, 14px);
+  /* Slightly tighter than --track: at 14px the wider tracking pushed the
+     six links plus the phone chip too close to the brand lockup. */
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.nav-links a {
+  padding-block: 6px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.nav-links a:hover {
+  border-bottom-color: currentColor;
+}
+
+.nav-phone {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  padding: 10px 18px !important;
+  border-bottom-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.nav-phone:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+
+.hero {
+  min-height: 100svh;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+}
+
+.hero-image {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  width: 100%;
+}
+
+.hero-shade {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.34) 52%, rgba(0, 0, 0, 0.16)),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.08) 46%);
+  inset: 0;
+  position: absolute;
+}
+
+/* Two aligned columns: copy left, form right, both vertically centred.
+   The old rule pinned the form to the bottom of an over-tall hero,
+   pushing it ~1200px below the fold. */
+.hero-content {
+  align-items: center;
+  color: white;
+  display: grid;
+  gap: var(--s6) clamp(32px, 5vw, 80px);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+  padding: 128px var(--edge) 120px;
+  position: relative;
+  width: 100%;
+  z-index: 2;
+}
+
+.hero-copy-col {
+  grid-column: 1;
+  max-width: 780px;
+}
+
+/* Sized to fit its own column: the previous clamp topped out at 116px
+   inside a 780px track, so the headline wrapped to 7 lines and made the
+   hero 1674px tall on a 900px screen. */
+.hero h1 {
+  color: white;
+  font-size: clamp(36px, 4.9vw, 74px);
+  line-height: 1.02;
+  margin-bottom: var(--s4);
+}
+
+.hero-copy {
+  font-size: clamp(16px, 1.35vw, 20px);
+  line-height: 1.6;
+  margin-bottom: 0;
+  max-width: 62ch;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: var(--s5);
+}
+
+/* Placement only. The panel's surface, padding and shadow are Tailwind
+   classes on the component in page.tsx. */
+.hero-form {
+  align-self: center;
+  grid-column: 2;
+  margin: 0;
+}
+
+.button {
+  align-items: center;
+  border: 1px solid currentColor;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: var(--micro);
+  justify-content: center;
+  letter-spacing: 0.14em;
+  min-height: 48px;
+  min-width: 210px;
+  padding: 14px 22px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.button.light {
+  background: var(--off-white);
+  border-color: var(--off-white);
+  color: var(--ink);
+}
+
+.button.light:hover {
+  background: transparent;
+  color: var(--off-white);
+}
+
+.button.ghost {
+  color: white;
+}
+
+.button.ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Sits in normal flow at the end of the hero grid rather than being
+   absolutely positioned over content. */
+.hero-footer {
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: var(--micro);
+  gap: var(--s3) var(--s5);
+  justify-content: space-between;
+  letter-spacing: var(--track);
+  padding: var(--s3) var(--edge) var(--s4);
+  position: relative;
+  text-transform: uppercase;
+  width: 100%;
+  z-index: 2;
+}
+
+/* ============================================================
+   Thesis
+   ============================================================ */
+
+.thesis-grid {
+  display: grid;
+  gap: var(--s5) clamp(34px, 6vw, 110px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  align-items: start;
+}
+
+.thesis-grid > div > p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   SEO band
+   ============================================================ */
+
+.seo-band {
+  background: var(--sand);
+}
+
+.seo-band-grid {
+  display: grid;
+  gap: var(--s6) var(--gap);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: start;
+}
+
+.seo-band h2 {
+  font-size: clamp(30px, 3.9vw, 56px);
+  line-height: 1.06;
+  margin-bottom: 0;
+}
+
+.seo-band-note {
+  border-top: 1px solid rgba(17, 17, 17, 0.2);
+  grid-column: 2;
+  line-height: 1.75;
+  margin: 0;
+  padding-top: var(--s4);
+}
+
+.service-list {
+  --cols: 2;
+  align-content: start;
+}
+
+.service-list span {
+  align-items: center;
+  background: rgba(247, 245, 241, 0.62);
+  color: var(--ink);
+  display: flex;
+  font-size: var(--micro);
+  letter-spacing: 0.12em;
+  min-height: 84px;
+  padding: var(--s3) var(--s4);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   SEO services
+   ============================================================ */
+
+.seo-services {
+  background: var(--off-white);
+}
+
+/* Five cards. Five equal columns fill exactly one row on wide screens;
+   the steps below keep every track from dropping under ~260px. */
+.seo-service-grid {
+  display: grid;
+  gap: var(--hairline);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+@media (max-width: 1199px) {
+  .seo-service-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 899px) {
+  .seo-service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 619px) {
+  .seo-service-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.seo-service-grid article {
+  background: var(--ivory);
+  display: flex;
+  flex-direction: column;
+  padding: var(--s5) var(--s4);
+}
+
+.faq-list h3 {
+  font-size: clamp(22px, 1.7vw, 26px);
+  line-height: 1.14;
+  margin-bottom: var(--s2);
+}
+
+/* Sized for the narrower five-up track. */
+.seo-service-grid h3 {
+  font-size: clamp(20px, 1.45vw, 23px);
+  line-height: 1.16;
+  margin-bottom: var(--s2);
+}
+
+.seo-service-grid p {
+  font-size: 15px;
+}
+
+.seo-service-grid p:last-child,
+.area-section p:last-child,
+.faq-list p:last-child {
+  margin-bottom: 0;
+}
+
+.seo-service-grid p,
+.area-section p,
+.faq-list p {
+  line-height: 1.65;
+}
+
+/* ============================================================
+   Service areas
+   ============================================================ */
+
+.area-section {
+  background: var(--poggenpohl-black);
+  color: var(--off-white);
+}
+
+.area-grid {
+  display: grid;
+  gap: var(--s6) var(--gap);
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.area-section h2 {
+  color: var(--off-white);
+  font-size: clamp(30px, 3.9vw, 58px);
+  line-height: 1.06;
+  margin-bottom: var(--s4);
+}
+
+.area-list {
+  --cols: 3;
+}
+
+.area-list span {
+  align-items: center;
+  background: rgba(247, 245, 241, 0.08);
+  display: flex;
+  font-size: var(--micro);
+  justify-content: center;
+  letter-spacing: 0.14em;
+  min-height: 82px;
+  padding: var(--s3);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Showroom
+   ============================================================ */
+
+.showroom {
+  background: var(--sand);
+}
+
+/* Was 1.15fr / 0.8fr / 1.05fr, which rendered as 537 / 197 / 449px --
+   the middle card was too narrow for its own display numeral. */
+.showroom-grid {
+  --cols: 3;
+}
+
+.showroom-grid article {
+  background: rgba(247, 245, 241, 0.7);
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 3.4vw, 46px);
+}
+
+.showroom-grid strong {
+  color: var(--ink);
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(48px, 6vw, 92px);
+  font-weight: 400;
+  line-height: 0.95;
+  margin-bottom: var(--s3);
+  /* Keeps "Terminus", "7" and "Library" on one shared baseline. */
+  min-height: 1em;
+}
+
+.showroom-grid span {
+  color: var(--sage);
+  display: block;
+  font-size: var(--micro);
+  letter-spacing: 0.2em;
+  margin-bottom: var(--s4);
+  text-transform: uppercase;
+}
+
+.showroom-grid p {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Design worlds
+   ============================================================ */
+
+.worlds {
+  background: var(--ivory);
+}
+
+.world-grid {
+  --cols: 4;
+}
+
+.world-card {
+  background: var(--off-white);
+  display: flex;
+  flex-direction: column;
+}
+
+/* height + aspect-ratio were both set, so the ratio never applied. */
+.world-card img {
+  aspect-ratio: 3 / 4;
+  height: auto;
+  object-fit: cover;
+  width: 100%;
+}
+
+.world-card-copy {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--s4);
+}
+
+.world-card-copy p:last-child {
+  margin-bottom: 0;
+}
+
+.world-card h3,
+.journey-card h3,
+.editorial h3 {
+  font-size: clamp(21px, 1.7vw, 26px);
+  line-height: 1.12;
+  margin-bottom: var(--s2);
+}
+
+.world-card p,
+.journey-card p,
+.editorial p {
+  line-height: 1.62;
+}
+
+/* ============================================================
+   Poggenpohl split
+   ============================================================ */
+
+.poggenpohl {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  min-height: 720px;
+}
+
+.split-media,
+.consultation-image {
+  position: relative;
+}
+
+.split-media img,
+.consultation-image img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.split-copy {
+  align-content: center;
+  background: var(--off-white);
+  display: grid;
+  padding: clamp(46px, 6vw, 92px) clamp(32px, 5vw, 84px);
+}
+
+.split-copy h2 {
+  margin-bottom: var(--s4);
+}
+
+.concept-row {
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s4);
+  margin-top: var(--s5);
+  padding-top: var(--s4);
+}
+
+.concept-row span {
+  color: var(--sage);
+  font-size: 12px;
+  letter-spacing: var(--track);
+}
+
+/* ============================================================
+   Journey
+   ============================================================ */
+
+.journey {
+  background: var(--off-white);
+}
+
+.journey-grid {
+  --cols: 3;
+}
+
+.journey-card {
+  border-top: 1px solid var(--stone);
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--s4);
+}
+
+.journey-card img {
+  aspect-ratio: 1 / 1;
+  margin-bottom: var(--s4);
+  object-fit: cover;
+  width: 100%;
+}
+
+.journey-card p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Editorial
+   ============================================================ */
+
+.editorial {
+  background: var(--sage);
+  color: var(--off-white);
+}
+
+.editorial-grid-wrap {
+  display: grid;
+  gap: var(--s6) var(--gap);
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.editorial h2,
+.editorial h3 {
+  color: var(--off-white);
+}
+
+.editorial h2 {
+  margin-bottom: 0;
+}
+
+.editorial .eyebrow {
+  color: var(--sand);
+}
+
+/* Four tracks that were meant to be equal rendered as
+   209 / 189 / 184 / 179px because 1fr floors at min-content. */
+/* Four cards inside the narrower right-hand column: 2x2 keeps each card
+   readable. Four across left only ~180px per track. */
+.editorial-grid {
+  display: grid;
+  gap: var(--s5) var(--gap);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.editorial article {
+  border-left: 1px solid var(--line-dark);
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--s3);
+}
+
+.editorial article:nth-child(odd) {
+  border-left: 0;
+  padding-left: 0;
+}
+
+/* The number now anchors the top of every card instead of relying on a
+   fixed 72px margin that only lined up at one viewport width. */
+.editorial article > span {
+  color: var(--champagne);
+  display: block;
+  font-size: 12px;
+  letter-spacing: var(--track);
+  margin-bottom: var(--s4);
+}
+
+.editorial article p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+
+.faq {
+  background: var(--ivory);
+}
+
+.faq-list {
+  display: grid;
+  gap: var(--hairline);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.faq-list article {
+  background: var(--off-white);
+  display: flex;
+  flex-direction: column;
+  padding: var(--s4);
+}
+
+/* ============================================================
+   Consultation
+   ============================================================ */
+
+.consultation {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.consultation-panel {
+  align-content: center;
+  background: var(--sand);
+  display: grid;
+  padding: clamp(40px, 6vw, 92px) clamp(32px, 5vw, 84px);
+}
+
+.consultation-panel h2 {
+  margin-bottom: var(--s4);
+}
+
+.contact-note {
+  color: var(--sage);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  margin: var(--s4) 0 0;
+  text-transform: uppercase;
+}
+
+.contact-note a {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ============================================================
+   Forms
+
+   Form controls are shadcn components (components/ui/*) styled with
+   Tailwind. No element-level rules here on purpose: this stylesheet is
+   unlayered, and unlayered CSS outranks Tailwind's @layer utilities, so
+   a bare `button { ... }` would silently beat every utility class.
+   ============================================================ */
+
+/* ============================================================
+   Footer
+   ============================================================ */
+
+.footer {
+  background: var(--ink);
+  color: var(--off-white);
+  padding: var(--s7) var(--gutter) var(--s4);
+}
+
+.footer-grid {
+  align-items: start;
+  display: grid;
+  gap: var(--s6) clamp(32px, 5vw, 80px);
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 0.9fr);
+}
+
+.footer-brand img {
+  height: auto;
+  width: clamp(112px, 10vw, 148px);
+  aspect-ratio: 260 / 205;
+  margin-bottom: var(--s3);
+}
+
+.footer-brand p {
+  font-size: clamp(13px, 1.05vw, 15px);
+  letter-spacing: var(--track);
+  margin-bottom: var(--s1);
+  text-transform: uppercase;
+}
+
+.footer-brand span {
+  color: var(--stone);
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+}
+
+.footer-phone {
+  color: var(--off-white);
+  display: inline-block;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  margin-top: var(--s4);
+  border-bottom: 1px solid rgba(247, 245, 241, 0.4);
+}
+
+.footer-contact {
+  display: grid;
+  gap: var(--s2);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--stone);
+}
+
+.footer-contact strong {
+  color: var(--off-white);
+  display: block;
+  font-size: var(--micro);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--s1);
+  text-transform: uppercase;
+}
+
+/* Spacing only; colours come from the .surface-dark token scope. */
+.footer-form {
+  margin: 0;
+}
+
+/* Legal line was landing inside the third grid column; it is now a
+   full-width rule across the bottom. */
+.footer-legal {
+  border-top: 1px solid var(--line-dark);
+  color: var(--stone);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  line-height: 1.9;
+  margin: var(--s6) 0 0;
+  padding-top: var(--s4);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Responsive
+
+   One ladder, applied consistently: every deck steps down a column
+   before its tracks fall under ~260px, instead of the old single
+   960px jump straight from 4-5 columns to 1.
+   ============================================================ */
+
+/* --- Small laptop ------------------------------------------------ */
+@media (max-width: 1180px) {
+  .world-grid {
+    --cols: 2;
+  }
+
+  .footer-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .footer-contact {
+    grid-column: 1 / -1;
+  }
+}
+
+/* --- Tablet landscape -------------------------------------------- */
+@media (max-width: 1024px) {
+  .hero-content {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 116px;
+  }
+
+
+  .hero-copy-col,
+  .hero-form {
+    grid-column: 1;
+  }
+
+  .hero-form {
+    max-width: 520px;
+  }
+
+  .showroom-grid,
+  .journey-grid {
+    --cols: 2;
+  }
+
+  .pin-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .thesis-grid,
+  .seo-band-grid,
+  .area-grid,
+  .editorial-grid-wrap,
+  .section-heading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .seo-band-note {
+    grid-column: 1;
+  }
+
+  .poggenpohl,
+  .consultation {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .split-media,
+  .consultation-image {
+    min-height: 380px;
+    max-height: 60svh;
+  }
+}
+
+/* --- Tablet portrait --------------------------------------------- */
+@media (max-width: 860px) {
+  /* Keep the phone number reachable; drop the rest of the nav. */
+  .nav-links a:not(.nav-phone) {
+    display: none;
+  }
+
+  .footer-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Large phone -------------------------------------------------- */
+@media (max-width: 700px) {
+  .showroom-grid,
+  .journey-grid,
+  .world-grid,
+  .area-list {
+    --cols: 1;
+  }
+
+  .editorial-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Rules run between stacked cards, not down their left edge. */
+  .editorial article,
+  .editorial article:nth-child(odd) {
+    border-left: 0;
+    border-top: 1px solid var(--line-dark);
+    padding: var(--s4) 0 0;
+  }
+
+  .editorial article:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+}
+
+/* --- Phone -------------------------------------------------------- */
+@media (max-width: 560px) {
+  .site-nav {
+    padding-block: var(--s2);
+  }
+
+  .brand img {
+    width: 84px;
+  }
+
+  .brand span {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    max-width: 150px;
+    white-space: normal;
+  }
+
+  .service-list {
+    --cols: 1;
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .hero-footer {
+    display: grid;
+    gap: var(--s2);
+  }
+}
+
+/* ============================================================
+   Nav: mobile drawer, active state, skip link
+   ============================================================ */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 60;
+  background: var(--ink);
+  color: var(--off-white);
+  padding: 14px 20px;
+  font-size: var(--micro);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+}
+
+.skip-link:focus {
+  left: var(--gutter);
+  top: 12px;
+}
+
+.nav-links a[aria-current="page"] {
+  border-bottom-color: currentColor;
+}
+
+/* Hamburger. Hidden until the inline links are dropped. */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  cursor: pointer;
+  min-height: 44px;
+  width: 44px;
+  padding: 0;
+}
+
+.nav-drawer {
+  display: none;
+}
+
+/* ============================================================
+   Scroll reveal
+   ============================================================ */
+
+/* No attribute at all = visible. The component only sets "hidden" once it
+   has confirmed it can reveal again, so this degrades safely. */
+.alg-reveal[data-reveal="hidden"] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.alg-reveal[data-reveal="shown"] {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alg-reveal[data-reveal="hidden"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   Marquee band
+   ============================================================ */
+
+.marquee {
+  background: var(--ink);
+  color: var(--off-white);
+  overflow: hidden;
+  padding: 18px 0;
+  border-block: 1px solid var(--ink);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: alg-marquee 42s linear infinite;
+}
+
+.marquee-group {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.marquee-group span {
+  align-items: center;
+  display: flex;
+  font-size: var(--micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.marquee-group i {
+  color: var(--champagne);
+  font-style: normal;
+  padding: 0 clamp(18px, 2.4vw, 34px);
+}
+
+@keyframes alg-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Stat band
+   ============================================================ */
+
+.stat-band {
+  background: var(--off-white);
+  border-bottom: 1px solid var(--line);
+}
+
+.stat-grid {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.stat {
+  border-left: 1px solid var(--line);
+  padding-left: var(--s4);
+}
+
+.stat strong {
+  color: var(--ink);
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(40px, 4.2vw, 64px);
+  font-weight: 400;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--s2);
+}
+
+/* Direct child only: Counter renders a <span> inside <strong>, and a
+   descendant selector here would shrink the numeral to label size. */
+.stat > span {
+  color: var(--sage);
+  display: block;
+  font-size: var(--micro);
+  letter-spacing: 0.16em;
+  line-height: 1.7;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Horizontal gallery rail
+   ============================================================ */
+
+.rail-hint {
+  color: var(--sage);
+  font-size: var(--micro);
+  letter-spacing: 0.16em;
+  margin: var(--s3) 0 0;
+  text-transform: uppercase;
+}
+
+/* Four cards fit comfortably above 1180px, so show them as a grid: the rail
+   clipped the fourth card mid-word, which read as a rendering fault rather
+   than as "there is more to scroll". */
+@media (min-width: 1181px) {
+  .gallery-rail {
+    grid-auto-flow: row !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow-x: visible;
+  }
+
+  .rail-hint {
+    display: none;
+  }
+}
+
+.gallery-rail {
+  display: grid;
+  grid-auto-flow: column;
+  /* A definite track size, not minmax(): with only four cards the grid would
+     otherwise shrink the tracks to fit and the rail would never scroll. */
+  grid-auto-columns: clamp(252px, 24vw, 340px);
+  gap: var(--hairline);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--edge);
+  padding-inline: var(--edge);
+  padding-bottom: var(--s4);
+}
+
+.gallery-rail::-webkit-scrollbar {
+  height: 3px;
+}
+
+.gallery-rail::-webkit-scrollbar-track {
+  background: var(--line);
+}
+
+.gallery-rail::-webkit-scrollbar-thumb {
+  background: var(--sage);
+}
+
+.gallery-rail {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sage) var(--line);
+}
+
+.gallery-card {
+  background: var(--off-white);
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+}
+
+.gallery-card img {
+  aspect-ratio: 4 / 5;
+  height: auto;
+  object-fit: cover;
+  width: 100%;
+}
+
+.gallery-card-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--s4);
+}
+
+.gallery-card h3 {
+  font-size: clamp(21px, 1.7vw, 26px);
+  line-height: 1.12;
+  margin-bottom: var(--s2);
+}
+
+.gallery-card p {
+  line-height: 1.62;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Offset composition
+   ============================================================ */
+
+.offset-section {
+  background: var(--off-white);
+}
+
+.offset-grid {
+  align-items: center;
+  display: grid;
+  gap: clamp(40px, 6vw, 96px);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+}
+
+.offset-media {
+  position: relative;
+  padding-bottom: clamp(48px, 7vw, 96px);
+  padding-right: clamp(40px, 6vw, 88px);
+}
+
+.offset-media img {
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.offset-media .offset-a {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+}
+
+/* The smaller plate overlaps the corner of the larger one.
+   Scoped under .offset-media because the generic `.offset-media img`
+   rule above sets width:100% and would otherwise out-specify this,
+   blowing the accent image up to full width over the main one. */
+.offset-media .offset-b {
+  aspect-ratio: 1 / 1;
+  border: 8px solid var(--off-white);
+  bottom: 0;
+  height: auto;
+  position: absolute;
+  right: 0;
+  width: clamp(150px, 40%, 250px);
+}
+
+.offset-tag {
+  background: var(--ink);
+  color: var(--off-white);
+  font-size: 10px;
+  left: 0;
+  letter-spacing: 0.24em;
+  padding: 10px 16px;
+  position: absolute;
+  text-transform: uppercase;
+  top: clamp(18px, 3vw, 34px);
+}
+
+.offset-copy h2 {
+  margin-bottom: var(--s4);
+}
+
+/* ============================================================
+   Material swatches
+   ============================================================ */
+
+.swatch-section {
+  background: var(--ivory);
+}
+
+.swatch-strip {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding-inline: var(--edge);
+}
+
+.swatch-chip {
+  aspect-ratio: 4 / 5;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  display: block;
+  margin-bottom: var(--s3);
+  width: 100%;
+}
+
+.swatch strong {
+  color: var(--ink);
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.swatch-note {
+  color: var(--sage);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Sticky-pinned process
+   ============================================================ */
+
+.pin-process {
+  background: var(--off-white);
+}
+
+.pin-grid {
+  display: grid;
+  gap: var(--s6);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pin-sticky {
+  max-width: 62ch;
+}
+
+.pin-sticky h2 {
+  max-width: 20ch;
+}
+
+.pin-sticky h2 {
+  margin-bottom: var(--s4);
+}
+
+.pin-steps {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pin-step {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--s3);
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  padding-top: var(--s4);
+}
+
+.pin-number {
+  color: var(--stone);
+  font-family: var(--serif);
+  font-size: clamp(34px, 3.4vw, 52px);
+  line-height: 0.9;
+}
+
+.pin-step-body h3 {
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.1;
+  margin-bottom: var(--s2);
+}
+
+.pin-step-body p {
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+/* Full width beneath both columns rather than trapped in column 2, which
+   left a tall empty cell under the numeral. */
+.pin-step img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  order: -1;
+  width: 100%;
+}
+
+/* ============================================================
+   Pull quote
+   ============================================================ */
+
+.pullquote {
+  background: var(--sage);
+  color: var(--off-white);
+  padding: clamp(72px, 8vw, 120px) var(--edge);
+}
+
+.pullquote blockquote {
+  margin-inline: auto;
+  margin-block: 0;
+  text-align: center;
+}
+
+/* The measure belongs on the element that actually carries the large type.
+   On <blockquote> the `ch` unit resolved against the inherited 16px body
+   font (~190px), which forced one word per line and broke words mid-way. */
+.pullquote p {
+  margin-inline: auto;
+  max-width: 21ch;
+}
+
+.pullquote p {
+  color: var(--off-white);
+  font-family: var(--serif);
+  font-size: clamp(30px, 4vw, 58px);
+  line-height: 1.1;
+  margin-bottom: var(--s5);
+  text-wrap: balance;
+}
+
+.pullquote cite {
+  color: var(--sand);
+  font-size: var(--micro);
+  font-style: normal;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Inner page hero
+   ============================================================ */
+
+.page-hero {
+  background: var(--off-white);
+  padding-top: var(--nav-h);
+}
+
+.page-hero-media {
+  position: relative;
+  height: clamp(280px, 42svh, 460px);
+}
+
+.page-hero-media img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.page-hero-shade {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.05));
+  inset: 0;
+  position: absolute;
+}
+
+/* Not zero: with the full --section-y above it, a flush bottom edge puts the
+   h1 descenders hard against whatever band follows. */
+.page-hero-body {
+  padding-bottom: var(--s7);
+}
+
+.page-hero-grid {
+  display: grid;
+  gap: var(--s5) clamp(34px, 6vw, 96px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  align-items: end;
+}
+
+.page-hero h1 {
+  font-size: clamp(34px, 4.6vw, 70px);
+  line-height: 1.02;
+  margin: 0;
+}
+
+.page-hero-intro {
+  font-size: 17px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.crumbs {
+  align-items: center;
+  color: var(--sage);
+  display: flex;
+  font-size: var(--micro);
+  gap: 10px;
+  letter-spacing: 0.18em;
+  margin-bottom: var(--s4);
+  text-transform: uppercase;
+}
+
+.crumbs a:hover {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ============================================================
+   Services page
+   ============================================================ */
+
+.service-index {
+  display: grid;
+  gap: clamp(56px, 7vw, 110px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.service-row {
+  display: grid;
+  gap: var(--s4) clamp(28px, 4vw, 64px);
+  grid-template-columns: auto minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+}
+
+.service-row-number {
+  color: var(--stone);
+  font-family: var(--serif);
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1;
+}
+
+.service-row-media img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  width: 100%;
+}
+
+.service-row-body h2 {
+  font-size: clamp(26px, 2.8vw, 40px);
+  line-height: 1.08;
+  margin-bottom: var(--s3);
+}
+
+.service-row-body > p {
+  line-height: 1.75;
+}
+
+.tick-list {
+  display: grid;
+  gap: var(--s2);
+  list-style: none;
+  margin: var(--s4) 0 0;
+  padding: 0;
+}
+
+.tick-list li {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.tick-list svg {
+  color: var(--champagne);
+  height: 16px;
+  margin-top: 3px;
+  width: 16px;
+}
+
+.tick-list.on-dark li {
+  color: var(--off-white);
+}
+
+/* ============================================================
+   Showroom page
+   ============================================================ */
+
+.visit-grid {
+  display: grid;
+  gap: clamp(40px, 6vw, 88px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.visit-facts h2 {
+  font-size: clamp(28px, 3.2vw, 46px);
+  margin-bottom: var(--s5);
+}
+
+.visit-facts ul,
+.contact-list {
+  display: grid;
+  gap: var(--s5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.visit-facts li,
+.contact-list li {
+  display: grid;
+  gap: var(--s3);
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  line-height: 1.7;
+}
+
+.visit-facts svg,
+.contact-list svg {
+  color: var(--champagne);
+  height: 20px;
+  width: 20px;
+  margin-top: 2px;
+}
+
+.visit-facts strong,
+.contact-list strong {
+  color: var(--sage);
+  display: block;
+  font-size: var(--micro);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--s1);
+  text-transform: uppercase;
+}
+
+.contact-list address {
+  font-style: normal;
+}
+
+.hours-table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 320px;
+}
+
+.hours-table th,
+.hours-table td {
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+  padding: 8px 0;
+  text-align: left;
+  font-size: 14px;
+}
+
+.hours-table td {
+  text-align: right;
+  color: var(--sage);
+}
+
+.visit-media {
+  position: relative;
+}
+
+.visit-media img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  width: 100%;
+}
+
+.visit-badge {
+  background: var(--ink);
+  bottom: 0;
+  color: var(--off-white);
+  left: 0;
+  padding: var(--s4);
+  position: absolute;
+  text-align: center;
+}
+
+.visit-badge strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(40px, 4vw, 60px);
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* Direct child only, for the same reason as .stat > span above. */
+.visit-badge > span {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Poggenpohl page
+   ============================================================ */
+
+.concept-list {
+  display: grid;
+  gap: clamp(48px, 6vw, 96px);
+}
+
+/* Renamed from .concept-row: that name was already taken by the homepage
+   chip row, and this later definition was overriding it into a 2-column
+   grid. */
+.concept-panel {
+  display: grid;
+  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+}
+
+/* Alternate the image side so the page reads as a sequence. */
+.concept-panel:nth-child(even) .concept-media {
+  order: 2;
+}
+
+.concept-media img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+}
+
+.concept-index {
+  color: var(--stone);
+  display: block;
+  font-family: var(--serif);
+  font-size: 32px;
+  line-height: 1;
+  margin-bottom: var(--s3);
+}
+
+.concept-body h3 {
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1.05;
+  margin-bottom: var(--s3);
+}
+
+.concept-body p {
+  line-height: 1.75;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Process page
+   ============================================================ */
+
+.phase-list {
+  display: grid;
+  gap: clamp(64px, 8vw, 128px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.phase-head {
+  align-items: start;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: auto minmax(0, 1fr);
+  margin-bottom: var(--s5);
+  padding-top: var(--s4);
+}
+
+.phase-number {
+  color: var(--champagne);
+  font-family: var(--serif);
+  font-size: clamp(44px, 5vw, 78px);
+  line-height: 0.8;
+}
+
+.phase-head h2 {
+  font-size: clamp(26px, 3.2vw, 46px);
+  line-height: 1.06;
+  margin: 0;
+}
+
+.phase-body {
+  display: grid;
+  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+}
+
+.phase-media img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  width: 100%;
+}
+
+.phase-lede {
+  font-size: 17px;
+  line-height: 1.75;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Contact page
+   ============================================================ */
+
+.contact-grid {
+  display: grid;
+  gap: clamp(40px, 6vw, 96px);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: start;
+}
+
+.contact-form-col h2 {
+  font-size: clamp(28px, 3.2vw, 46px);
+  margin-bottom: var(--s3);
+}
+
+.contact-lede {
+  font-size: 17px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.contact-areas {
+  border-top: 1px solid var(--line);
+  margin-top: var(--s6);
+  padding-top: var(--s4);
+}
+
+.contact-areas strong {
+  color: var(--sage);
+  display: block;
+  font-size: var(--micro);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--s3);
+  text-transform: uppercase;
+}
+
+.area-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.area-chips span {
+  border: 1px solid var(--line);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  padding: 8px 12px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Footer nav
+   ============================================================ */
+
+.footer-nav {
+  display: grid;
+  gap: 10px;
+  margin-top: var(--s4);
+}
+
+.footer-nav a {
+  font-size: var(--micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.footer-nav a:hover {
+  border-bottom: 1px solid currentColor;
+}
+
+/* ============================================================
+   Responsive for the new sections
+   ============================================================ */
+
+@media (max-width: 1180px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .swatch-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .service-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .service-row-media {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 1024px) {
+  .offset-grid,
+  .pin-grid,
+  .visit-grid,
+  .concept-panel,
+  .phase-body,
+  .contact-grid,
+  .page-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pin-sticky {
+    position: static;
+  }
+
+  .concept-panel:nth-child(even) .concept-media {
+    order: 0;
+  }
+
+  .gallery-rail {
+    grid-auto-columns: minmax(250px, 62vw);
+  }
+}
+
+@media (max-width: 860px) {
+  /* Inline links give way to the drawer. */
+  .nav-links {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-drawer {
+    background: rgba(247, 245, 241, 0.98);
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 2px;
+    left: 0;
+    padding: var(--s3) var(--edge) var(--s5);
+    position: absolute;
+    right: 0;
+    top: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s;
+  }
+
+  .nav-drawer[data-open="true"] {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav-drawer a {
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    padding: 16px 0;
+    text-transform: uppercase;
+  }
+
+  .nav-drawer a:last-child {
+    border-bottom: 0;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .swatch-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pin-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .service-row-media,
+  .pin-step img {
+    grid-column: 1;
+  }
+
+  .phase-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s2);
+  }
+}
+
+@media (max-width: 560px) {
+  .stat-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stat {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: var(--s3) 0 0;
+  }
+
+  .offset-media {
+    padding-right: clamp(24px, 8vw, 48px);
+  }
+
+  .pullquote blockquote {
+    max-width: none;
+  }
+}
