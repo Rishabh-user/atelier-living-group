@@ -4,14 +4,12 @@
  */
 
 /**
- * Canonical origin, used for metadata, Open Graph and JSON-LD.
- * Set NEXT_PUBLIC_SITE_URL when the real domain is live; the placeholder
- * below is the ChatGPT Sites preview host.
- * NOTE: public/robots.txt and public/sitemap.xml are static files and carry
- * the same origin literally - update those two by hand at the same time.
+ * Canonical origin, used for metadata, Open Graph, JSON-LD, robots and the
+ * sitemap. Everything derives from this one value, so pointing the site at a
+ * custom domain is a single change: set NEXT_PUBLIC_SITE_URL in the host
+ * environment (no trailing slash) and every absolute URL follows.
  */
-const FALLBACK_SITE_URL =
-  "https://atelier-living-group.murat-temiz.chatgpt.site";
+const FALLBACK_SITE_URL = "https://atelier-living-group.vercel.app";
 
 /**
  * Guarded because this module is imported by SiteNav, a client component, so
@@ -280,6 +278,8 @@ export const seoServices = [
     heading: "Fully custom cabinetry for high-end Atlanta homes.",
     copy: "Atelier Living Group plans cabinetry around architecture, storage, appliance integration and daily use. Our work supports custom kitchen cabinets, wall systems, concealed storage, pantry planning, islands, tall units and refined material palettes for premium residences.",
     image: images.segmento,
+    imageAlt:
+      "Poggenpohl +SEGMENTO cabinetry with concealed storage and a stone worktop",
     points: [
       "Wall systems, tall units and concealed storage planned as architecture",
       "Island proportions resolved against circulation and seating",
@@ -293,6 +293,8 @@ export const seoServices = [
     heading: "German-made Poggenpohl cabinets and kitchen systems.",
     copy: "As the exclusive Poggenpohl dealer for Atlanta and Georgia, Atelier Living Group gives homeowners, designers and builders access to German kitchen production, precision engineering, refined finishes and architectural planning standards.",
     image: images.modo,
+    imageAlt:
+      "German-made Poggenpohl +MODO kitchen in a dark wood finish",
     points: [
       "Exclusive Poggenpohl representation for Atlanta and Georgia",
       "+MODO, +SEGMENTO and +VENOVO design concepts",
@@ -306,6 +308,8 @@ export const seoServices = [
     heading: "High-end kitchen remodeling with design-build coordination.",
     copy: "For luxury kitchen remodeling, we coordinate design intent, cabinetry planning, appliance integration, materials, drawings and construction communication so the finished space feels resolved rather than assembled.",
     image: images.plan,
+    imageAlt:
+      "Measured kitchen elevations being drawn out during specification",
     points: [
       "Design intent held consistently from concept to installation",
       "Drawings and specifications your trades can build from",
@@ -319,6 +323,8 @@ export const seoServices = [
     heading: "Luxury kitchens for architecture-led living.",
     copy: "Our kitchens are designed as living environments: proportion, light, material, cabinetry, storage and hospitality working together for private residences across Atlanta and Georgia.",
     image: images.taglio,
+    imageAlt:
+      "Poggenpohl TAGLIO kitchen with sculptural oak fronts",
     points: [
       "Kitchens composed as rooms, not as runs of cabinetry",
       "Proportion and sightlines resolved before finishes are chosen",
@@ -332,6 +338,8 @@ export const seoServices = [
     heading: "Premium appliance coordination for luxury kitchens.",
     copy: "Atelier Living Group plans high-end appliance packages around cooking habits, refrigeration needs, ventilation, performance, panel integration and the architectural language of the kitchen. Brand names are available in private consultation.",
     image: images.experience,
+    imageAlt:
+      "Two people cooking together in a kitchen planned around how they use it",
     points: [
       "Packages planned around how you actually cook and entertain",
       "Refrigeration, cooking and ventilation sized to the room",
@@ -460,11 +468,35 @@ export const structuredData = [
     "@id": `${siteUrl}/#business`,
     name: "Atelier Living Group",
     url: siteUrl,
-    image: `${siteUrl}/og.png`,
+    image: [
+      `${siteUrl}/og.png`,
+      `${siteUrl}${images.hero}`,
+      `${siteUrl}${images.showroomA}`,
+      `${siteUrl}${images.segmento}`,
+    ],
     description:
       "Exclusive Poggenpohl dealer for Atlanta and Georgia specializing in luxury kitchen design-build, premium remodeling, high-end appliances, custom cabinetry and German-made kitchen systems.",
     slogan: "Spaces That Inspire",
+    logo: `${siteUrl}/alg-mark.png`,
     telephone: "+16786373262",
+    priceRange: "$$$$",
+    hasMap: address.mapsUrl,
+    // Mirrors the hours published on /showroom. Saturday is by appointment
+    // rather than a fixed window, so it is not given opening times here.
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+        ],
+        opens: "09:00",
+        closes: "17:00",
+      },
+    ],
     address: {
       "@type": "PostalAddress",
       streetAddress: "3280 Peachtree Rd NE Suite 125",

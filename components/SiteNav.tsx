@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -121,11 +122,14 @@ export default function SiteNav() {
       aria-label="Primary navigation"
     >
       <Link className="brand" href="/" scroll={false}>
-        <img
+        <Image
           src="/alg-mark.png"
-          alt="Atelier Living Group"
-          width={260}
-          height={205}
+          // The adjacent span already names the company; an alt here would
+          // make a screen reader announce it twice.
+          alt=""
+          width={140}
+          height={121}
+          priority
         />
         <span>Atelier Living Group</span>
       </Link>

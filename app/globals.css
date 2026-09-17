@@ -463,7 +463,7 @@ h3 {
   filter: invert(1);
   height: auto;
   width: clamp(92px, 8.8vw, 95px);
-  aspect-ratio: 260 / 205;
+  aspect-ratio: 140 / 121;
 }
 
 .brand span {
@@ -1129,7 +1129,7 @@ h3 {
 .footer-brand img {
   height: auto;
   width: clamp(112px, 10vw, 148px);
-  aspect-ratio: 260 / 205;
+  aspect-ratio: 140 / 121;
   margin-bottom: var(--s3);
 }
 
@@ -2450,6 +2450,10 @@ h3 {
 .page-banner-band figure {
   margin: 0;
   overflow: hidden;
+  /* next/image fill positions itself against the nearest positioned
+     ancestor, and the band's height is what each plate should fill. */
+  position: relative;
+  height: 100%;
 }
 
 .page-banner-band img {

@@ -1,11 +1,14 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
+import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
+import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import {
   concepts,
   images,
@@ -14,16 +17,70 @@ import {
   poggenpohlBanner,
 } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Poggenpohl Dealer for Atlanta & Georgia",
   description:
     "Atelier Living Group is the exclusive Poggenpohl dealer for Atlanta and Georgia. Explore the +MODO, +SEGMENTO and +VENOVO German kitchen concepts.",
-  alternates: { canonical: "/poggenpohl" },
-};
+  path: "/poggenpohl",
+  // Banner plate 1 is portrait; social cards want landscape.
+  image: images.poggenpohlB,
+  imageWidth: 1920,
+  imageHeight: 1080,
+  imageAlt: "Poggenpohl German kitchen with architectural cabinetry",
+});
+
+/**
+ * The page is about the brand, and the dealership is the relationship worth
+ * stating outright - it is the query this page competes for.
+ */
+const poggenpohlLd = [
+  breadcrumbLd([
+    { name: "Home", path: "/" },
+    { name: "Poggenpohl", path: "/poggenpohl" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": abs("/poggenpohl"),
+    name: "Poggenpohl Dealer for Atlanta & Georgia",
+    url: abs("/poggenpohl"),
+    about: {
+      "@type": "Brand",
+      name: "Poggenpohl",
+      description:
+        "German kitchen manufacturer founded in Herford in 1892, represented in Atlanta and Georgia by Atelier Living Group.",
+      url: "https://www.poggenpohl.com/",
+    },
+    mainEntity: {
+      "@type": "Service",
+      name: "Poggenpohl kitchen dealership for Atlanta and Georgia",
+      serviceType: "German kitchen cabinetry",
+      brand: { "@type": "Brand", name: "Poggenpohl" },
+      provider: { "@id": abs("/#business") },
+      areaServed: { "@type": "State", name: "Georgia" },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Poggenpohl design concepts",
+        itemListElement: concepts.map((concept) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Product",
+            name: concept.name,
+            description: concept.copy,
+            brand: { "@type": "Brand", name: "Poggenpohl" },
+            image: abs(concept.image),
+          },
+        })),
+      },
+    },
+  },
+];
 
 export default function PoggenpohlPage() {
   return (
     <>
+      <JsonLd data={poggenpohlLd} />
+
       <PageBanner
         crumb="Poggenpohl"
         title="German kitchen architecture, exclusively for Georgia."
@@ -70,11 +127,12 @@ export default function PoggenpohlPage() {
             {concepts.map((concept, i) => (
               <Reveal as="article" className="concept-panel" key={concept.name}>
                 <div className="concept-media">
-                  <img
+                  <Image
                     src={concept.image}
                     alt={`Poggenpohl ${concept.name} kitchen concept`}
-                    loading="lazy"
-                    decoding="async"
+                    width={1200}
+                    height={900}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 </div>
                 <div className="concept-body">

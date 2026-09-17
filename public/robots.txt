@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://atelier-living-group.murat-temiz.chatgpt.site/sitemap.xml

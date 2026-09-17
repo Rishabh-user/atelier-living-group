@@ -1,3 +1,4 @@
+import Image from "next/image";
 import InquiryForm from "@/components/InquiryForm";
 import { images, phone, phoneHref } from "@/content/site";
 
@@ -16,11 +17,11 @@ export default function ConsultationBand({
   return (
     <section className="consultation" id="consultation">
       <div className="consultation-image">
-        <img
+        <Image
           src={image}
           alt="Luxury kitchen planning consultation for custom cabinetry and premium remodeling in Atlanta"
-          loading="lazy"
-          decoding="async"
+          fill
+          sizes="(max-width: 1024px) 100vw, 50vw"
         />
       </div>
       <div className="consultation-panel">

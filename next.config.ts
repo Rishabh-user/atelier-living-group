@@ -6,12 +6,13 @@ const nextConfig: NextConfig = {
   // future AI sessions.
   agentRules: false,
 
-  // Poggenpohl imagery is hotlinked. Listed so next/image could be adopted
-  // later; plain <img> tags do not require this, but it costs nothing.
   images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "www.poggenpohl.com" },
-    ],
+    // Served in preference order. AVIF is roughly 20-30% smaller than WebP at
+    // the same quality, and every browser that lacks it falls through.
+    formats: ["image/avif", "image/webp"],
+    // All photography is local now; kept in case an image is ever pulled
+    // straight from the Poggenpohl press library again.
+    remotePatterns: [{ protocol: "https", hostname: "www.poggenpohl.com" }],
   },
 };
 

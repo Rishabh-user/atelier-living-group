@@ -1,11 +1,14 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import { ArrowUpRight, Clock, MapPin, Phone } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
 import Counter from "@/components/Counter";
+import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
+import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import {
   address,
   hours,
@@ -17,16 +20,42 @@ import {
   showroomHighlights,
 } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Poggenpohl Showroom in Buckhead, Atlanta",
   description:
     "Visit the Poggenpohl showroom in the Terminus building, Buckhead: seven kitchen displays, a full door sample and finish library, and private consultations by appointment.",
-  alternates: { canonical: "/showroom" },
-};
+  path: "/showroom",
+  image: images.showroomA,
+  imageWidth: 1920,
+  imageHeight: 1280,
+  imageAlt: "Poggenpohl kitchen display in the Terminus showroom, Buckhead",
+});
+
+/**
+ * The showroom is the premises of the business, so this points back at the
+ * same @id rather than declaring a second, competing LocalBusiness.
+ */
+const showroomLd = [
+  breadcrumbLd([
+    { name: "Home", path: "/" },
+    { name: "Showroom", path: "/showroom" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": abs("/showroom"),
+    name: "Poggenpohl Showroom in Buckhead, Atlanta",
+    url: abs("/showroom"),
+    about: { "@id": abs("/#business") },
+    primaryImageOfPage: abs(images.showroomA),
+  },
+];
 
 export default function ShowroomPage() {
   return (
     <>
+      <JsonLd data={showroomLd} />
+
       <PageBanner
         crumb="Showroom"
         title="Seven kitchens, one quiet room in Buckhead."
@@ -96,11 +125,12 @@ export default function ShowroomPage() {
           </Reveal>
 
           <Reveal className="visit-media" delay={120}>
-            <img
+            <Image
               src={images.material}
               alt="Door samples, finish chips and surfaces in the Atlanta showroom library"
-              loading="lazy"
-              decoding="async"
+              width={1000}
+              height={1250}
+              sizes="(max-width: 1024px) 100vw, 45vw"
             />
             <div className="visit-badge">
               <strong>

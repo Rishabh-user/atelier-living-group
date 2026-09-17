@@ -270,6 +270,11 @@ export default function InquiryForm({
     el?.focus();
   }, [errors, status, uid]);
 
+  // In the hero this title is the document's second heading, directly after
+  // the h1, so h3 there skipped a level. Elsewhere the form sits under a
+  // section h2 and h3 is correct.
+  const Title = variant === "hero" ? "h2" : "h3";
+
   if (status === "sent") {
     return (
       <div className={className}>
@@ -277,9 +282,9 @@ export default function InquiryForm({
           <span className="flex size-9 items-center justify-center border border-current text-current">
             <Check className="size-4" />
           </span>
-          <h3 className="font-serif text-2xl leading-tight text-current">
+          <Title className="font-serif text-2xl leading-tight text-current">
             Thank you — your request is with us.
-          </h3>
+          </Title>
           <p className="text-[15px] leading-relaxed opacity-80">
             A member of Atelier Living Group will be in touch shortly to arrange
             your private consultation. For anything urgent, call{" "}
@@ -318,9 +323,9 @@ export default function InquiryForm({
         </p>
       ) : null}
       {config.title ? (
-        <h3 className="mb-6 font-serif text-[27px] leading-tight text-foreground">
+        <Title className="mb-6 font-serif text-[27px] leading-tight text-foreground">
           {config.title}
-        </h3>
+        </Title>
       ) : null}
 
       <div

@@ -1,10 +1,13 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
+import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
+import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import {
   images,
   phone,
@@ -15,16 +18,56 @@ import {
   servicesBanner,
 } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Luxury Kitchen Services in Atlanta",
   description:
     "Custom cabinetry, German-made Poggenpohl cabinets, premium kitchen remodeling, luxury kitchens and high-end appliance planning for Atlanta and Georgia residences.",
-  alternates: { canonical: "/services" },
-};
+  path: "/services",
+  image: images.servicesB,
+  imageWidth: 1920,
+  imageHeight: 1080,
+  imageAlt:
+    "Poggenpohl door samples and finish chips laid out for comparison",
+});
+
+/**
+ * One Service node per discipline, each tied back to the business so Google
+ * reads them as offerings of this dealer rather than free-floating pages.
+ */
+const servicesLd = [
+  breadcrumbLd([
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Luxury kitchen services in Atlanta",
+    itemListElement: seoServices.map((service, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Service",
+        "@id": abs(`/services#${service.slug}`),
+        name: service.heading,
+        description: service.copy,
+        serviceType: service.title,
+        image: abs(service.image),
+        provider: { "@id": abs("/#business") },
+        areaServed: serviceAreas.map((area) => ({
+          "@type": "Place",
+          name: `${area}, Georgia`,
+        })),
+      },
+    })),
+  },
+];
 
 export default function ServicesPage() {
   return (
     <>
+      <JsonLd data={servicesLd} />
+
       <PageBanner
         crumb="Services"
         title="Kitchen architecture, planned end to end."
@@ -75,11 +118,12 @@ export default function ServicesPage() {
                 id={service.slug}
               >
                 <div className="service-row-media">
-                  <img
+                  <Image
                     src={service.image}
-                    alt={service.heading}
-                    loading="lazy"
-                    decoding="async"
+                    alt={service.imageAlt}
+                    width={1600}
+                    height={1100}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 </div>
 

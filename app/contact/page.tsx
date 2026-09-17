@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from "lucide-react";
 
 import InquiryForm from "@/components/InquiryForm";
+import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
+import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import {
   address,
   contactBanner,
@@ -15,16 +17,34 @@ import {
   serviceAreas,
 } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact & Private Consultation",
   description:
     "Contact Atelier Living Group in Buckhead, Atlanta. Book a private consultation for luxury kitchen design-build, custom German cabinetry and high-end appliance planning.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+  // Both banner plates are square or portrait, so the 1200x630 card wins.
+});
+
+const contactLd = [
+  breadcrumbLd([
+    { name: "Home", path: "/" },
+    { name: "Contact", path: "/contact" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": abs("/contact"),
+    name: "Contact Atelier Living Group",
+    url: abs("/contact"),
+    about: { "@id": abs("/#business") },
+  },
+];
 
 export default function ContactPage() {
   return (
     <>
+      <JsonLd data={contactLd} />
+
       <PageBanner
         crumb="Contact"
         title="Start the conversation."

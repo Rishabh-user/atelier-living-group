@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -30,12 +31,15 @@ export default function PageBanner({
       <div className="page-banner-band">
         {shots.map((shot, i) => (
           <figure key={shot.src} data-slot={i}>
-            <img
+            <Image
               src={shot.src}
               alt={shot.alt}
-              fetchPriority={i === 0 ? "high" : undefined}
-              loading={i === 0 ? undefined : "lazy"}
-              decoding="async"
+              fill
+              // The band is three plates wide on desktop and collapses to two
+              // then one, so the widest any plate gets is roughly half the
+              // viewport until the single-plate breakpoint.
+              sizes="(max-width: 700px) 100vw, (max-width: 1024px) 50vw, 40vw"
+              priority={i === 0}
             />
           </figure>
         ))}

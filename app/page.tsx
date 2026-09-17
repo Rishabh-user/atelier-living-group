@@ -1,3 +1,4 @@
+import Image from "next/image";
 import ConsultationBand from "@/components/ConsultationBand";
 import InquiryForm from "@/components/InquiryForm";
 import { Button } from "@/components/ui/button";
@@ -24,11 +25,13 @@ export default function Home() {
       />
 
       <section className="hero" id="top">
-        <img
+        <Image
           className="hero-image"
           src={images.hero}
           alt="Luxury German kitchen in an Atlanta home with custom dark cabinetry, stone island and architectural Poggenpohl design"
-          fetchPriority="high"
+          fill
+          sizes="100vw"
+          priority
         />
         <div className="hero-shade" />
         <div className="hero-content">
@@ -198,11 +201,12 @@ export default function Home() {
           <div className="world-grid grid-tiles">
             {designWorlds.map((world) => (
               <article className="world-card" key={world.title}>
-                <img
+                <Image
                   src={world.image}
                   alt={`${world.title} luxury kitchen and custom cabinetry reference for Atlanta and Georgia residences`}
-                  loading="lazy"
-                  decoding="async"
+                  width={900}
+                  height={1200}
+                  sizes="(max-width: 700px) 100vw, (max-width: 1180px) 50vw, 25vw"
                 />
                 <div className="world-card-copy">
                   <h3>{world.title}</h3>
@@ -216,11 +220,11 @@ export default function Home() {
 
       <section className="poggenpohl" id="poggenpohl">
         <div className="split-media">
-          <img
+          <Image
             src={images.taglio}
             alt="Poggenpohl TAGLIO German kitchen with sculptural high-end cabinetry"
-            loading="lazy"
-            decoding="async"
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
           />
         </div>
         <div className="split-copy">
@@ -263,11 +267,12 @@ export default function Home() {
           <div className="journey-grid grid-deck">
             {journey.map((step) => (
               <article className="journey-card" key={step.label}>
-                <img
+                <Image
                   src={step.image}
                   alt={`${step.label} phase: luxury kitchen design-build, custom cabinetry and premium remodeling`}
-                  loading="lazy"
-                  decoding="async"
+                  width={1000}
+                  height={1000}
+                  sizes="(max-width: 1024px) 100vw, 33vw"
                 />
                 <p className="step-label">{step.label}</p>
                 <h3>{step.title}</h3>

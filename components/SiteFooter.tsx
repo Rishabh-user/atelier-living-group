@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import InquiryForm from "@/components/InquiryForm";
@@ -9,11 +10,11 @@ export default function SiteFooter() {
       <div className="shell">
         <div className="footer-grid">
           <div className="footer-brand">
-            <img
+            <Image
               src="/alg-mark-white.png"
               alt="Atelier Living Group"
-              width={260}
-              height={205}
+              width={139}
+              height={121}
             />
             <p>Atelier Living Group</p>
             <span>Spaces That Inspire</span>

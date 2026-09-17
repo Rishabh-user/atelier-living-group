@@ -1,11 +1,14 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
+import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
+import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import {
   faqs,
   images,
@@ -16,16 +19,45 @@ import {
   processDeliverables,
 } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Our Design-Build Process",
   description:
     "Inspire, Experience, Plan: how Atelier Living Group takes a luxury kitchen from first conversation through specification, construction coordination and installation.",
-  alternates: { canonical: "/process" },
-};
+  path: "/process",
+  // Both banner plates are square or portrait, so the 1200x630 card wins.
+});
+
+/**
+ * HowTo mirrors the three phases the page walks through, so the step names in
+ * the markup and in the schema stay in step automatically.
+ */
+const processLd = [
+  breadcrumbLd([
+    { name: "Home", path: "/" },
+    { name: "Process", path: "/process" },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "@id": abs("/process#howto"),
+    name: "How a luxury kitchen is planned at Atelier Living Group",
+    description:
+      "Inspire, Experience and Plan: the three phases Atelier Living Group works through from first conversation to installed kitchen.",
+    step: journey.map((phase, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: phase.title,
+      text: phase.copy,
+      image: abs(phase.image),
+    })),
+  },
+];
 
 export default function ProcessPage() {
   return (
     <>
+      <JsonLd data={processLd} />
+
       <PageBanner
         crumb="Process"
         title="Inspire. Experience. Plan."
@@ -56,11 +88,12 @@ export default function ProcessPage() {
                 id={`phase-${step.number}`}
               >
                 <div className="phase-media">
-                  <img
+                  <Image
                     src={step.image}
                     alt={`${step.label} phase of the Atelier Living Group design-build process`}
-                    loading="lazy"
-                    decoding="async"
+                    width={1200}
+                    height={900}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                   <span className="phase-number" aria-hidden="true">
                     {step.number}

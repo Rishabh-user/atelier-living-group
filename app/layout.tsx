@@ -33,14 +33,33 @@ const displaySerif = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default:
-      "Luxury German Kitchens, Custom Cabinetry & Appliances Atlanta | Atelier Living Group",
+    // Kept under ~60 characters so the brand is not cut off in results; the
+    // fuller keyword set lives in the h1 and description.
+    default: "Luxury German Kitchens & Cabinetry | Atelier Living Group",
     template: "%s | Atelier Living Group",
   },
   description:
     "Exclusive Poggenpohl dealer for Atlanta and Georgia. Luxury kitchen design-build, premium remodeling, high-end appliances and custom German cabinetry at the Terminus showroom.",
+  applicationName: "Atelier Living Group",
+  authors: [{ name: "Atelier Living Group", url: siteUrl }],
+  creator: "Atelier Living Group",
+  publisher: "Atelier Living Group",
+  category: "Home & Garden",
   alternates: { canonical: "/" },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  // The phone number is already a tel: link; leaving auto-detection on lets
+  // iOS Safari restyle it and other numerals on the page.
+  formatDetection: { telephone: false, address: false, email: false },
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   openGraph: {
     title: "Luxury German Kitchens, Custom Cabinetry & Appliances Atlanta",
@@ -48,7 +67,14 @@ export const metadata: Metadata = {
       "Atelier Living Group is the exclusive Poggenpohl dealer for Atlanta and Georgia, specializing in luxury kitchens, premium remodeling, high-end appliances and fully custom German cabinetry.",
     url: "/",
     siteName: "Atelier Living Group",
-    images: ["/og.png"],
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Atelier Living Group — luxury German kitchens in Atlanta",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
@@ -69,7 +95,7 @@ export default function RootLayout({
     // and --sans on :root, and a var() there cannot see a custom property
     // defined one level below it.
     <html
-      lang="en"
+      lang="en-US"
       className={`${geistSans.variable} ${geistMono.variable} ${displaySerif.variable}`}
     >
       <body className="antialiased">
