@@ -148,6 +148,31 @@ export default function PoggenpohlPage() {
         </div>
       </section>
 
+      <section className="collection-link" aria-label="TAGLIO collection">
+        <div className="collection-link-media">
+          <Image
+            src="/products/taglio/taglio-09.jpg"
+            alt="Poggenpohl TAGLIO kitchen with faceted fronts"
+            fill
+            sizes="(max-width: 860px) 100vw, 50vw"
+          />
+        </div>
+        <Reveal className="collection-link-body">
+          <p className="eyebrow">New collection</p>
+          <h2>TAGLIO</h2>
+          <p>
+            Sculpted 44 mm fronts with four slanted facets, drawn in light and
+            shadow. See the full collection and book a design consultation.
+          </p>
+          <Button asChild variant="light" size="wide">
+            <Link scroll={false} href="/poggenpohl/taglio">
+              Explore TAGLIO
+              <ArrowRight />
+            </Link>
+          </Button>
+        </Reveal>
+      </section>
+
       <section className="area-section section-pad" aria-label="Dealer role">
         <div className="shell area-grid">
           <Reveal>

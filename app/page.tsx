@@ -1,10 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
+import { preload } from "react-dom";
 import ConsultationBand from "@/components/ConsultationBand";
+import HeroVideo from "@/components/HeroVideo";
 import InquiryForm from "@/components/InquiryForm";
 import { Button } from "@/components/ui/button";
 import {
   designWorlds,
   faqs,
+  heroVideo,
   images,
   journey,
   phone,
@@ -17,6 +21,9 @@ import {
 } from "@/content/site";
 
 export default function Home() {
+  // The poster is the largest first paint while the film buffers.
+  preload(heroVideo.poster, { as: "image", fetchPriority: "high" });
+
   return (
     <>
       <script
@@ -25,13 +32,10 @@ export default function Home() {
       />
 
       <section className="hero" id="top">
-        <Image
-          className="hero-image"
-          src={images.hero}
-          alt="Luxury German kitchen in an Atlanta home with custom dark cabinetry, stone island and architectural Poggenpohl design"
-          fill
-          sizes="100vw"
-          priority
+        <HeroVideo
+          src={heroVideo.src}
+          poster={heroVideo.poster}
+          label="Poggenpohl TAGLIO kitchen with sculpted, faceted fronts"
         />
         <div className="hero-shade" />
         <div className="hero-content">
@@ -65,7 +69,17 @@ export default function Home() {
           />
         </div>
         <div className="hero-footer">
-          <span>Exclusive Poggenpohl Dealer for Atlanta + Georgia</span>
+          <span className="hero-brand">
+            <Image
+              className="brand-logo on-dark"
+              src="/brand/poggenpohl-logo-black.svg"
+              alt="Poggenpohl"
+              width={75}
+              height={48}
+              unoptimized
+            />
+            Exclusive Poggenpohl Dealer for Atlanta + Georgia
+          </span>
           <span>Terminus Showroom + 7 Displays + High-End Appliances</span>
         </div>
       </section>
@@ -228,6 +242,14 @@ export default function Home() {
           />
         </div>
         <div className="split-copy">
+          <Image
+            className="brand-logo"
+            src="/brand/poggenpohl-logo-black.svg"
+            alt="Poggenpohl"
+            width={75}
+            height={48}
+            unoptimized
+          />
           <p className="eyebrow dark">Poggenpohl at Atelier Living Group</p>
           <h2>
             German kitchen architecture, exclusively represented for Atlanta and
@@ -247,6 +269,9 @@ export default function Home() {
             <span>+SEGMENTO</span>
             <span>+VENOVO</span>
           </div>
+          <Button asChild variant="default" size="wide" className="mt-9">
+            <Link href="/poggenpohl/taglio">Explore TAGLIO</Link>
+          </Button>
         </div>
       </section>
 

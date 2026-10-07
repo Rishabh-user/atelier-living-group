@@ -2590,3 +2590,554 @@ h3 {
     display: none;
   }
 }
+
+/* ============================================================
+   Product detail pages (/poggenpohl/[slug])
+   ============================================================ */
+
+.pdp-hero {
+  background: var(--ink);
+  color: white;
+  display: grid;
+  min-height: min(100svh, 920px);
+  overflow: hidden;
+  position: relative;
+}
+
+.pdp-hero-video {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  width: 100%;
+}
+
+.pdp-hero-shade {
+  background:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.05) 55%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0) 60%);
+  inset: 0;
+  position: absolute;
+}
+
+.pdp-hero-copy {
+  align-self: end;
+  padding-bottom: clamp(48px, 8vw, 104px);
+  padding-top: calc(var(--nav-h) + 48px);
+  position: relative;
+  z-index: 2;
+}
+
+.crumbs.on-dark {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.pdp-hero h1 {
+  color: white;
+  font-size: clamp(56px, 11vw, 160px);
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  margin-bottom: var(--s3);
+}
+
+.pdp-tagline {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.4vw, 32px);
+  line-height: 1.25;
+  margin: 0;
+  max-width: 28ch;
+}
+
+.pdp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: var(--s5);
+}
+
+.pdp-intro-grid {
+  align-items: start;
+  display: grid;
+  gap: clamp(28px, 5vw, 96px);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+}
+
+.pdp-intro h2 {
+  max-width: 16ch;
+}
+
+.pdp-lede {
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.75;
+}
+
+.pdp-specs {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: var(--s4);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: var(--s5) 0 0;
+  padding-top: var(--s4);
+}
+
+.pdp-specs dt {
+  color: var(--champagne);
+  font-family: var(--serif);
+  font-size: clamp(30px, 3.4vw, 48px);
+  line-height: 1;
+}
+
+.pdp-specs dd {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: var(--s2) 0 0;
+}
+
+.pdp-features {
+  background: var(--ivory);
+}
+
+.pdp-features .shell {
+  display: grid;
+  gap: clamp(56px, 8vw, 120px);
+}
+
+.pdp-feature {
+  align-items: center;
+  display: grid;
+  gap: clamp(28px, 5vw, 88px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.pdp-feature:nth-child(even) .pdp-feature-media {
+  order: 2;
+}
+
+.pdp-feature-media img {
+  aspect-ratio: 4 / 5;
+  height: auto;
+  object-fit: cover;
+  width: 100%;
+}
+
+.pdp-feature-body h3 {
+  font-size: clamp(28px, 3.2vw, 44px);
+  line-height: 1.1;
+  margin-bottom: var(--s3);
+  max-width: 16ch;
+}
+
+.pdp-feature-body p:last-child {
+  line-height: 1.75;
+  max-width: 46ch;
+}
+
+.pdp-panorama {
+  color: white;
+  display: grid;
+  min-height: clamp(460px, 62vw, 760px);
+  position: relative;
+}
+
+.pdp-panorama img {
+  object-fit: cover;
+}
+
+.pdp-panorama-shade {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.15) 70%);
+  inset: 0;
+  position: absolute;
+}
+
+.pdp-panorama-copy {
+  align-self: center;
+  padding-bottom: var(--s7);
+  padding-top: var(--s7);
+  position: relative;
+  z-index: 2;
+}
+
+.pdp-panorama-copy h2 {
+  color: white;
+  font-size: clamp(32px, 4.4vw, 60px);
+  margin-bottom: var(--s3);
+  max-width: 14ch;
+}
+
+.pdp-panorama-copy p:last-child {
+  line-height: 1.75;
+  max-width: 54ch;
+}
+
+.pdp-gallery-grid {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pdp-gallery-grid img {
+  aspect-ratio: 3 / 4;
+  height: auto;
+  object-fit: cover;
+  width: 100%;
+}
+
+.pdp-gallery-note {
+  margin: var(--s6) auto 0;
+  max-width: 62ch;
+  text-align: center;
+}
+
+.pdp-gallery-note p {
+  font-family: var(--serif);
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Collection link band on /poggenpohl */
+.collection-link {
+  align-items: center;
+  background: var(--ink);
+  color: var(--off-white);
+  display: grid;
+  gap: clamp(24px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.collection-link-media {
+  aspect-ratio: 16 / 10;
+  position: relative;
+}
+
+.collection-link-media img {
+  object-fit: cover;
+}
+
+.collection-link-body {
+  padding: var(--s6) var(--edge) var(--s6) 0;
+}
+
+.collection-link-body h2 {
+  color: var(--off-white);
+  font-size: clamp(30px, 4vw, 52px);
+  margin-bottom: var(--s3);
+}
+
+.collection-link-body p {
+  line-height: 1.7;
+}
+
+.brand-logo {
+  height: auto;
+  width: 64px;
+}
+
+@media (max-width: 860px) {
+  .pdp-intro-grid,
+  .pdp-feature,
+  .collection-link {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .collection-link-body {
+    padding: 0 var(--edge) var(--s6);
+  }
+
+  .pdp-feature:nth-child(even) .pdp-feature-media {
+    order: 0;
+  }
+
+  .pdp-specs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pdp-hero {
+    min-height: 88svh;
+  }
+
+  .pdp-actions > * {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .pdp-gallery-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.brand-logo.on-dark {
+  filter: brightness(0) invert(1);
+}
+
+.hero-brand {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--s3);
+}
+
+.hero-brand .brand-logo {
+  width: 44px;
+}
+
+.pdp-hero-copy,
+.pdp-panorama-copy {
+  padding-inline: var(--edge);
+}
+
+.pdp-intro h2 {
+  font-size: clamp(30px, 3.6vw, 52px);
+  line-height: 1.1;
+}
+
+.pdp-panorama-copy h2,
+.area-section h2 {
+  line-height: 1.1;
+}
+
+/* ---- TAGLIO page, second pass: shared left edge + more character ---- */
+
+/* The hero and panorama copy used `.shell` plus edge padding, which doubles the
+   inset on screens wider than the container. They now sit on --edge alone, the
+   same line every .section-pad content block uses. */
+.pdp-hero-copy,
+.pdp-panorama-copy {
+  max-width: none;
+  padding-inline: var(--edge);
+  width: 100%;
+}
+
+.pdp-hero h1 {
+  font-size: clamp(72px, 15vw, 240px);
+  letter-spacing: 0.02em;
+  margin-left: -0.04em;
+  text-shadow: 0 2px 60px rgba(0, 0, 0, 0.35);
+}
+
+.pdp-hero-specs {
+  bottom: clamp(24px, 4vw, 56px);
+  display: flex;
+  gap: clamp(20px, 3vw, 48px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: var(--edge);
+  z-index: 2;
+}
+
+.pdp-hero-specs li {
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+  display: grid;
+  gap: 6px;
+  max-width: 150px;
+  padding-left: 16px;
+}
+
+.pdp-hero-specs strong {
+  font-family: var(--serif);
+  font-size: clamp(24px, 2.6vw, 40px);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.pdp-hero-specs span {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* Three-pillar band under the hero: static, ruled, on the shared left edge. */
+.pdp-pillars {
+  background: var(--ink);
+  color: var(--off-white);
+  padding: clamp(40px, 5vw, 72px) var(--edge);
+}
+
+.pdp-pillars ul {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pdp-pillars li {
+  border-left: 1px solid rgba(181, 154, 114, 0.4);
+  padding: 4px clamp(20px, 3vw, 48px);
+}
+
+.pdp-pillars li:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.pdp-pillar-no {
+  color: var(--champagne);
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  margin-bottom: var(--s3);
+}
+
+.pdp-pillars h2 {
+  color: var(--off-white);
+  font-size: clamp(34px, 4vw, 60px);
+  line-height: 1;
+  margin-bottom: var(--s2);
+}
+
+.pdp-pillars p {
+  color: rgba(247, 245, 241, 0.72);
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 30ch;
+}
+
+@media (max-width: 860px) {
+  .pdp-pillars ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pdp-pillars li,
+  .pdp-pillars li:first-child {
+    border-left: 0;
+    border-top: 1px solid rgba(181, 154, 114, 0.4);
+    padding: var(--s4) 0;
+  }
+
+  .pdp-pillars li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+}
+
+/* Faceted diamond motif echoing the fronts */
+.pdp-facet {
+  aspect-ratio: 1;
+  background: conic-gradient(
+    from 45deg,
+    #c9ae82 0 25%,
+    #a58b61 0 50%,
+    #8a7250 0 75%,
+    #dcc7a2 0 100%
+  );
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  display: block;
+  margin-bottom: var(--s4);
+  width: clamp(56px, 6vw, 88px);
+}
+
+.pdp-lede {
+  border-left: 2px solid var(--champagne);
+  padding-left: clamp(18px, 2.4vw, 36px);
+}
+
+/* Features: offset media, oversize index numerals */
+.pdp-feature {
+  position: relative;
+}
+
+.pdp-feature-media {
+  position: relative;
+}
+
+.pdp-feature-media::after {
+  border: 1px solid var(--champagne);
+  content: "";
+  inset: 18px -18px -18px 18px;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.pdp-feature-media img {
+  position: relative;
+  z-index: 1;
+}
+
+.pdp-feature:nth-child(even) .pdp-feature-media::after {
+  inset: 18px 18px -18px -18px;
+}
+
+.pdp-feature-index {
+  color: transparent;
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(88px, 11vw, 168px);
+  line-height: 0.85;
+  margin-bottom: var(--s2);
+  -webkit-text-stroke: 1px var(--champagne);
+}
+
+.pdp-feature-body {
+  padding-block: var(--s5);
+}
+
+/* Panorama: copy in a glass card */
+.pdp-panorama-copy {
+  align-self: end;
+  padding-bottom: clamp(40px, 6vw, 88px);
+}
+
+.pdp-panorama-copy > * {
+  max-width: 520px;
+}
+
+.pdp-panorama-copy {
+  display: block;
+}
+
+/* Gallery: staggered pair */
+.pdp-gallery-grid figure:nth-child(2) {
+  margin-top: clamp(40px, 8vw, 120px);
+}
+
+.pdp-gallery-grid {
+  align-items: start;
+  padding-bottom: clamp(0px, 8vw, 120px);
+}
+
+@media (max-width: 1100px) {
+  .pdp-hero-specs {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .pdp-intro-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pdp-feature-media::after {
+    inset: 12px -8px -12px 12px;
+  }
+
+  .pdp-feature:nth-child(even) .pdp-feature-media::after {
+    inset: 12px -8px -12px 12px;
+  }
+
+  .pdp-feature-index {
+    font-size: 96px;
+  }
+
+  .pdp-hero h1 {
+    font-size: clamp(64px, 22vw, 120px);
+  }
+}
+
+@media (max-width: 560px) {
+  .pdp-gallery-grid figure:nth-child(2) {
+    margin-top: 0;
+  }
+
+  .pdp-gallery-grid {
+    padding-bottom: 0;
+  }
+}
+

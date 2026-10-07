@@ -74,6 +74,12 @@ export const images = {
   poggenpohlC: "/images/poggenpohlC.jpg",
 };
 
+/** Opening film for the homepage hero (TAGLIO loop, see ASSETS.md). */
+export const heroVideo = {
+  src: "/video/taglio-loop.mp4",
+  poster: "/products/taglio/taglio-poster.jpg",
+};
+
 /**
  * Banner bands. Each page gets its own three, so no image appears in two
  * banners, and none of them repeat the imagery used inside the pages.
