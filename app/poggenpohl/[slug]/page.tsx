@@ -85,7 +85,7 @@ export default async function ProductPage({
     <>
       <JsonLd data={ld} />
 
-      <header className="pdp-hero">
+      <header className="pdp-hero" id="top">
         <video
           className="pdp-hero-video"
           src={product.video.src}
@@ -106,7 +106,6 @@ export default async function ProductPage({
             <span aria-hidden="true">/</span>
             <span aria-current="page">{product.name}</span>
           </nav>
-          <p className="eyebrow">Poggenpohl design concept</p>
           <h1>{product.name}</h1>
           <p className="pdp-tagline">{product.tagline}</p>
           <div className="pdp-actions">

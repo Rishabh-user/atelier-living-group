@@ -30,8 +30,10 @@ import { useIsomorphicLayoutEffect } from "@/lib/use-isomorphic-layout-effect";
  */
 export default function SiteNav() {
   const pathname = usePathname();
-  // Only the homepage has a dark full-bleed hero behind the bar.
-  const alwaysSolid = pathname !== "/";
+  // The homepage and the product pages (/poggenpohl/[slug]) have a dark
+  // full-bleed hero, marked id="top", behind the bar.
+  const hasHero = pathname === "/" || /^\/poggenpohl\/[^/]+\/?$/.test(pathname);
+  const alwaysSolid = !hasHero;
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -91,7 +93,7 @@ export default function SiteNav() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, [alwaysSolid]);
+  }, [alwaysSolid, pathname]);
 
   // The drawer closes from the link handlers below rather than by reacting to
   // the route, which would be a cascading setState inside an effect.

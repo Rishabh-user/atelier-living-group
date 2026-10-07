@@ -3141,3 +3141,95 @@ h3 {
   }
 }
 
+
+/* Hero decluttered: breadcrumb, title, one tagline, two actions. */
+.pdp-hero h1 {
+  font-size: clamp(64px, 11vw, 176px);
+  margin-bottom: var(--s4);
+}
+
+.pdp-hero .crumbs {
+  margin-bottom: var(--s6);
+}
+
+.pdp-tagline {
+  font-size: clamp(18px, 2vw, 28px);
+}
+
+.pdp-hero-copy {
+  padding-bottom: clamp(56px, 9vw, 120px);
+}
+
+.pdp-hero-shade {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 60%);
+}
+
+
+/* Key figures stay on the banner at every width: bottom-right on desktop,
+   a compact three-column row under the actions below 1100px. */
+@media (max-width: 1100px) {
+  .pdp-hero-specs {
+    bottom: auto;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 0 var(--edge) clamp(28px, 5vw, 48px);
+    position: relative;
+    right: auto;
+    width: 100%;
+  }
+
+  .pdp-hero-specs li {
+    max-width: none;
+    padding-left: 12px;
+  }
+
+  .pdp-hero-specs strong {
+    font-size: clamp(20px, 4.6vw, 32px);
+  }
+
+  .pdp-hero-specs span {
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+  }
+
+  .pdp-hero-copy {
+    padding-bottom: clamp(28px, 5vw, 48px);
+  }
+}
+
+
+/* Legibility over the bright film: a deeper scrim on the copy side and floor,
+   plus soft text shadows so small type holds up on any frame. */
+.pdp-hero-shade {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.32) 45%, rgba(0, 0, 0, 0) 75%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.25) 100%);
+}
+
+.pdp-hero .crumbs,
+.pdp-hero .crumbs a,
+.pdp-tagline,
+.pdp-hero-specs {
+  color: #fff;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.65);
+}
+
+.pdp-hero .crumbs {
+  font-weight: 500;
+}
+
+.pdp-hero-specs li {
+  border-left-color: rgba(255, 255, 255, 0.7);
+}
+
+.pdp-hero-specs span {
+  font-weight: 500;
+}
+
+@media (max-width: 1100px) {
+  .pdp-hero-shade {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.5) 55%, rgba(0, 0, 0, 0.35) 100%);
+  }
+}
+
