@@ -14,20 +14,6 @@ import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 
 type Params = { slug: string };
 
-const pillars = [
-  {
-    word: "Light",
-    line: "Strips set flush beneath the shelves warm every object they touch.",
-  },
-  {
-    word: "Shadow",
-    line: "Four slanted facets turn the day's light into changing depth.",
-  },
-  {
-    word: "Depth",
-    line: "A 44 mm front, more than twice the usual, gives the kitchen presence.",
-  },
-];
 
 export const dynamicParams = false;
 
@@ -47,7 +33,7 @@ export async function generateMetadata({
     title: `Poggenpohl ${product.name} Kitchen | Atlanta & Georgia`,
     description: `${product.name}: ${product.tagline} Explore the Poggenpohl ${product.name} kitchen and book a design consultation or showroom visit with Atelier Living Group in Atlanta.`,
     path: `/poggenpohl/${product.slug}`,
-    image: product.video.poster,
+    image: product.heroImage.src,
     imageWidth: 1920,
     imageHeight: 1080,
     imageAlt: product.heroAlt,
@@ -75,7 +61,7 @@ export default async function ProductPage({
       name: `Poggenpohl ${product.name}`,
       description: product.intro,
       brand: { "@type": "Brand", name: "Poggenpohl" },
-      image: [product.video.poster, product.panorama.image.src].map(abs),
+      image: [product.heroImage.src, product.panorama.image.src].map(abs),
       url: abs(path),
       seller: { "@id": abs("/#business") },
     },
@@ -86,17 +72,29 @@ export default async function ProductPage({
       <JsonLd data={ld} />
 
       <header className="pdp-hero" id="top">
-        <video
-          className="pdp-hero-video"
-          src={product.video.src}
-          poster={product.video.poster}
-          aria-label={product.heroAlt}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
+        {product.video ? (
+          <video
+            className="pdp-hero-video"
+            src={product.video.src}
+            poster={product.video.poster}
+            aria-label={product.heroAlt}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+        ) : (
+          <Image
+            className="pdp-hero-video"
+            src={product.heroImage.src}
+            alt={product.heroAlt}
+            fill
+            sizes="100vw"
+            style={{ objectPosition: product.heroImage.position }}
+            priority
+          />
+        )}
         <div className="pdp-hero-shade" />
         <div className="pdp-hero-copy">
           <nav className="crumbs on-dark" aria-label="Breadcrumb">
@@ -119,6 +117,7 @@ export default async function ProductPage({
             </Button>
           </div>
         </div>
+        {product.specs.length ? (
         <ul className="pdp-hero-specs" aria-label="Key figures">
           {product.specs.map((spec) => (
             <li key={spec.label}>
@@ -127,11 +126,12 @@ export default async function ProductPage({
             </li>
           ))}
         </ul>
+        ) : null}
       </header>
 
-      <section className="pdp-pillars" aria-label="The TAGLIO idea">
+      <section className="pdp-pillars" aria-label={`The ${product.name} idea`}>
         <ul>
-          {pillars.map((pillar, i) => (
+          {product.pillars.map((pillar, i) => (
             <li key={pillar.word}>
               <span className="pdp-pillar-no">{String(i + 1).padStart(2, "0")}</span>
               <h2>{pillar.word}</h2>
@@ -146,7 +146,7 @@ export default async function ProductPage({
           <Reveal className="pdp-intro-head">
             <span className="pdp-facet" aria-hidden="true" />
             <p className="eyebrow dark">The concept</p>
-            <h2>One idea, expressed in the depth of the front.</h2>
+            <h2>{product.introTitle}</h2>
           </Reveal>
           <Reveal delay={120}>
             <p className="pdp-lede">{product.intro}</p>
@@ -186,6 +186,7 @@ export default async function ProductPage({
           alt={product.panorama.image.alt}
           fill
           sizes="100vw"
+          style={{ objectPosition: product.panorama.image.position }}
         />
         <div className="pdp-panorama-shade" />
         <Reveal className="pdp-panorama-copy">
@@ -213,11 +214,7 @@ export default async function ProductPage({
             </div>
           </Reveal>
           <Reveal className="pdp-gallery-note">
-            <p>
-              Light strips set flush beneath the shelves showcase objects and
-              create a warm, inviting atmosphere, and the interplay of light and
-              shadow gives every surface a noticeable depth and movement.
-            </p>
+            <p>{product.galleryNote}</p>
           </Reveal>
         </div>
       </section>

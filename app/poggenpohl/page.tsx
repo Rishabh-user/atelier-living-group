@@ -76,6 +76,44 @@ const poggenpohlLd = [
   },
 ];
 
+const collections = [
+  {
+    name: "TAGLIO",
+    href: "/poggenpohl/taglio",
+    image: "/products/taglio/taglio-09.jpg",
+    alt: "Poggenpohl TAGLIO kitchen with faceted fronts",
+    copy: "Sculpted 44 mm fronts with four slanted facets, drawn in light and shadow. See the full collection and book a design consultation.",
+  },
+  {
+    name: "ALVOLO",
+    href: "/poggenpohl/alvolo",
+    image: "/products/alvolo/alvolo-11.jpg",
+    alt: "Poggenpohl ALVOLO kitchen with handle-lit dark fronts",
+    copy: "Wing-inspired fronts with light hidden in the handle strip, and a stainless worktop and sink in one piece. See the collection and book a consultation.",
+  },
+  {
+    name: "Solitaire",
+    href: "/poggenpohl/solitaire",
+    image: "/products/solitaire/solitaire-03.jpg",
+    alt: "Poggenpohl Solitaire ONE A Wine cabinet behind glass",
+    copy: "Showcase cabinets, the ONE A Wine and the Stage series: confident characters for your home. See the collection and book a consultation.",
+  },
+  {
+    name: "+MODO",
+    href: "/poggenpohl/modo",
+    image: "/products/modo/modo-07.jpg",
+    alt: "Poggenpohl +MODO island with a stone worktop in front of green onyx",
+    copy: "A culinary workbench and a stage for kitchen living, in stone, veneer and pull-out shelving. See the collection and book a consultation.",
+  },
+  {
+    name: "+SEGMENTO",
+    href: "/poggenpohl/segmento",
+    image: "/products/segmento/segmento-07.jpg",
+    alt: "Poggenpohl +SEGMENTO island in pale stone with a curved seating recess",
+    copy: "Calm objectivity and meaningful details: thin worktops, handleless fronts and fine lines. See the collection and book a consultation.",
+  },
+];
+
 export default function PoggenpohlPage() {
   return (
     <>
@@ -148,30 +186,33 @@ export default function PoggenpohlPage() {
         </div>
       </section>
 
-      <section className="collection-link" aria-label="TAGLIO collection">
-        <div className="collection-link-media">
-          <Image
-            src="/products/taglio/taglio-09.jpg"
-            alt="Poggenpohl TAGLIO kitchen with faceted fronts"
-            fill
-            sizes="(max-width: 860px) 100vw, 50vw"
-          />
-        </div>
-        <Reveal className="collection-link-body">
-          <p className="eyebrow">New collection</p>
-          <h2>TAGLIO</h2>
-          <p>
-            Sculpted 44 mm fronts with four slanted facets, drawn in light and
-            shadow. See the full collection and book a design consultation.
-          </p>
-          <Button asChild variant="light" size="wide">
-            <Link scroll={false} href="/poggenpohl/taglio">
-              Explore TAGLIO
-              <ArrowRight />
-            </Link>
-          </Button>
-        </Reveal>
-      </section>
+      {collections.map((item, i) => (
+        <section
+          className={`collection-link${i % 2 ? " flip" : ""}`}
+          aria-label={`${item.name} collection`}
+          key={item.name}
+        >
+          <div className="collection-link-media">
+            <Image
+              src={item.image}
+              alt={item.alt}
+              fill
+              sizes="(max-width: 860px) 100vw, 50vw"
+            />
+          </div>
+          <Reveal className="collection-link-body">
+            <p className="eyebrow">Collection</p>
+            <h2>{item.name}</h2>
+            <p>{item.copy}</p>
+            <Button asChild variant="light" size="wide">
+              <Link scroll={false} href={item.href}>
+                Explore {item.name}
+                <ArrowRight />
+              </Link>
+            </Button>
+          </Reveal>
+        </section>
+      ))}
 
       <section className="area-section section-pad" aria-label="Dealer role">
         <div className="shell area-grid">

@@ -3233,3 +3233,25 @@ h3 {
   }
 }
 
+
+/* Alternate the image side when collection bands stack. */
+.collection-link.flip .collection-link-media {
+  order: 2;
+}
+
+.collection-link.flip .collection-link-body {
+  padding: var(--s6) 0 var(--s6) var(--edge);
+}
+
+@media (max-width: 860px) {
+  .collection-link.flip .collection-link-media {
+    order: 0;
+  }
+
+  .collection-link.flip .collection-link-body {
+    padding: 0 var(--edge) var(--s6);
+  }
+}
+
+
+
