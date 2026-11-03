@@ -81,38 +81,71 @@ const collections = [
     name: "TAGLIO",
     href: "/poggenpohl/taglio",
     image: "/products/taglio/taglio-09.jpg",
-    alt: "Poggenpohl TAGLIO kitchen with faceted fronts",
-    copy: "Sculpted 44 mm fronts with four slanted facets, drawn in light and shadow. See the full collection and book a design consultation.",
+    copy: "Sculpted 44 mm fronts with four slanted facets, drawn in light and shadow. The artistic fronts are placed selectively, so the whole kitchen stays calm.",
   },
   {
     name: "ALVOLO",
     href: "/poggenpohl/alvolo",
     image: "/products/alvolo/alvolo-11.jpg",
-    alt: "Poggenpohl ALVOLO kitchen with handle-lit dark fronts",
-    copy: "Wing-inspired fronts with light hidden in the handle strip, and a stainless worktop and sink in one piece. See the collection and book a consultation.",
+    copy: "Inspired by inclined wing surfaces, with light hidden in the handle strip and a stainless worktop and sink in one piece.",
   },
   {
     name: "Solitaire",
     href: "/poggenpohl/solitaire",
     image: "/products/solitaire/solitaire-03.jpg",
-    alt: "Poggenpohl Solitaire ONE A Wine cabinet behind glass",
-    copy: "Showcase cabinets, the ONE A Wine and the Stage series: confident characters for your home. See the collection and book a consultation.",
-  },
-  {
-    name: "+MODO",
-    href: "/poggenpohl/modo",
-    image: "/products/modo/modo-07.jpg",
-    alt: "Poggenpohl +MODO island with a stone worktop in front of green onyx",
-    copy: "A culinary workbench and a stage for kitchen living, in stone, veneer and pull-out shelving. See the collection and book a consultation.",
-  },
-  {
-    name: "+SEGMENTO",
-    href: "/poggenpohl/segmento",
-    image: "/products/segmento/segmento-07.jpg",
-    alt: "Poggenpohl +SEGMENTO island in pale stone with a curved seating recess",
-    copy: "Calm objectivity and meaningful details: thin worktops, handleless fronts and fine lines. See the collection and book a consultation.",
+    copy: "Showcase cabinets, the ONE A Wine and the Stage series: confident characters for your home, with space for beloved objects.",
   },
 ];
+
+type PanelItem = { name: string; href?: string; image: string; copy: string };
+
+/**
+ * Alternating image/text panels, shared by the collections and the design
+ * concepts so both read the same way. A concept without an inner page yet
+ * simply has no button.
+ */
+function PanelList({ items }: { items: PanelItem[] }) {
+  return (
+    <div className="concept-list">
+      {items.map((item, i) => (
+        <Reveal as="article" className="concept-panel" key={item.name}>
+          <div className="concept-media">
+            <Image
+              className="concept-logo"
+              src="/brand/poggenpohl-logo-black.svg"
+              alt="Poggenpohl"
+              width={75}
+              height={48}
+              unoptimized
+            />
+            <Image
+              src={item.image}
+              alt={`Poggenpohl ${item.name} kitchen`}
+              width={1200}
+              height={900}
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+          </div>
+          <div className="concept-body">
+            <span className="concept-index" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3>{item.name}</h3>
+            <p>{item.copy}</p>
+            {item.href ? (
+              <Button asChild variant="default" size="wide" className="mt-8">
+                <Link scroll={false} href={item.href}>
+                  Explore {item.name}
+                  <ArrowRight />
+                </Link>
+              </Button>
+            ) : null}
+          </div>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
 
 export default function PoggenpohlPage() {
   return (
@@ -128,7 +161,7 @@ export default function PoggenpohlPage() {
         actions={
           <>
             <Button asChild variant="default" size="wide">
-              <a href="#concepts">The three concepts</a>
+              <a href="#collections">Explore the collections</a>
             </Button>
             <Button asChild variant="outline" size="wide">
               <a href={phoneHref}>Call {phone}</a>
@@ -137,9 +170,12 @@ export default function PoggenpohlPage() {
         }
       />
 
-      <section className="pullquote" aria-label="Poggenpohl statement">
-        <div className="shell">
-          <Reveal>
+      <section className="statement" aria-label="Poggenpohl statement">
+        <div className="statement-grid">
+          <Reveal className="statement-quote">
+            <span className="statement-mark" aria-hidden="true">
+              &ldquo;
+            </span>
             <blockquote>
               <p>
                 Precision is not a finish you add at the end. It is decided in
@@ -148,6 +184,31 @@ export default function PoggenpohlPage() {
               <cite>On German kitchen production</cite>
             </blockquote>
           </Reveal>
+          <figure className="statement-media">
+            <Image
+              src="/thesis/herford.jpg"
+              alt="The Poggenpohl headquarters in Herford, Germany, at dusk"
+              width={1000}
+              height={1000}
+              sizes="(max-width: 960px) 100vw, 45vw"
+            />
+            <figcaption>
+              <strong>Herford, Germany</strong>
+              <span>Poggenpohl has built kitchens here since 1892</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section className="section-pad" id="collections">
+        <div className="shell">
+          <Reveal>
+            <div className="section-heading">
+              <p className="eyebrow dark">Collections</p>
+              <h2>Three collections, one standard of making.</h2>
+            </div>
+          </Reveal>
+          <PanelList items={collections} />
         </div>
       </section>
 
@@ -160,59 +221,9 @@ export default function PoggenpohlPage() {
               <h2>Three architectures, one standard of making.</h2>
             </div>
           </Reveal>
-
-          <div className="concept-list">
-            {concepts.map((concept, i) => (
-              <Reveal as="article" className="concept-panel" key={concept.name}>
-                <div className="concept-media">
-                  <Image
-                    src={concept.image}
-                    alt={`Poggenpohl ${concept.name} kitchen concept`}
-                    width={1200}
-                    height={900}
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </div>
-                <div className="concept-body">
-                  <span className="concept-index" aria-hidden="true">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h3>{concept.name}</h3>
-                  <p>{concept.copy}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <PanelList items={concepts} />
         </div>
       </section>
-
-      {collections.map((item, i) => (
-        <section
-          className={`collection-link${i % 2 ? " flip" : ""}`}
-          aria-label={`${item.name} collection`}
-          key={item.name}
-        >
-          <div className="collection-link-media">
-            <Image
-              src={item.image}
-              alt={item.alt}
-              fill
-              sizes="(max-width: 860px) 100vw, 50vw"
-            />
-          </div>
-          <Reveal className="collection-link-body">
-            <p className="eyebrow">Collection</p>
-            <h2>{item.name}</h2>
-            <p>{item.copy}</p>
-            <Button asChild variant="light" size="wide">
-              <Link scroll={false} href={item.href}>
-                Explore {item.name}
-                <ArrowRight />
-              </Link>
-            </Button>
-          </Reveal>
-        </section>
-      ))}
 
       <section className="area-section section-pad" aria-label="Dealer role">
         <div className="shell area-grid">

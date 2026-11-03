@@ -16,6 +16,8 @@ const routes: { path: string; priority: number }[] = [
   { path: "/poggenpohl/solitaire", priority: 0.8 },
   { path: "/poggenpohl/modo", priority: 0.8 },
   { path: "/poggenpohl/segmento", priority: 0.8 },
+  { path: "/poggenpohl/venovo", priority: 0.8 },
+  { path: "/gallery", priority: 0.7 },
   { path: "/showroom", priority: 0.9 },
   { path: "/process", priority: 0.8 },
   { path: "/contact", priority: 0.8 },

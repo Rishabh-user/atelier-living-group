@@ -1,5 +1,6 @@
+import Image from "next/image";
 import type { Metadata } from "next";
-import { ArrowUpRight, Clock, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowUpRight, Check, Clock, MapPin, Phone } from "lucide-react";
 
 import InquiryForm from "@/components/InquiryForm";
 import JsonLd from "@/components/JsonLd";
@@ -65,84 +66,95 @@ export default function ContactPage() {
 
       {/* ------------------------------------------------ Form + details */}
       <section className="section-pad" id="enquiry">
-        <div className="shell contact-grid">
+        <div className="shell contact-grid contact-v2-grid">
           <Reveal className="contact-form-col">
+            <p className="eyebrow dark">Private consultation</p>
             <h2>Request a private consultation</h2>
             <p className="contact-lede">
               The more you can tell us about the space, the timeline and the
               architecture, the more useful our first reply will be.
             </p>
-            <InquiryForm
-              variant="consultation"
-              className="mt-8"
-              ariaLabel="Contact page consultation request"
-            />
-          </Reveal>
-
-          <Reveal className="contact-details" delay={120}>
-            <ul className="contact-list">
+            <ul className="contact-promises">
               <li>
-                <MapPin aria-hidden="true" />
-                <div>
-                  <strong>Showroom</strong>
-                  <address>
-                    {address.building} Building
-                    <br />
-                    {address.street}
-                    <br />
-                    {address.city}, {address.region} {address.postalCode}
-                  </address>
-                </div>
+                <Check aria-hidden="true" />
+                We reply within one business day
               </li>
               <li>
-                <Phone aria-hidden="true" />
-                <div>
-                  <strong>Telephone</strong>
-                  <a href={phoneHref}>{phone}</a>
-                </div>
+                <Check aria-hidden="true" />
+                No obligation in the first conversation
               </li>
               <li>
-                <Mail aria-hidden="true" />
-                <div>
-                  <strong>Enquiries</strong>
-                  Use the form and we will route it to the right person.
-                </div>
-              </li>
-              <li>
-                <Clock aria-hidden="true" />
-                <div>
-                  <strong>Hours</strong>
-                  <table className="hours-table">
-                    <tbody>
-                      {hours.map((row) => (
-                        <tr key={row.day}>
-                          <th scope="row">{row.day}</th>
-                          <td>{row.time}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <Check aria-hidden="true" />
+                Handled privately, by the person who will run the project
               </li>
             </ul>
+            <div className="contact-form-card">
+              <InquiryForm
+                variant="consultation"
+                ariaLabel="Contact page consultation request"
+              />
+            </div>
+          </Reveal>
 
-            <Button asChild variant="outline" size="wide" className="mt-6">
-              <a
-                href={address.mapsUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                Directions
-                <ArrowUpRight />
+          <Reveal className="contact-card" delay={120}>
+            <figure className="contact-card-media">
+              <Image
+                src="/showroom/system-in-the-room.jpg"
+                alt="A Poggenpohl showroom installation of black cabinet volumes arranged in a white room"
+                width={1000}
+                height={1000}
+                sizes="(max-width: 960px) 100vw, 40vw"
+              />
+            </figure>
+            <div className="contact-card-body">
+              <p className="eyebrow">Prefer to talk?</p>
+              <a className="contact-card-phone" href={phoneHref}>
+                <Phone aria-hidden="true" />
+                {phone}
               </a>
-            </Button>
 
-            <div className="contact-areas">
-              <strong>Areas served</strong>
-              <div className="area-chips">
-                {serviceAreas.map((area) => (
-                  <span key={area}>{area}</span>
-                ))}
+              <div className="contact-card-row">
+                <MapPin aria-hidden="true" />
+                <address>
+                  <strong>{address.building} Building</strong>
+                  {address.street}
+                  <br />
+                  {address.city}, {address.region} {address.postalCode}
+                </address>
+              </div>
+
+              <div className="contact-card-row">
+                <Clock aria-hidden="true" />
+                <table className="hours-table">
+                  <tbody>
+                    {hours.map((row) => (
+                      <tr key={row.day}>
+                        <th scope="row">{row.day}</th>
+                        <td>{row.time}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <Button asChild variant="light" size="wide" className="w-full">
+                <a
+                  href={address.mapsUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Get directions
+                  <ArrowUpRight />
+                </a>
+              </Button>
+
+              <div className="contact-card-areas">
+                <strong>Areas served</strong>
+                <ul>
+                  {serviceAreas.map((area) => (
+                    <li key={area}>{area}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           </Reveal>

@@ -5,8 +5,8 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Underline field rather than a boxed input: keeps the editorial,
- * architectural feel of the site instead of shadcn's default bordered box.
+ * Softly filled, square-cornered field: a quiet tint and a hairline border
+ * that warms to the accent on focus, in keeping with the site's editorial look.
  */
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   // Pick the border colour explicitly. `border-input` is a border-color
@@ -20,12 +20,12 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       data-slot="input"
       className={cn(
-        "w-full min-h-11 bg-transparent px-0 py-2 text-[15px] text-foreground rounded-none",
-        "border-0 border-b transition-colors",
-        invalid ? "border-destructive" : "border-input",
+        "w-full min-h-12 bg-foreground/[0.04] px-4 py-3 text-[15px] text-foreground rounded-none",
+        "border transition-colors",
+        invalid ? "border-destructive" : "border-input/50",
         "placeholder:text-muted-foreground/70",
-        "focus:outline-none focus:border-b-foreground",
-        "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring",
+        "hover:border-foreground/40",
+        "focus:outline-none focus:border-ring focus:bg-foreground/[0.02] focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--ring)_28%,transparent)]",
         "disabled:opacity-55 disabled:cursor-not-allowed",
         className,
       )}

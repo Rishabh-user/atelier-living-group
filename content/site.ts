@@ -45,7 +45,7 @@ export const images = {
   modo: "/images/modo.jpg",
   segmento:
     "/images/segmento.jpg",
-  venovo: "/images/venovo.jpg",
+  venovo: "/products/venovo/venovo-01.jpg",
   material:
     "/images/material.jpg",
   experience:
@@ -86,16 +86,16 @@ export const heroVideo = {
  */
 export const showroomBanner = [
   {
-    src: images.showroomA,
-    alt: "Poggenpohl +SEGMENTO kitchen installed in a Munich residence",
+    src: "/showroom/banner-1.jpg",
+    alt: "Poggenpohl island and stools in a loft kitchen with tall steel-framed windows",
   },
   {
-    src: images.showroomB,
-    alt: "Poggenpohl +SEGMENTO cabinetry and island in a Munich residence",
+    src: "/showroom/banner-2.jpg",
+    alt: "A long Poggenpohl island running beside floor-to-ceiling glass",
   },
   {
-    src: images.showroomC,
-    alt: "Poggenpohl cabinetry and island seen from the living space",
+    src: "/showroom/banner-3.jpg",
+    alt: "A Poggenpohl kitchen in a concrete house, looking out over a valley",
   },
 ];
 
@@ -116,32 +116,32 @@ export const poggenpohlBanner = [
 
 export const servicesBanner = [
   {
-    src: images.servicesA,
-    alt: "Poggenpohl surface and material samples",
+    src: "/services/banner-1.jpg",
+    alt: "Poggenpohl kitchen with a long dark island seen through floor-to-ceiling glass",
   },
   {
-    src: images.servicesB,
-    alt: "Door samples and finish chips laid out for comparison",
+    src: "/services/banner-2.jpg",
+    alt: "Poggenpohl island in cream beneath black pendants, against a green stone wall",
   },
   {
-    src: images.servicesC,
-    alt: "Poggenpohl interior accessories and drawer organisation",
+    src: "/services/banner-3.jpg",
+    alt: "Poggenpohl kitchen in grey cabinetry running along a concrete-ceilinged corridor",
   },
 ];
 
 /** Three-image band across the top of the contact page. */
 export const contactBanner = [
   {
-    src: images.alvolo,
-    alt: "Poggenpohl ALVOLO kitchen with sculpted cabinetry fronts",
+    src: "/contact/banner-1.jpg",
+    alt: "A woman chopping vegetables at a bright Poggenpohl kitchen island",
   },
   {
-    src: images.worktops,
-    alt: "Poggenpohl worktop surfaces in stone and composite",
+    src: "/products/segmento/segmento-07.jpg",
+    alt: "Poggenpohl +SEGMENTO island in pale stone with a curved seating recess",
   },
   {
-    src: images.oneA,
-    alt: "Poggenpohl x ONE-A kitchen architecture",
+    src: "/products/taglio/taglio-09.jpg",
+    alt: "Poggenpohl TAGLIO kitchen with faceted fronts",
   },
 ];
 
@@ -198,6 +198,7 @@ export const navLinks = [
   { href: "/services", label: "Services" },
   { href: "/showroom", label: "Showroom" },
   { href: "/poggenpohl", label: "Poggenpohl" },
+  { href: "/gallery", label: "Gallery" },
   { href: "/process", label: "Process" },
   { href: "/contact", label: "Contact" },
 ];
@@ -230,7 +231,8 @@ export const journey = [
     label: "Inspire",
     number: "01",
     title: "Find the architectural idea.",
-    image: images.material,
+    image: "/journey/inspire.jpg",
+    imageAlt: "A long Poggenpohl kitchen in a concrete and glass house, lit by low evening sun",
     copy: "We begin with atmosphere, rituals, light, proportion and the way a space should change daily life.",
     detail: [
       "An unhurried first conversation about the residence and how you live in it.",
@@ -243,7 +245,8 @@ export const journey = [
     label: "Experience",
     number: "02",
     title: "Enter the material world.",
-    image: images.experience,
+    image: "/journey/experience.jpg",
+    imageAlt: "A Poggenpohl drawer fitted with timber inserts for knives, graters and spoons",
     copy: "Private showroom consultations reveal fully custom cabinetry, finishes, storage systems, surfaces and the detail that separates good from exceptional.",
     detail: [
       "A private session across seven Poggenpohl displays in the Terminus showroom.",
@@ -256,7 +259,8 @@ export const journey = [
     label: "Plan",
     number: "03",
     title: "Resolve the living environment.",
-    image: images.plan,
+    image: "/journey/plan.jpg",
+    imageAlt: "A design studio where people work at a shared desk beside a lit lamp",
     copy: "Design intent becomes drawings, selections, specifications, construction coordination and a clear path toward execution.",
     detail: [
       "Measured drawings and elevations resolved to German production tolerances.",
@@ -283,9 +287,8 @@ export const seoServices = [
     title: "Custom Cabinetry",
     heading: "Fully custom cabinetry for high-end Atlanta homes.",
     copy: "Atelier Living Group plans cabinetry around architecture, storage, appliance integration and daily use. Our work supports custom kitchen cabinets, wall systems, concealed storage, pantry planning, islands, tall units and refined material palettes for premium residences.",
-    image: images.segmento,
-    imageAlt:
-      "Poggenpohl +SEGMENTO cabinetry with concealed storage and a stone worktop",
+    image: "/expertise/custom-cabinetry.jpg",
+    imageAlt: "Poggenpohl island clad in pale veined stone, with a built-in sink",
     points: [
       "Wall systems, tall units and concealed storage planned as architecture",
       "Island proportions resolved against circulation and seating",
@@ -298,9 +301,8 @@ export const seoServices = [
     title: "German Cabinets",
     heading: "German-made Poggenpohl cabinets and kitchen systems.",
     copy: "As the exclusive Poggenpohl dealer for Atlanta and Georgia, Atelier Living Group gives homeowners, designers and builders access to German kitchen production, precision engineering, refined finishes and architectural planning standards.",
-    image: images.modo,
-    imageAlt:
-      "German-made Poggenpohl +MODO kitchen in a dark wood finish",
+    image: "/expertise/german-cabinets.jpg",
+    imageAlt: "Poggenpohl drawer fitted with timber inserts for cutlery and utensils",
     points: [
       "Exclusive Poggenpohl representation for Atlanta and Georgia",
       "+MODO, +SEGMENTO and +VENOVO design concepts",
@@ -313,9 +315,8 @@ export const seoServices = [
     title: "Premium Remodeling",
     heading: "High-end kitchen remodeling with design-build coordination.",
     copy: "For luxury kitchen remodeling, we coordinate design intent, cabinetry planning, appliance integration, materials, drawings and construction communication so the finished space feels resolved rather than assembled.",
-    image: images.plan,
-    imageAlt:
-      "Measured kitchen elevations being drawn out during specification",
+    image: "/expertise/premium-remodeling.jpg",
+    imageAlt: "Line drawing of a planned Poggenpohl kitchen elevation",
     points: [
       "Design intent held consistently from concept to installation",
       "Drawings and specifications your trades can build from",
@@ -328,9 +329,8 @@ export const seoServices = [
     title: "Luxury Kitchens",
     heading: "Luxury kitchens for architecture-led living.",
     copy: "Our kitchens are designed as living environments: proportion, light, material, cabinetry, storage and hospitality working together for private residences across Atlanta and Georgia.",
-    image: images.taglio,
-    imageAlt:
-      "Poggenpohl TAGLIO kitchen with sculptural oak fronts",
+    image: "/expertise/luxury-kitchens.jpg",
+    imageAlt: "Poggenpohl island in red veined marble with a lit terracotta tray",
     points: [
       "Kitchens composed as rooms, not as runs of cabinetry",
       "Proportion and sightlines resolved before finishes are chosen",
@@ -343,9 +343,8 @@ export const seoServices = [
     title: "High-End Appliances",
     heading: "Premium appliance coordination for luxury kitchens.",
     copy: "Atelier Living Group plans high-end appliance packages around cooking habits, refrigeration needs, ventilation, performance, panel integration and the architectural language of the kitchen. Brand names are available in private consultation.",
-    image: images.experience,
-    imageAlt:
-      "Two people cooking together in a kitchen planned around how they use it",
+    image: "/expertise/high-end-appliances.jpg",
+    imageAlt: "Poggenpohl orange tall units with integrated ovens and coffee machine",
     points: [
       "Packages planned around how you actually cook and entertain",
       "Refrigeration, cooking and ventilation sized to the room",
@@ -391,22 +390,97 @@ export const materials = [
   { name: "Sage Stone", note: "Ceramic", color: "#485553" },
 ];
 
-export const concepts = [
+/** `href` is set once a concept has its own inner page. */
+export const concepts: {
+  name: string;
+  href?: string;
+  image: string;
+  copy: string;
+}[] = [
   {
     name: "+MODO",
+    href: "/poggenpohl/modo",
     image: images.modo,
     copy: "A modular architecture of surfaces and volumes. +MODO composes the kitchen from clean horizontal planes, handleless fronts and precise reveals.",
   },
   {
     name: "+SEGMENTO",
+    href: "/poggenpohl/segmento",
     image: images.segmento,
     copy: "Framed segments give the kitchen a graphic order. Vertical and horizontal lines divide the elevation into considered proportions.",
   },
   {
     name: "+VENOVO",
+    href: "/poggenpohl/venovo",
     image: images.venovo,
     copy: "Free-standing and wall-hung elements read as furniture. +VENOVO opens the kitchen toward the living space with lightness and flexibility.",
   },
+];
+
+/** Every Poggenpohl collection with an inner page, for the homepage grid. */
+export const collectionCards = [
+  {
+    name: "TAGLIO",
+    href: "/poggenpohl/taglio",
+    image: "/products/taglio/taglio-09.jpg",
+    line: "Sculpted 44 mm fronts, drawn in light and shadow.",
+  },
+  {
+    name: "ALVOLO",
+    href: "/poggenpohl/alvolo",
+    image: "/products/alvolo/alvolo-11.jpg",
+    line: "Wing-inspired fronts with light in the handle strip.",
+  },
+  {
+    name: "Solitaire",
+    href: "/poggenpohl/solitaire",
+    image: "/products/solitaire/solitaire-03.jpg",
+    line: "Showcase cabinets, ONE A Wine and the Stage series.",
+  },
+  {
+    name: "+MODO",
+    href: "/poggenpohl/modo",
+    image: "/products/modo/modo-07.jpg",
+    line: "A culinary workbench and a stage for kitchen living.",
+  },
+  {
+    name: "+SEGMENTO",
+    href: "/poggenpohl/segmento",
+    image: "/products/segmento/segmento-07.jpg",
+    line: "Calm objectivity and meaningful details.",
+  },
+  {
+    name: "+VENOVO",
+    href: "/poggenpohl/venovo",
+    image: "/products/venovo/venovo-02.jpg",
+    line: "Kitchen furniture, free to move.",
+  },
+];
+
+/** Brand-thesis band on the homepage: how the studio works, in four lines. */
+export const thesisPrinciples = [
+  {
+    title: "Fewer, better choices",
+    copy: "An intentionally private experience, edited down to what suits the residence.",
+  },
+  {
+    title: "Exact planning",
+    copy: "Drawings and specifications resolved before anything is built.",
+  },
+  {
+    title: "Tactile materials",
+    copy: "Door samples, finish chips and surfaces compared in real light.",
+  },
+  {
+    title: "German production quality",
+    copy: "Poggenpohl precision, with appliance integration planned in from the start.",
+  },
+];
+
+export const thesisFacts = [
+  { value: "1892", label: "Poggenpohl founded in Herford" },
+  { value: "7", label: "Kitchen displays in Buckhead" },
+  { value: "1", label: "Exclusive dealer for Georgia" },
 ];
 
 export const serviceAreas = [
@@ -422,6 +496,19 @@ export const serviceAreas = [
   "Lake Oconee",
   "North Georgia",
   "Greater Georgia",
+];
+
+/** Same twelve places as `serviceAreas`, grouped by how far from the showroom. */
+export const areaGroups = [
+  { label: "In town", areas: ["Atlanta", "Buckhead", "Midtown", "Ansley Park"] },
+  {
+    label: "North metro",
+    areas: ["Sandy Springs", "Brookhaven", "Alpharetta", "Milton", "Marietta"],
+  },
+  {
+    label: "Across Georgia",
+    areas: ["Lake Oconee", "North Georgia", "Greater Georgia"],
+  },
 ];
 
 export const faqs = [

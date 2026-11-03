@@ -41,7 +41,9 @@ export type Product = {
     image: ProductImage;
   }[];
   /** Full-bleed landscape moment between feature rows. */
-  panorama: { eyebrow: string; title: string; copy: string; image: ProductImage };
+  /** Optional: skipped where there is no wide photo to carry it. */
+  panorama?: { eyebrow: string; title: string; copy: string; image: ProductImage };
+  /** Optional pair of photos under the wide band. */
   gallery: ProductImage[];
   closingImage: ProductImage;
 };
@@ -79,6 +81,14 @@ const sg = (
   alt: string,
   size: readonly [number, number] = P,
 ): ProductImage => img("segmento", n, alt, size[0], size[1]);
+
+const ve = (
+  n: string,
+  alt: string,
+  w: number,
+  h: number,
+  position?: string,
+): ProductImage => ({ ...img("venovo", n, alt, w, h), position });
 
 const so = (
   n: string,
@@ -456,6 +466,55 @@ export const products: Product[] = [
       "Poggenpohl +SEGMENTO walnut-fronted island with a pale stone worktop",
       L,
     ),
+  },
+  {
+    slug: "venovo",
+    name: "+VENOVO",
+    tagline: "Kitchen furniture, free to move.",
+    intro:
+      "Free-standing and wall-hung elements read as furniture. +VENOVO opens the kitchen toward the living space with lightness and flexibility: an island, lowboard, highboard and tall units that stand on their own and can be combined as you like.",
+    heroImage: ve(
+      "02",
+      "Poggenpohl +VENOVO island with a warm orange tall unit and built-in appliances",
+      1920,
+      1358,
+      "50% 60%",
+    ),
+    heroAlt:
+      "Poggenpohl +VENOVO island with a warm orange tall unit and built-in appliances",
+    introTitle: "A kitchen that behaves like furniture.",
+    specs: [],
+    pillars: [
+      {
+        word: "Free",
+        line: "Island, lowboard, highboard and tall units stand on their own frames.",
+      },
+      {
+        word: "Flexible",
+        line: "Combine the elements, or move them to another room.",
+      },
+      {
+        word: "Finished",
+        line: "Lacquer, wood veneer and stone worktops in many colours.",
+      },
+    ],
+    features: [
+      {
+        eyebrow: "Frame",
+        title: "Raised, so it reads as furniture.",
+        copy: "Cabinets sit on a slim side frame instead of a plinth, which lets the whole piece appear to float and lets the floor run beneath it, the way it would under a sideboard.",
+        image: ve("03", "Poggenpohl +VENOVO free-standing island on a chrome frame", 1000, 1000),
+      },
+      {
+        eyebrow: "Function",
+        title: "Every level has a job.",
+        copy: "Storage and preparation are spread across different heights. Multi-level units can carry a cooktop, extractor, oven, refrigerator, sink and workspace, with drawers and cabinets below.",
+        image: ve("01", "Poggenpohl +VENOVO tall unit and island with built-in appliances", 1358, 1358),
+      },
+    ],
+    gallery: [],
+    galleryNote: "",
+    closingImage: ve("01", "Poggenpohl +VENOVO tall unit and island", 1358, 1358),
   },
 ];
 

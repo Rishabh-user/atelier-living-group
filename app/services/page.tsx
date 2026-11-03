@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
 import JsonLd from "@/components/JsonLd";
@@ -9,7 +9,6 @@ import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import {
-  images,
   phone,
   phoneHref,
   seoServices,
@@ -23,11 +22,11 @@ export const metadata: Metadata = pageMetadata({
   description:
     "Custom cabinetry, German-made Poggenpohl cabinets, premium kitchen remodeling, luxury kitchens and high-end appliance planning for Atlanta and Georgia residences.",
   path: "/services",
-  image: images.servicesB,
-  imageWidth: 1920,
-  imageHeight: 1080,
+  image: "/services/banner-1.jpg",
+  imageWidth: 1400,
+  imageHeight: 933,
   imageAlt:
-    "Poggenpohl door samples and finish chips laid out for comparison",
+    "Poggenpohl kitchen with a long dark island seen through floor-to-ceiling glass",
 });
 
 /**
@@ -144,6 +143,10 @@ export default function ServicesPage() {
                       </li>
                     ))}
                   </ul>
+                  <a className="service-row-cta" href="#consultation">
+                    Discuss {service.title.toLowerCase()}
+                    <ArrowRight aria-hidden="true" />
+                  </a>
                 </div>
               </Reveal>
             ))}
@@ -151,25 +154,34 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section
-        className="seo-band service-capabilities section-pad"
-        aria-label="Capabilities"
-      >
-        <div className="shell seo-band-grid">
-          <div>
+      <section className="capabilities-v2 section-pad" aria-label="Capabilities">
+        <div className="shell capabilities-v2-grid">
+          <div className="capabilities-v2-copy">
             <p className="eyebrow dark">Capabilities</p>
             <h2>What a project with Atelier Living Group includes.</h2>
+            <p>
+              We work with homeowners, architects, interior designers, builders
+              and developers across {serviceAreas.slice(0, 6).join(", ")} and
+              the wider Georgia market, from first concept through final
+              installation.
+            </p>
+            <div className="capabilities-v2-actions">
+              <Button asChild variant="default" size="wide">
+                <a href="#consultation">Start a project</a>
+              </Button>
+              <Button asChild variant="outline" size="wide">
+                <a href={phoneHref}>Call {phone}</a>
+              </Button>
+            </div>
           </div>
-          <div className="service-list grid-tiles">
+          <ul className="capabilities-v2-list">
             {services.map((service) => (
-              <span key={service}>{service}</span>
+              <li key={service}>
+                <Check aria-hidden="true" />
+                {service}
+              </li>
             ))}
-          </div>
-          <p className="seo-band-note">
-            We work with homeowners, architects, interior designers, builders and
-            developers across {serviceAreas.slice(0, 6).join(", ")} and the wider
-            Georgia market, from first concept through final installation.
-          </p>
+          </ul>
         </div>
       </section>
 
@@ -177,7 +189,6 @@ export default function ServicesPage() {
         eyebrow="Start a project"
         title="Tell us what you are planning."
         copy="Share the residence, the architecture and the timeline. We will suggest which of these disciplines your project actually needs."
-        image={images.venovoHome}
       />
     </>
   );

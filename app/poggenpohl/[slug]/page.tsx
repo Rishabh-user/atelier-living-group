@@ -48,6 +48,7 @@ export default async function ProductPage({
   const product = getProduct((await params).slug);
   if (!product) notFound();
 
+  const { panorama } = product;
   const path = `/poggenpohl/${product.slug}`;
   const ld = [
     breadcrumbLd([
@@ -61,7 +62,9 @@ export default async function ProductPage({
       name: `Poggenpohl ${product.name}`,
       description: product.intro,
       brand: { "@type": "Brand", name: "Poggenpohl" },
-      image: [product.heroImage.src, product.panorama.image.src].map(abs),
+      image: [product.heroImage.src, product.panorama?.image.src]
+        .filter((src): src is string => Boolean(src))
+        .map(abs),
       url: abs(path),
       seller: { "@id": abs("/#business") },
     },
@@ -104,6 +107,14 @@ export default async function ProductPage({
             <span aria-hidden="true">/</span>
             <span aria-current="page">{product.name}</span>
           </nav>
+          <Image
+            className="brand-logo on-dark pdp-hero-logo"
+            src="/brand/poggenpohl-logo-black.svg"
+            alt="Poggenpohl"
+            width={75}
+            height={48}
+            unoptimized
+          />
           <h1>{product.name}</h1>
           <p className="pdp-tagline">{product.tagline}</p>
           <div className="pdp-actions">
@@ -180,22 +191,25 @@ export default async function ProductPage({
         </div>
       </section>
 
-      <section className="pdp-panorama" aria-label={product.panorama.title}>
+      {panorama ? (
+      <section className="pdp-panorama" aria-label={panorama.title}>
         <Image
-          src={product.panorama.image.src}
-          alt={product.panorama.image.alt}
+          src={panorama.image.src}
+          alt={panorama.image.alt}
           fill
           sizes="100vw"
-          style={{ objectPosition: product.panorama.image.position }}
+          style={{ objectPosition: panorama.image.position }}
         />
         <div className="pdp-panorama-shade" />
         <Reveal className="pdp-panorama-copy">
-          <p className="eyebrow">{product.panorama.eyebrow}</p>
-          <h2>{product.panorama.title}</h2>
-          <p>{product.panorama.copy}</p>
+          <p className="eyebrow">{panorama.eyebrow}</p>
+          <h2>{panorama.title}</h2>
+          <p>{panorama.copy}</p>
         </Reveal>
       </section>
+      ) : null}
 
+      {product.gallery.length ? (
       <section className="section-pad pdp-gallery" aria-label="Gallery">
         <div className="shell">
           <Reveal>
@@ -218,6 +232,7 @@ export default async function ProductPage({
           </Reveal>
         </div>
       </section>
+      ) : null}
 
       <section className="area-section section-pad" aria-label="Visit the showroom">
         <div className="shell area-grid">

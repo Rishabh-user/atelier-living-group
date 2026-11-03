@@ -7,7 +7,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Radix select styled as an underline field. Radix renders a hidden native
+ * Radix select styled to match Input. Radix renders a hidden native
  * <select> when `name` is set, so plain FormData submission still works.
  */
 function Select(props: React.ComponentProps<typeof SelectPrimitive.Root>) {
@@ -32,13 +32,13 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        "flex w-full min-h-11 items-center justify-between gap-2 bg-transparent px-0 py-2 rounded-none",
+        "flex w-full min-h-12 items-center justify-between gap-2 bg-foreground/[0.04] px-4 py-3 rounded-none",
         "text-left text-[15px] text-foreground",
-        "border-0 border-b transition-colors cursor-pointer",
-        invalid ? "border-destructive" : "border-input",
-        "hover:border-b-foreground/60",
-        "focus:outline-none focus:border-b-foreground",
-        "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring",
+        "border transition-colors cursor-pointer",
+        invalid ? "border-destructive" : "border-input/50",
+        "hover:border-foreground/40",
+        "focus:outline-none focus:border-ring focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--ring)_28%,transparent)]",
+        "data-[state=open]:border-ring",
         "disabled:opacity-55 disabled:cursor-not-allowed",
         "[&>span]:truncate",
         className,
@@ -99,9 +99,9 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-pointer select-none items-center gap-2 py-2.5 pl-3 pr-8 text-[13px] rounded-none outline-none",
+        "relative flex w-full cursor-pointer select-none items-center gap-2 py-3 pl-4 pr-9 text-[14px] rounded-none outline-none",
         "focus:bg-secondary focus:text-secondary-foreground",
-        "data-[state=checked]:text-foreground",
+        "data-[state=checked]:bg-secondary/70 data-[state=checked]:text-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}

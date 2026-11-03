@@ -19,7 +19,7 @@ export default function NotFound() {
     <section className="section-pad">
       <div className="shell">
         <p className="eyebrow dark">Error 404</p>
-        <h1>This page has moved or never existed.</h1>
+        <h1 className="not-found-title">This page has moved or never existed.</h1>
         <p className="mt-5 max-w-[60ch] text-[17px] leading-relaxed">
           Nothing is here at that address. The pages below cover the studio, the
           Buckhead showroom and how a project runs — or call us and we will

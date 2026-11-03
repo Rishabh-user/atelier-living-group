@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowRight, Check, Clock, Loader2, Mail, Phone, User } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,8 @@ type FieldDef = {
   options?: string[];
   /** Span both columns in the two-up consultation layout. */
   full?: boolean;
+  /** Leading icon inside a text field. */
+  icon?: LucideIcon;
 };
 
 const PROJECT_OPTIONS_FULL = [
@@ -51,7 +54,6 @@ const PROJECT_OPTIONS_FULL = [
 
 const PROJECT_OPTIONS_SHORT = [
   "Luxury kitchen design",
-  "Custom German cabinetry",
   "High-end appliance planning",
   "Premium remodeling",
   "Showroom appointment",
@@ -90,6 +92,7 @@ const VARIANTS: Record<
         placeholder: "Your name",
         autoComplete: "name",
         required: true,
+        icon: User,
       },
       {
         name: "phone",
@@ -98,6 +101,7 @@ const VARIANTS: Record<
         placeholder: "Best number",
         autoComplete: "tel",
         required: true,
+        icon: Phone,
       },
       {
         name: "projectType",
@@ -118,6 +122,7 @@ const VARIANTS: Record<
         placeholder: "Your name",
         autoComplete: "name",
         required: true,
+        icon: User,
       },
       {
         name: "email",
@@ -126,6 +131,7 @@ const VARIANTS: Record<
         placeholder: "you@example.com",
         autoComplete: "email",
         required: true,
+        icon: Mail,
       },
       {
         name: "projectType",
@@ -145,7 +151,6 @@ const VARIANTS: Record<
     ],
   },
   footer: {
-    eyebrow: "Book a showroom visit",
     submit: "Request appointment",
     fields: [
       {
@@ -155,6 +160,7 @@ const VARIANTS: Record<
         placeholder: "Your name",
         autoComplete: "name",
         required: true,
+        icon: User,
       },
       {
         name: "contact",
@@ -163,6 +169,7 @@ const VARIANTS: Record<
         placeholder: "How should we reach you?",
         autoComplete: "email",
         required: true,
+        icon: Mail,
       },
       {
         name: "projectType",
@@ -318,12 +325,12 @@ export default function InquiryForm({
       noValidate
     >
       {config.eyebrow ? (
-        <p className="mb-1 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="mb-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
           {config.eyebrow}
         </p>
       ) : null}
       {config.title ? (
-        <Title className="mb-6 font-serif text-[27px] leading-tight text-foreground">
+        <Title className="mb-7 border-b border-border pb-5 font-serif text-[28px] leading-tight text-foreground">
           {config.title}
         </Title>
       ) : null}
@@ -375,17 +382,26 @@ export default function InquiryForm({
                   aria-describedby={describedBy}
                 />
               ) : (
-                <Input
-                  id={id}
-                  name={field.name}
-                  type={field.type}
-                  placeholder={field.placeholder}
-                  autoComplete={field.autoComplete}
-                  required={field.required}
-                  disabled={busy}
-                  aria-invalid={error ? true : undefined}
-                  aria-describedby={describedBy}
-                />
+                <div className="relative">
+                  {field.icon ? (
+                    <field.icon
+                      aria-hidden="true"
+                      className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                    />
+                  ) : null}
+                  <Input
+                    id={id}
+                    name={field.name}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    autoComplete={field.autoComplete}
+                    required={field.required}
+                    disabled={busy}
+                    aria-invalid={error ? true : undefined}
+                    aria-describedby={describedBy}
+                    className={field.icon ? "pl-11" : undefined}
+                  />
+                </div>
               )}
             </Field>
           );
@@ -404,7 +420,7 @@ export default function InquiryForm({
         />
       </div>
 
-      <Button type="submit" disabled={busy} className="mt-7 w-full">
+      <Button type="submit" disabled={busy} size="wide" className="mt-8 w-full min-h-[56px]">
         {busy ? (
           <>
             <Loader2 className="animate-spin" />
@@ -419,7 +435,8 @@ export default function InquiryForm({
       </Button>
 
       {config.note && !formMessage ? (
-        <p className="mt-3 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="flex items-center justify-center gap-2 pt-4 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+          <Clock aria-hidden="true" className="size-3.5" />
           {config.note}
         </p>
       ) : null}
