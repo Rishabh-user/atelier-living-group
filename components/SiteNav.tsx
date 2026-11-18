@@ -32,7 +32,9 @@ export default function SiteNav() {
   const pathname = usePathname();
   // The homepage and the product pages (/poggenpohl/[slug]) have a dark
   // full-bleed hero, marked id="top", behind the bar.
-  const hasHero = pathname === "/" || /^\/poggenpohl\/[^/]+\/?$/.test(pathname);
+  const hasHero =
+    pathname === "/" ||
+    /^\/poggenpohl\/[^/]+\/?$/.test(pathname);
   const alwaysSolid = !hasHero;
 
   const [scrolled, setScrolled] = useState(false);
@@ -57,8 +59,6 @@ export default function SiteNav() {
       return () => window.removeEventListener("resize", publishNavHeight);
     }
 
-    const hero = document.getElementById("top");
-
     const navHeight = () =>
       document.querySelector(".site-nav")?.getBoundingClientRect().height ?? 110;
 
@@ -72,8 +72,9 @@ export default function SiteNav() {
       );
     };
 
-    const threshold = () =>
-      hero ? Math.max(0, hero.offsetHeight - navHeight()) : 24;
+    // Solid as soon as the page moves. Waiting for the hero to end left the
+    // transparent bar floating over the hero's own text mid-scroll.
+    const threshold = () => 24;
 
     let cutoff = threshold();
 
@@ -124,16 +125,25 @@ export default function SiteNav() {
       aria-label="Primary navigation"
     >
       <Link className="brand" href="/" scroll={false}>
+        {/* Two artworks, one per bar state: white wordmark over the dark hero,
+            dark wordmark on the light scrolled bar. CSS swaps them. */}
         <Image
-          src="/alg-mark.png"
-          // The adjacent span already names the company; an alt here would
-          // make a screen reader announce it twice.
-          alt=""
-          width={140}
-          height={121}
+          className="brand-on-dark"
+          src="/brand/atelier-logo-on-dark.png"
+          alt="Atelier Living Group"
+          width={1600}
+          height={595}
           priority
         />
-        <span>Atelier Living Group</span>
+        <Image
+          className="brand-on-light"
+          src="/brand/atelier-logo-on-light.png"
+          alt=""
+          aria-hidden="true"
+          width={1600}
+          height={597}
+          priority
+        />
       </Link>
 
       <div className="nav-links">
@@ -147,9 +157,9 @@ export default function SiteNav() {
             {link.label}
           </Link>
         ))}
-        <a className="nav-phone" href={phoneHref}>
-          {phone}
-        </a>
+        <Link className="nav-cta" href="/contact#enquiry" scroll={false}>
+          Book a Private Consultation
+        </Link>
       </div>
 
       <button
@@ -175,6 +185,13 @@ export default function SiteNav() {
             {link.label}
           </Link>
         ))}
+        <Link
+          href="/contact#enquiry"
+          scroll={false}
+          onClick={() => setMenuOpen(false)}
+        >
+          Book a Private Consultation
+        </Link>
         <a href={phoneHref} onClick={() => setMenuOpen(false)}>
           {phone}
         </a>

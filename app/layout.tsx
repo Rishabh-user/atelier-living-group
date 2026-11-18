@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   // The phone number is already a tel: link; leaving auto-detection on lets
   // iOS Safari restyle it and other numerals on the page.
   formatDetection: { telephone: false, address: false, email: false },
-  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+  icons: { icon: "/favicon.png", shortcut: "/favicon.png", apple: "/favicon.png" },
   openGraph: {
     title: "Luxury German Kitchens, Custom Cabinetry & Appliances Atlanta",
     description:

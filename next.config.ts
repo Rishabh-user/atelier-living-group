@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [{ source: "/gallery", destination: "/our-work", permanent: true }];
+  },
+
   // Next 16 writes AGENTS.md / CLAUDE.md into the repo on dev start. Opted
   // out: those files were not asked for and CLAUDE.md would silently steer
   // future AI sessions.

@@ -187,10 +187,16 @@ export default function InquiryForm({
   variant,
   className,
   ariaLabel,
+  defaultProjectType,
+  lockedProjectType,
 }: {
   variant: Variant;
   className?: string;
   ariaLabel: string;
+  /** Preselects a project type when it is one of the select's options. */
+  defaultProjectType?: string;
+  /** When set, the project-type field is not shown and this value is submitted. */
+  lockedProjectType?: string;
 }) {
   const config = VARIANTS[variant];
   // Deterministic ids rather than useId(). Each variant appears at most once
@@ -259,7 +265,7 @@ export default function InquiryForm({
       setStatus("idle");
     } catch {
       setFormMessage(
-        "We could not reach the server. Please check your connection or call 678-637-3262.",
+        "We could not reach the server. Please check your connection or call 404-912-9996.",
       );
       setStatus("idle");
     }
@@ -295,8 +301,8 @@ export default function InquiryForm({
           <p className="text-[15px] leading-relaxed opacity-80">
             A member of Atelier Living Group will be in touch shortly to arrange
             your private consultation. For anything urgent, call{" "}
-            <a className="border-b border-current" href="tel:+16786373262">
-              678-637-3262
+            <a className="border-b border-current" href="tel:+14049129996">
+              404-912-9996
             </a>
             .
           </p>
@@ -341,7 +347,12 @@ export default function InquiryForm({
           config.twoUp && "sm:grid-cols-2 sm:gap-x-8",
         )}
       >
-        {config.fields.map((field) => {
+        {lockedProjectType ? (
+          <input type="hidden" name="projectType" value={lockedProjectType} />
+        ) : null}
+        {config.fields
+          .filter((field) => !(lockedProjectType && field.name === "projectType"))
+          .map((field) => {
           const id = `${uid}-${field.name}`;
           const error = errors[field.name];
           const describedBy = error ? `${id}-error` : undefined;
@@ -356,7 +367,14 @@ export default function InquiryForm({
               className={cn(field.full && "sm:col-span-2")}
             >
               {field.type === "select" ? (
-                <Select name={field.name} defaultValue={field.options?.[0]}>
+                <Select
+                  name={field.name}
+                  defaultValue={
+                    defaultProjectType && field.options?.includes(defaultProjectType)
+                      ? defaultProjectType
+                      : field.options?.[0]
+                  }
+                >
                   <SelectTrigger
                     id={id}
                     aria-invalid={error ? true : undefined}

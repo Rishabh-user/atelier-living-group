@@ -41,7 +41,21 @@ const contactLd = [
   },
 ];
 
-export default function ContactPage() {
+const interestToProjectType: Record<string, string> = {
+  new: "Luxury kitchen design-build",
+  renovation: "Premium kitchen remodeling",
+  collab: "Architect / designer collaboration",
+  visit: "Showroom appointment",
+};
+
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ interest?: string }>;
+}) {
+  const { interest } = await searchParams;
+  const defaultProjectType = interest ? interestToProjectType[interest] : undefined;
+
   return (
     <>
       <JsonLd data={contactLd} />
@@ -92,6 +106,7 @@ export default function ContactPage() {
               <InquiryForm
                 variant="consultation"
                 ariaLabel="Contact page consultation request"
+                defaultProjectType={defaultProjectType}
               />
             </div>
           </Reveal>

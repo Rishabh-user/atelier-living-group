@@ -20,8 +20,8 @@ export const siteUrl =
   (typeof process !== "undefined"
     ? process.env?.NEXT_PUBLIC_SITE_URL
     : undefined) ?? FALLBACK_SITE_URL;
-export const phone = "678-637-3262";
-export const phoneHref = "tel:+16786373262";
+export const phone = "404-912-9996";
+export const phoneHref = "tel:+14049129996";
 
 export const address = {
   building: "Terminus",
@@ -35,8 +35,8 @@ export const address = {
 };
 
 export const hours = [
-  { day: "Monday – Friday", time: "9:00 – 17:00" },
-  { day: "Saturday", time: "By appointment" },
+  { day: "Monday – Friday", time: "9:00 AM – 5:00 PM" },
+  { day: "Saturday", time: "10:00 AM – 4:00 PM" },
   { day: "Sunday", time: "Closed" },
 ];
 
@@ -72,12 +72,6 @@ export const images = {
   poggenpohlA: "/images/poggenpohlA.jpg",
   poggenpohlB: "/images/poggenpohlB.jpg",
   poggenpohlC: "/images/poggenpohlC.jpg",
-};
-
-/** Opening film for the homepage hero (TAGLIO loop, see ASSETS.md). */
-export const heroVideo = {
-  src: "/video/taglio-loop.mp4",
-  poster: "/products/taglio/taglio-poster.jpg",
 };
 
 /**
@@ -195,11 +189,11 @@ export const contactSteps = [
 ];
 
 export const navLinks = [
-  { href: "/services", label: "Services" },
-  { href: "/showroom", label: "Showroom" },
+  { href: "/services", label: "Kitchens" },
   { href: "/poggenpohl", label: "Poggenpohl" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/process", label: "Process" },
+  { href: "/our-work", label: "Our Work" },
+  { href: "/showroom", label: "Showroom" },
+  { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -570,12 +564,11 @@ export const structuredData = [
     description:
       "Exclusive Poggenpohl dealer for Atlanta and Georgia specializing in luxury kitchen design-build, premium remodeling, high-end appliances, custom cabinetry and German-made kitchen systems.",
     slogan: "Spaces That Inspire",
-    logo: `${siteUrl}/alg-mark.png`,
-    telephone: "+16786373262",
+    logo: `${siteUrl}/brand/atelier-logo-on-light.png`,
+    telephone: "+14049129996",
     priceRange: "$$$$",
     hasMap: address.mapsUrl,
-    // Mirrors the hours published on /showroom. Saturday is by appointment
-    // rather than a fixed window, so it is not given opening times here.
+    // Mirrors the hours published on /showroom.
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
@@ -588,6 +581,12 @@ export const structuredData = [
         ],
         opens: "09:00",
         closes: "17:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: "Saturday",
+        opens: "10:00",
+        closes: "16:00",
       },
     ],
     address: {
@@ -626,7 +625,10 @@ export const structuredData = [
       "Luxury kitchen design-build, custom cabinetry, high-end appliances and Poggenpohl German cabinets in Atlanta and Georgia.",
     publisher: { "@id": `${siteUrl}/#business` },
   },
-  {
+];
+
+/** Lives on /faq, where the questions are shown. */
+export const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "@id": `${siteUrl}/#faq`,
@@ -635,5 +637,4 @@ export const structuredData = [
       name: faq.question,
       acceptedAnswer: { "@type": "Answer", text: faq.answer },
     })),
-  },
-];
+  };

@@ -20,13 +20,29 @@ import { useIsomorphicLayoutEffect } from "@/lib/use-isomorphic-layout-effect";
  * The reset runs on every pathname change, and on mount, in a layout effect -
  * before paint, so the page is never shown at the old offset.
  *
- * URLs with a hash are left alone, so /#consultation and #enquiry still work.
+ * URLs with a hash scroll to their target instead. Links here use
+ * scroll={false}, which stops the router doing that itself, so it is done
+ * below once the new page has rendered (it can take a frame or two).
  */
 export default function StartAtTop() {
   const pathname = usePathname();
 
   useIsomorphicLayoutEffect(() => {
-    if (window.location.hash) return;
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    if (hash) {
+      let tries = 0;
+      let frame = 0;
+      const seek = () => {
+        const target = document.getElementById(hash);
+        if (target) {
+          target.scrollIntoView({ block: "start", behavior: "instant" });
+        } else if (tries++ < 30) {
+          frame = requestAnimationFrame(seek);
+        }
+      };
+      seek();
+      return () => cancelAnimationFrame(frame);
+    }
     // "instant" so this is never animated, whatever scroll-behavior is set to.
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [pathname]);

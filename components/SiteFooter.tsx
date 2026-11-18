@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp, MapPin, Phone } from "lucide-react";
 
-import InquiryForm from "@/components/InquiryForm";
 import {
   address,
   collectionCards,
@@ -16,38 +15,19 @@ export default function SiteFooter() {
   return (
     <footer className="footer surface-dark footer-v2">
       <div className="shell">
-        <div className="footer-v2-cta">
-          <div className="footer-v2-cta-copy">
-            <p className="eyebrow dark">Visit the showroom</p>
-            <h2>Book a showroom visit.</h2>
-            <p>
-              Private sessions by appointment at the Terminus building in
-              Buckhead, with the displays and finish library set up for your
-              project.
-            </p>
-            <a className="footer-v2-call" href={phoneHref}>
-              <Phone aria-hidden="true" />
-              {phone}
-            </a>
-          </div>
-
-          <InquiryForm
-            variant="footer"
-            className="footer-form"
-            ariaLabel="Footer consultation request"
-          />
-        </div>
-
         <div className="footer-v2-grid">
           <div className="footer-v2-brand">
             <Image
-              src="/alg-mark-white.png"
+              src="/brand/atelier-logo-on-dark.png"
               alt="Atelier Living Group"
-              width={139}
-              height={121}
+              width={1600}
+              height={595}
             />
-            <p>Atelier Living Group</p>
             <span>Spaces That Inspire</span>
+            <a className="footer-v2-call footer-v2-call-sm" href={phoneHref}>
+              <Phone aria-hidden="true" />
+              {phone}
+            </a>
             <div className="footer-v2-dealer">
               <Image
                 className="brand-logo on-dark"
@@ -124,6 +104,11 @@ export default function SiteFooter() {
             &copy; {new Date().getFullYear()} Atelier Living Group. Exclusive
             Poggenpohl dealer for Atlanta and Georgia.
           </p>
+          <span className="footer-v2-links">
+            <Link href="/faq" scroll={false}>FAQ</Link>
+            <Link href="/service-areas" scroll={false}>Service areas</Link>
+            <Link href="/process" scroll={false}>Our process</Link>
+          </span>
           <a href="#main">
             Back to top
             <ArrowUp aria-hidden="true" />
