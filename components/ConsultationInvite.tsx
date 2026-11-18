@@ -24,14 +24,14 @@ const options = [
 export default function ConsultationInvite() {
   const [choice, setChoice] = useState<number | null>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const firstRender = useRef(true);
+  const shownChoice = useRef<number | null>(null);
 
   // Move focus into the new step so keyboard and screen-reader users follow it.
+  // Only when the step actually changed: focusing on page load would scroll the
+  // whole page down to this section.
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
+    if (shownChoice.current === choice) return;
+    shownChoice.current = choice;
     panel.current?.focus();
   }, [choice]);
 
@@ -75,7 +75,7 @@ export default function ConsultationInvite() {
               </button>
             </div>
             <InquiryForm
-              variant="consultation"
+              source="home"
               ariaLabel="Homepage consultation request"
               lockedProjectType={selected.projectType}
             />

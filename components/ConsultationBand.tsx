@@ -35,7 +35,7 @@ export default function ConsultationBand({
         <h2>{title}</h2>
         <p>{copy}</p>
         <InquiryForm
-          variant="consultation"
+          source="page"
           className="mt-9"
           ariaLabel="Private consultation request"
         />

@@ -122,7 +122,7 @@ with Poggenpohl before launch.
 
 The old `public/images/venovo.jpg` (a 7 KB low-resolution image) is no longer used.
 
-## Gallery page (/gallery)
+## Our Work page (/our-work)
 
 Collection photos reuse files listed above. Project photos were taken from
 Poggenpohl's reference pages
@@ -163,8 +163,6 @@ unmodified at their published 1000 x 1000 px.
 | Local file | Source URL |
 |---|---|
 | `public/thesis/herford.jpg` (Poggenpohl headquarters, Herford) | https://www.poggenpohl.com/media/70/d9/dd/1690614120/home_poggenpohl_headquarter-optimized_1920x1920.jpg |
-| `public/thesis/showcase.jpg` | https://www.poggenpohl.com/media/d5/39/82/1690613945/home-perfektion-optimzed_1920x1920_1920x1920.jpg |
-| `public/thesis/drawer.jpg` | https://www.poggenpohl.com/media/dd/d1/af/1690614411/home-perfektion1-optimzed_1920x1920.jpg |
 
 ## Homepage "Searchable Expertise" showcase
 
@@ -187,17 +185,6 @@ published 1000 x 1000 px. /services keeps its own imagery.
 
 It is a Poggenpohl display concept, not a photograph of the Terminus showroom.
 Replace it with a photo of the Terminus showroom when one is available.
-
-## Homepage "Beyond the kitchen showroom" cards
-
-Images from the poggenpohl.com homepage (retrieved 2026-11-03), used unmodified.
-
-| Local file | Source URL |
-|---|---|
-| `public/editorial/architects.jpg` (1000 x 1000) | https://www.poggenpohl.com/media/67/29/de/1690614319/home-planung-design-optimized_1920x1920.jpg |
-| `public/editorial/remodeling.jpg` (1000 x 1000) | https://www.poggenpohl.com/media/e8/f2/9e/1690613895/home_segmento-optimzed_1920x1920.jpg |
-| `public/editorial/culture.jpg` (1000 x 1000) | https://www.poggenpohl.com/media/d2/42/62/1690613877/home-plusmodo-optimized_1920x1920.jpg |
-| `public/editorial/appliances.jpg` (1281 x 574, people cooking) | https://www.poggenpohl.com/media/f0/f2/90/1685973397/1-erleben-Medium-1707_Pog_Como_M11_020.jpg |
 
 ## Consultation band (default image, homepage and inner pages)
 
@@ -252,3 +239,7 @@ the Atlanta showroom when available.
 The other two banner plates and the card photo reuse files listed above
 (`products/segmento/segmento-07.jpg`, `products/taglio/taglio-09.jpg`,
 `showroom/system-in-the-room.jpg`).
+
+## Image processing
+
+All photographs under `public/` were re-encoded (mozjpeg, quality 78, max 1920 px wide) to cut page weight. No cropping or colour changes were applied.

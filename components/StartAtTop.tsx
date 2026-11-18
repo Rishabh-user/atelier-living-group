@@ -44,7 +44,17 @@ export default function StartAtTop() {
       return () => cancelAnimationFrame(frame);
     }
     // "instant" so this is never animated, whatever scroll-behavior is set to.
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    const top = () =>
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    top();
+    // The new page can still be settling (the old one is unmounting, images are
+    // being laid out), which can leave a few pixels of the old offset. Repeat
+    // for two frames so the page reliably starts at 0.
+    let frame = requestAnimationFrame(() => {
+      top();
+      frame = requestAnimationFrame(top);
+    });
+    return () => cancelAnimationFrame(frame);
   }, [pathname]);
 
   return null;

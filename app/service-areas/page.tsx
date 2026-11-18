@@ -7,9 +7,9 @@ import { breadcrumbLd, pageMetadata } from "@/lib/seo";
 import { areaGroups } from "@/content/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Luxury Kitchens Atlanta & Georgia | Service Areas",
+  title: "Luxury Kitchens Atlanta | Service Areas",
   description:
-    "Atelier Living Group serves Atlanta, Buckhead, Midtown, Ansley Park, Sandy Springs, Brookhaven, Alpharetta, Milton, Marietta, Lake Oconee and selected residences across Georgia.",
+    "Luxury German kitchens across Atlanta, Buckhead, Midtown, Sandy Springs, Alpharetta, Marietta, Lake Oconee and selected residences across Georgia.",
   path: "/service-areas",
 });
 

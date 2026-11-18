@@ -69,7 +69,7 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
 
       {/* 02 · German heritage */}
       <section className="heritage" id="heritage">
-        <Reveal className="heritage-media">
+        <Reveal className="heritage-media img-fx">
           <Image
             src="/thesis/herford.jpg"
             alt="The Poggenpohl headquarters in Herford, Germany, at dusk"

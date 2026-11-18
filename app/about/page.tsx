@@ -11,9 +11,9 @@ import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About Atelier Living Group | Poggenpohl Atlanta",
+  title: "About Us | Poggenpohl Atlanta",
   description:
-    "Atelier Living Group is the Atlanta design team behind the Poggenpohl showroom in Buckhead: personalized design, service and expertise for luxury German kitchens.",
+    "The Atlanta design team behind the Poggenpohl showroom in Buckhead: personalized design, service and expertise for luxury German kitchens.",
   path: "/about",
 });
 
@@ -75,7 +75,9 @@ export default function AboutPage() {
           <ol className="about-steps-list">
             {journey.map((step) => (
               <Reveal as="li" key={step.label}>
-                <Image src={step.image} alt={step.imageAlt} width={1000} height={1000} sizes="(max-width: 860px) 100vw, 33vw" />
+                <div className="img-fx about-step-media">
+                  <Image src={step.image} alt={step.imageAlt} width={1000} height={1000} sizes="(max-width: 860px) 100vw, 33vw" />
+                </div>
                 <p className="step-label">{step.label}</p>
                 <h3>{step.title}</h3>
                 <p>{step.copy}</p>

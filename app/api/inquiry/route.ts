@@ -6,7 +6,7 @@ import { sql } from "drizzle-orm";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const SOURCES = ["hero", "consultation", "footer"] as const;
+const SOURCES = ["home", "contact", "page"] as const;
 type Source = (typeof SOURCES)[number];
 
 const MAX = {
@@ -109,8 +109,7 @@ export async function POST(request: Request): Promise<Response> {
   }
   // Every form collects at least one way to reply.
   if (email === "" && phone === "") {
-    const field = source === "consultation" ? "email" : "phone";
-    errors[field] = "Add an email address or a phone number.";
+    errors.email = "Add an email address or a phone number.";
   }
 
   if (Object.keys(errors).length > 0) {

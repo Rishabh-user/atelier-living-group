@@ -7,9 +7,9 @@ import { breadcrumbLd, pageMetadata } from "@/lib/seo";
 import { faqLd, faqs } from "@/content/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Luxury Kitchen & Poggenpohl FAQ | Atlanta",
+  title: "Poggenpohl FAQ | Atlanta",
   description:
-    "Answers about Poggenpohl in Atlanta and Georgia: the showroom, custom German cabinetry, appliance planning, remodeling and the areas we serve.",
+    "Answers about Poggenpohl in Atlanta: the showroom, custom German cabinetry, appliance planning, remodeling and the areas we serve.",
   path: "/faq",
 });
 

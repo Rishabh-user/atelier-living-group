@@ -29,7 +29,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "Poggenpohl Showroom in Buckhead, Atlanta",
   description:
-    "Visit the Poggenpohl showroom in the Terminus building, Buckhead: seven kitchen displays, a full door sample and finish library, and private consultations by appointment.",
+    "Visit the Poggenpohl showroom at Terminus, Buckhead: seven kitchen displays, a full finish library and private consultations.",
   path: "/showroom",
   image: "/showroom/banner-1.jpg",
   imageWidth: 1400,

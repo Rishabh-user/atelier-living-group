@@ -23,13 +23,25 @@ TURSO_DATABASE_URL=file:./local.db
 
 ## Shape
 
-- `app/` — routes. Six pages (`/`, `/services`, `/showroom`, `/poggenpohl`,
-  `/process`, `/contact`) plus `app/api/inquiry/route.ts`.
-- `content/site.ts` — all copy and data in one file. **Imported by a client
-  component, so it must not read Node-only globals at the top level.**
-- `components/` — shared UI; `components/ui/` is shadcn/ui.
+- `app/` — routes: `/` (homepage), `/about`, `/services` (shown as "Kitchens"),
+  `/poggenpohl` and `/poggenpohl/[slug]` (one page per collection), `/our-work`,
+  `/showroom`, `/contact`, `/faq`, `/service-areas`, `/process`, plus
+  `app/api/inquiry/route.ts`. `/gallery` redirects to `/our-work`.
+- `content/site.ts` — site-wide copy and data: phone, address, **opening hours**,
+  navigation, services, FAQs and the business structured data. **It is imported
+  by a client component, so it must not read Node-only globals at the top
+  level.**
+- `content/products.ts` — the six collection pages. Add or edit a collection
+  here; the page template renders whatever is listed.
+- `content/projects.ts` — completed Atelier projects for `/our-work`. Empty until
+  real, credited project photography is available. Do not list manufacturer
+  images here.
+- `content/gallery.ts` — Poggenpohl photography shown on `/our-work`.
+- `components/` — shared UI; `components/ui/` is shadcn/ui. The homepage hero is
+  `HeroSlider` and the sections are in `HomePage`.
 - `db/` — Drizzle schema and the libSQL client.
 - `drizzle/` — generated SQL migrations.
+- `ASSETS.md` — source URL of every Poggenpohl photograph, for brand approval.
 
 ## Database
 
@@ -61,8 +73,8 @@ rather than failing silently.
    - `NEXT_PUBLIC_SITE_URL` (your production domain)
 3. Deploy.
 
-After the domain is final, update `public/robots.txt` and `public/sitemap.xml`
-— they carry the origin literally and are not templated.
+`robots.txt` and `sitemap.xml` are generated from `NEXT_PUBLIC_SITE_URL`, so
+setting it is all that is needed when the domain changes.
 
 ## Scripts
 
@@ -73,6 +85,7 @@ After the domain is final, update `public/robots.txt` and `public/sitemap.xml`
 | `npm start` | Serve the production build |
 | `npm run lint` | ESLint |
 | `npm run db:generate` | Regenerate SQL from `db/schema.ts` |
+| `npm run images:compress` | Re-encode `public/images` (JPEG/WebP) in place |
 
 ## History
 

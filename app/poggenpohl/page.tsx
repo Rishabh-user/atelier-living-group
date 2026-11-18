@@ -20,7 +20,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "Poggenpohl Dealer for Atlanta & Georgia",
   description:
-    "Atelier Living Group is the exclusive Poggenpohl dealer for Atlanta and Georgia. Explore the +MODO, +SEGMENTO and +VENOVO German kitchen concepts.",
+    "The exclusive Poggenpohl dealer for Atlanta and Georgia. Explore TAGLIO, ALVOLO, Solitaire, +MODO, +SEGMENTO and +VENOVO.",
   path: "/poggenpohl",
   // Banner plate 1 is portrait; social cards want landscape.
   image: images.poggenpohlB,

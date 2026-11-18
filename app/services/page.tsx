@@ -20,7 +20,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "Luxury Kitchen Services in Atlanta",
   description:
-    "Custom cabinetry, German-made Poggenpohl cabinets, premium kitchen remodeling, luxury kitchens and high-end appliance planning for Atlanta and Georgia residences.",
+    "Custom cabinetry, German-made Poggenpohl cabinets, kitchen remodeling, luxury kitchens and appliance planning for Atlanta and Georgia.",
   path: "/services",
   image: "/services/banner-1.jpg",
   imageWidth: 1400,

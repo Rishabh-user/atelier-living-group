@@ -21,7 +21,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "Contact & Private Consultation",
   description:
-    "Contact Atelier Living Group in Buckhead, Atlanta. Book a private consultation for luxury kitchen design-build, custom German cabinetry and high-end appliance planning.",
+    "Book a private consultation at the Poggenpohl showroom in Buckhead, Atlanta: luxury kitchen design-build, German cabinetry and appliance planning.",
   path: "/contact",
   // Both banner plates are square or portrait, so the 1200x630 card wins.
 });
@@ -104,7 +104,7 @@ export default async function ContactPage({
             </ul>
             <div className="contact-form-card">
               <InquiryForm
-                variant="consultation"
+                source="contact"
                 ariaLabel="Contact page consultation request"
                 defaultProjectType={defaultProjectType}
               />

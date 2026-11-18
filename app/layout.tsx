@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | Atelier Living Group",
   },
   description:
-    "Exclusive Poggenpohl dealer for Atlanta and Georgia. Luxury kitchen design-build, premium remodeling, high-end appliances and custom German cabinetry at the Terminus showroom.",
+    "Exclusive Poggenpohl dealer for Atlanta and Georgia. Luxury kitchens, premium remodeling, high-end appliances and custom German cabinetry in Buckhead.",
   applicationName: "Atelier Living Group",
   authors: [{ name: "Atelier Living Group", url: siteUrl }],
   creator: "Atelier Living Group",

@@ -121,10 +121,22 @@ export default function SiteNav() {
   return (
     <nav
       className="site-nav"
-      data-scrolled={scrolled || menuOpen ? "true" : "false"}
+      data-scrolled={alwaysSolid || scrolled || menuOpen ? "true" : "false"}
       aria-label="Primary navigation"
     >
-      <Link className="brand" href="/" scroll={false}>
+      <Link
+        className="brand"
+        href="/"
+        scroll={false}
+        onClick={(event) => {
+          setMenuOpen(false);
+          // Already on the homepage: a same-URL link does nothing, so scroll up.
+          if (pathname === "/") {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        }}
+      >
         {/* Two artworks, one per bar state: white wordmark over the dark hero,
             dark wordmark on the light scrolled bar. CSS swaps them. */}
         <Image

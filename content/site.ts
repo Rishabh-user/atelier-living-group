@@ -43,32 +43,13 @@ export const hours = [
 export const images = {
   hero: "/images/hero.webp",
   modo: "/images/modo.jpg",
-  segmento:
-    "/images/segmento.jpg",
+  segmento: "/images/segmento.jpg",
   venovo: "/products/venovo/venovo-01.jpg",
-  material:
-    "/images/material.jpg",
-  experience:
-    "/images/experience.jpg",
-  plan: "/images/plan.jpg",
-  taglio: "/images/taglio.jpg",
-  alvolo: "/images/alvolo.jpg",
-  oneA:
-    "/images/oneA.jpg",
-  segmentoDetail:
-    "/images/segmentoDetail.webp",
-  venovoHome:
-    "/images/venovoHome.jpg",
-  worktops:
-    "/images/worktops.jpg",
-  fronts:
-    "/images/fronts.jpg",
+  material: "/images/material.jpg",
+  segmentoDetail: "/images/segmentoDetail.webp",
+  venovoHome: "/images/venovoHome.jpg",
+  fronts: "/images/fronts.jpg",
   showroomA: "/images/showroomA.jpg",
-  showroomB: "/images/showroomB.jpg",
-  showroomC: "/images/showroomC.jpg",
-  servicesA: "/images/servicesA.jpg",
-  servicesB: "/images/servicesB.jpg",
-  servicesC: "/images/servicesC.jpg",
   poggenpohlA: "/images/poggenpohlA.jpg",
   poggenpohlB: "/images/poggenpohlB.jpg",
   poggenpohlC: "/images/poggenpohlC.jpg",
@@ -195,29 +176,6 @@ export const navLinks = [
   { href: "/showroom", label: "Showroom" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
-];
-
-export const designWorlds = [
-  {
-    title: "Pure Architecture",
-    image: images.hero,
-    copy: "A quiet, exact language for homes where proportion, material and light do the work.",
-  },
-  {
-    title: "Urban Residence",
-    image: images.modo,
-    copy: "Composed living environments for clients who want sophistication without ceremony.",
-  },
-  {
-    title: "Material Atelier",
-    image: images.material,
-    copy: "Stone, wood, glass, metal and surface systems selected with architectural discipline.",
-  },
-  {
-    title: "European Kitchen",
-    image: images.segmento,
-    copy: "Poggenpohl planning intelligence translated into an Atlanta and Georgia design-build experience.",
-  },
 ];
 
 export const journey = [
@@ -366,14 +324,6 @@ export const showroomHighlights = [
   },
 ];
 
-/** Counter band on the homepage. `value` is numeric where it should animate. */
-export const stats = [
-  { value: 7, suffix: "", label: "Kitchen displays in Buckhead" },
-  { value: 3, suffix: "", label: "Poggenpohl design concepts" },
-  { value: 12, suffix: "+", label: "Georgia communities served" },
-  { value: 1, suffix: "", label: "Exclusive dealer for Georgia" },
-];
-
 /** Material swatch strip. Colours approximate real Poggenpohl finishes. */
 export const materials = [
   { name: "Nero Assoluto", note: "Granite", color: "#23252a" },
@@ -449,32 +399,6 @@ export const collectionCards = [
     image: "/products/venovo/venovo-02.jpg",
     line: "Kitchen furniture, free to move.",
   },
-];
-
-/** Brand-thesis band on the homepage: how the studio works, in four lines. */
-export const thesisPrinciples = [
-  {
-    title: "Fewer, better choices",
-    copy: "An intentionally private experience, edited down to what suits the residence.",
-  },
-  {
-    title: "Exact planning",
-    copy: "Drawings and specifications resolved before anything is built.",
-  },
-  {
-    title: "Tactile materials",
-    copy: "Door samples, finish chips and surfaces compared in real light.",
-  },
-  {
-    title: "German production quality",
-    copy: "Poggenpohl precision, with appliance integration planned in from the start.",
-  },
-];
-
-export const thesisFacts = [
-  { value: "1892", label: "Poggenpohl founded in Herford" },
-  { value: "7", label: "Kitchen displays in Buckhead" },
-  { value: "1", label: "Exclusive dealer for Georgia" },
 ];
 
 export const serviceAreas = [

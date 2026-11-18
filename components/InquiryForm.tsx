@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Check, Clock, Loader2, Mail, Phone, User } from "lucide-react";
+import { ArrowRight, Check, Loader2, Mail, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -17,13 +17,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type Variant = "hero" | "consultation" | "footer";
+/** Where the form sits; stored with the enquiry so leads can be traced. */
+type Source = "home" | "contact" | "page";
 
 type FieldName =
   | "name"
   | "email"
   | "phone"
-  | "contact"
   | "projectType"
   | "message";
 
@@ -52,66 +52,12 @@ const PROJECT_OPTIONS_FULL = [
   "Showroom appointment",
 ];
 
-const PROJECT_OPTIONS_SHORT = [
-  "Luxury kitchen design",
-  "High-end appliance planning",
-  "Premium remodeling",
-  "Showroom appointment",
-];
-
-const PROJECT_OPTIONS_FOOTER = [
-  "Showroom appointment",
-  "Luxury kitchen design-build",
-  "Custom cabinetry",
-  "High-end appliances",
-  "Premium remodeling",
-];
-
-const VARIANTS: Record<
-  Variant,
-  {
-    eyebrow?: string;
-    title?: string;
-    note?: string;
-    submit: string;
-    fields: FieldDef[];
-    /** Two-column field grid on wider screens. */
-    twoUp?: boolean;
-  }
-> = {
-  hero: {
-    eyebrow: "Private consultation",
-    title: "Start the conversation",
-    note: "We reply within one business day.",
-    submit: "Request consultation",
-    fields: [
-      {
-        name: "name",
-        label: "Name",
-        type: "text",
-        placeholder: "Your name",
-        autoComplete: "name",
-        required: true,
-        icon: User,
-      },
-      {
-        name: "phone",
-        label: "Phone",
-        type: "tel",
-        placeholder: "Best number",
-        autoComplete: "tel",
-        required: true,
-        icon: Phone,
-      },
-      {
-        name: "projectType",
-        label: "Project focus",
-        type: "select",
-        options: PROJECT_OPTIONS_SHORT,
-      },
-    ],
-  },
-  consultation: {
+const FORM: {
+  submit: string;
+  fields: FieldDef[];
+  /** Two-column field grid on wider screens. */
+  twoUp?: boolean;
+} = {
     submit: "Request consultation",
     twoUp: true,
     fields: [
@@ -149,48 +95,18 @@ const VARIANTS: Record<
         full: true,
       },
     ],
-  },
-  footer: {
-    submit: "Request appointment",
-    fields: [
-      {
-        name: "name",
-        label: "Name",
-        type: "text",
-        placeholder: "Your name",
-        autoComplete: "name",
-        required: true,
-        icon: User,
-      },
-      {
-        name: "contact",
-        label: "Email or phone",
-        type: "text",
-        placeholder: "How should we reach you?",
-        autoComplete: "email",
-        required: true,
-        icon: Mail,
-      },
-      {
-        name: "projectType",
-        label: "Project",
-        type: "select",
-        options: PROJECT_OPTIONS_FOOTER,
-      },
-    ],
-  },
-};
+  };
 
 type Errors = Partial<Record<string, string>>;
 
 export default function InquiryForm({
-  variant,
+  source,
   className,
   ariaLabel,
   defaultProjectType,
   lockedProjectType,
 }: {
-  variant: Variant;
+  source: Source;
   className?: string;
   ariaLabel: string;
   /** Preselects a project type when it is one of the select's options. */
@@ -198,11 +114,11 @@ export default function InquiryForm({
   /** When set, the project-type field is not shown and this value is submitted. */
   lockedProjectType?: string;
 }) {
-  const config = VARIANTS[variant];
+  const config = FORM;
   // Deterministic ids rather than useId(). Each variant appears at most once
   // per page, so these are unique, and stable ids keep the aria-describedby
   // wiring readable in the DOM.
-  const uid = `alg-${variant}`;
+  const uid = `alg-${source}`;
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [errors, setErrors] = useState<Errors>({});
@@ -215,15 +131,11 @@ export default function InquiryForm({
     const data = new FormData(event.currentTarget);
     const read = (key: string) => String(data.get(key) ?? "").trim();
 
-    // The footer takes one "email or phone" field; split it for the API.
-    const contact = read("contact");
-    const isEmailContact = contact.includes("@");
-
     const body = {
-      source: variant,
+      source,
       name: read("name"),
-      email: read("email") || (isEmailContact ? contact : ""),
-      phone: read("phone") || (!isEmailContact ? contact : ""),
+      email: read("email"),
+      phone: read("phone"),
       projectType: read("projectType"),
       message: read("message"),
       company: read("company"),
@@ -251,14 +163,7 @@ export default function InquiryForm({
         return;
       }
 
-      // Map the API's email/phone errors back onto the footer's single field.
-      const next: Errors = { ...(result.errors ?? {}) };
-      if (variant === "footer" && (next.email || next.phone)) {
-        next.contact = next.email ?? next.phone;
-        delete next.email;
-        delete next.phone;
-      }
-      setErrors(next);
+      setErrors(result.errors ?? {});
       setFormMessage(
         result.message ?? "Something went wrong. Please try again.",
       );
@@ -283,10 +188,7 @@ export default function InquiryForm({
     el?.focus();
   }, [errors, status, uid]);
 
-  // In the hero this title is the document's second heading, directly after
-  // the h1, so h3 there skipped a level. Elsewhere the form sits under a
-  // section h2 and h3 is correct.
-  const Title = variant === "hero" ? "h2" : "h3";
+  const Title = "h3";
 
   if (status === "sent") {
     return (
@@ -330,17 +232,6 @@ export default function InquiryForm({
       onSubmit={handleSubmit}
       noValidate
     >
-      {config.eyebrow ? (
-        <p className="mb-2 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-          {config.eyebrow}
-        </p>
-      ) : null}
-      {config.title ? (
-        <Title className="mb-7 border-b border-border pb-5 font-serif text-[28px] leading-tight text-foreground">
-          {config.title}
-        </Title>
-      ) : null}
-
       <div
         className={cn(
           "grid gap-5",
@@ -451,13 +342,6 @@ export default function InquiryForm({
           </>
         )}
       </Button>
-
-      {config.note && !formMessage ? (
-        <p className="flex items-center justify-center gap-2 pt-4 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-          <Clock aria-hidden="true" className="size-3.5" />
-          {config.note}
-        </p>
-      ) : null}
 
       <p
         className="mt-3 text-[13px] leading-relaxed text-destructive empty:mt-0"

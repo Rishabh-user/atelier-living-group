@@ -37,3 +37,7 @@ yarn-error.log*
 /.wrangler/
 /outputs/
 /work/
+
+# local database and TypeScript build cache
+/local.db
+*.tsbuildinfo

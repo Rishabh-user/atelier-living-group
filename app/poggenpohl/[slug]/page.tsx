@@ -30,8 +30,8 @@ export async function generateMetadata({
   if (!product) return {};
 
   return pageMetadata({
-    title: `Poggenpohl ${product.name} Kitchen | Atlanta & Georgia`,
-    description: `${product.name}: ${product.tagline} Explore the Poggenpohl ${product.name} kitchen and book a design consultation or showroom visit with Atelier Living Group in Atlanta.`,
+    title: `Poggenpohl ${product.name} Atlanta`,
+    description: `Explore the Poggenpohl ${product.name} kitchen collection in Atlanta, and book a design consultation or showroom visit with Atelier Living Group.`,
     path: `/poggenpohl/${product.slug}`,
     image: product.heroImage.src,
     imageWidth: 1920,
@@ -170,6 +170,7 @@ export default async function ProductPage({
           {product.features.map((feature, i) => (
             <Reveal as="article" className="pdp-feature" key={feature.title}>
               <div className="pdp-feature-media">
+                <div className="img-fx pdp-feature-img">
                 <Image
                   src={feature.image.src}
                   alt={feature.image.alt}
@@ -177,6 +178,7 @@ export default async function ProductPage({
                   height={feature.image.height}
                   sizes="(max-width: 860px) 100vw, 45vw"
                 />
+                </div>
               </div>
               <div className="pdp-feature-body">
                 <span className="pdp-feature-index" aria-hidden="true">
