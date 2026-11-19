@@ -30,8 +30,11 @@ export const address = {
   region: "GA",
   postalCode: "30305",
   full: "3280 Peachtree Rd NE, Suite 125, Atlanta, GA 30305",
+  // The showroom's own Google Maps listing.
   mapsUrl:
-    "https://www.google.com/maps/search/?api=1&query=3280+Peachtree+Rd+NE+Suite+125+Atlanta+GA+30305",
+    "https://www.google.com/maps/place/Poggenpohl+Atlanta+%7C+Kitchen+Design+Studio/@33.8444362,-84.3739979,17z/data=!3m2!4b1!5s0x88f505f5c93c8b43:0x7edf0a3a151cedb5!4m6!3m5!1s0x88f505f5b1ae12bf:0x51c13cbc4525987f!8m2!3d33.8444362!4d-84.3714176!16s%2Fg%2F1tzlzt74",
+  latitude: 33.8444362,
+  longitude: -84.3714176,
 };
 
 export const hours = [
@@ -520,6 +523,11 @@ export const structuredData = [
       addressRegion: "GA",
       postalCode: "30305",
       addressCountry: "US",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: address.latitude,
+      longitude: address.longitude,
     },
     areaServed: serviceAreas.map((area) => ({
       "@type": "Place",

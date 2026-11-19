@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, Phone, X } from "lucide-react";
 
 import { navLinks, phone, phoneHref } from "@/content/site";
 import { useIsomorphicLayoutEffect } from "@/lib/use-isomorphic-layout-effect";
@@ -169,9 +169,10 @@ export default function SiteNav() {
             {link.label}
           </Link>
         ))}
-        <Link className="nav-cta" href="/contact#enquiry" scroll={false}>
-          Book a Private Consultation
-        </Link>
+        <a className="nav-cta nav-phone" href={phoneHref}>
+          <Phone aria-hidden="true" />
+          {phone}
+        </a>
       </div>
 
       <button
@@ -197,13 +198,6 @@ export default function SiteNav() {
             {link.label}
           </Link>
         ))}
-        <Link
-          href="/contact#enquiry"
-          scroll={false}
-          onClick={() => setMenuOpen(false)}
-        >
-          Book a Private Consultation
-        </Link>
         <a href={phoneHref} onClick={() => setMenuOpen(false)}>
           {phone}
         </a>

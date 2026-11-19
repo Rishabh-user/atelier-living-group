@@ -2,6 +2,8 @@ import { getDb, isDatabaseConfigured } from "@/db";
 import { inquiries } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
+import { isMailConfigured, sendEnquiryEmails } from "@/lib/mailjet";
+
 // Submissions must never be cached or statically evaluated.
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -73,6 +75,9 @@ async function ensureTable(db: ReturnType<typeof getDb>): Promise<void> {
   `);
 }
 
+const fallbackMessage =
+  "We could not send that request right now. Please call 404-912-9996 and we will take the details directly.";
+
 export async function POST(request: Request): Promise<Response> {
   let payload: Payload;
   try {
@@ -119,43 +124,55 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  if (!isDatabaseConfigured()) {
+  const enquiry = { source, name, email, phone, projectType, message };
+
+  // Email is the primary channel; the database is a record kept alongside it.
+  // The enquiry counts as received if either one succeeds, and is only refused
+  // if both are unavailable.
+  const mailConfigured = isMailConfigured();
+  const dbConfigured = isDatabaseConfigured();
+
+  if (!mailConfigured && !dbConfigured) {
     console.error(
-      "inquiry received but no database is configured (TURSO_DATABASE_URL unset)",
+      "inquiry received but neither Mailjet nor a database is configured",
       { source, name, email, phone, projectType },
     );
-    return json(
-      {
-        ok: false,
-        message:
-          "We could not save that request right now. Please call 404-912-9996 and we will take the details directly.",
-      },
-      503,
-    );
+    return json({ ok: false, message: fallbackMessage }, 503);
   }
 
-  try {
-    const db = getDb();
-    await ensureTable(db);
-    await db.insert(inquiries).values({
-      source,
-      name,
-      email: email || null,
-      phone: phone || null,
-      projectType: projectType || null,
-      message: message || null,
-      createdAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error("inquiry insert failed", error);
-    return json(
-      {
-        ok: false,
-        message:
-          "We could not save that request. Please call 404-912-9996 and we will take the details directly.",
-      },
-      500,
-    );
+  let delivered = false;
+
+  if (mailConfigured) {
+    try {
+      delivered = await sendEnquiryEmails(enquiry);
+    } catch (error) {
+      console.error("enquiry email failed", error);
+    }
+  }
+
+  if (dbConfigured) {
+    try {
+      const db = getDb();
+      await ensureTable(db);
+      await db.insert(inquiries).values({
+        source,
+        name,
+        email: email || null,
+        phone: phone || null,
+        projectType: projectType || null,
+        message: message || null,
+        createdAt: new Date().toISOString(),
+      });
+      delivered = true;
+    } catch (error) {
+      console.error("inquiry insert failed", error);
+    }
+  }
+
+  if (!delivered) {
+    // Keep the details in the server log so the lead is not lost.
+    console.error("inquiry could not be delivered", enquiry);
+    return json({ ok: false, message: fallbackMessage }, 502);
   }
 
   return json({ ok: true }, 201);

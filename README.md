@@ -43,6 +43,18 @@ TURSO_DATABASE_URL=file:./local.db
 - `drizzle/` — generated SQL migrations.
 - `ASSETS.md` — source URL of every Poggenpohl photograph, for brand approval.
 
+## Form emails (Mailjet)
+
+Every form posts to `/api/inquiry`, which emails `MAIL_TO` through Mailjet
+(replying to that email answers the visitor) and sends the visitor a short
+confirmation. All settings live in `.env.local` / Vercel env vars, see
+`.env.example`. The sender in `MAIL_FROM_EMAIL` must be verified in Mailjet
+(add the domain and its SPF/DKIM records for best deliverability).
+
+The database below is optional. With Mailjet and/or Turso configured, an
+enquiry counts as received if either succeeds; with neither, the forms return
+a 503 with the phone-number fallback.
+
 ## Database
 
 Consultation form submissions are stored in a **libSQL (Turso)** database.
@@ -68,8 +80,8 @@ rather than failing silently.
 1. Import the GitHub repo at [vercel.com/new](https://vercel.com/new). Vercel
    detects Next.js automatically — no `vercel.json` is needed.
 2. Add environment variables under **Settings → Environment Variables**:
-   - `TURSO_DATABASE_URL`
-   - `TURSO_AUTH_TOKEN`
+   - `MAILJET_API_KEY`, `MAILJET_SECRET_KEY`, `MAIL_FROM_EMAIL`, `MAIL_FROM_NAME`, `MAIL_TO`
+   - optional: `MAIL_AUTOREPLY`, `MAILJET_SANDBOX`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
    - `NEXT_PUBLIC_SITE_URL` (your production domain)
 3. Deploy.
 

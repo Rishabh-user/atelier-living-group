@@ -4857,3 +4857,15 @@ main:has(.invite-section:last-child) + .footer-v2 > .shell {
   }
 }
 
+
+.nav-links .nav-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.14em;
+}
+
+.nav-links .nav-phone svg {
+  width: 14px;
+  height: 14px;
+}
