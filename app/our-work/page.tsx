@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import ConsultationBand from "@/components/ConsultationBand";
+import FilmSection from "@/components/FilmSection";
 import GalleryGrid from "@/components/GalleryGrid";
 import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import { Button } from "@/components/ui/button";
 import { galleryItems } from "@/content/gallery";
+import { films } from "@/content/media";
 import { projects } from "@/content/projects";
 import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 
@@ -81,7 +83,7 @@ export default function OurWorkPage() {
             <div className="work-empty">
               <p>
                 Our Atlanta project case studies are being prepared with full
-                photography and credits. In the meantime, the Terminus showroom
+                photography and credits. In the meantime, the Terminus 100 showroom
                 is the best place to see the work in person.
               </p>
               <Button asChild variant="default" size="wide">
@@ -94,13 +96,21 @@ export default function OurWorkPage() {
         </div>
       </section>
 
+      <FilmSection
+        id="films"
+        title="Poggenpohl on film."
+        films={films}
+        lead
+        tone="dark"
+      />
+
       <section className="section-pad gallery-section" id="inspiration">
         <div className="shell">
           <div className="section-heading">
             <p className="eyebrow dark">Inspiration</p>
             <h2>Poggenpohl photography.</h2>
             <p>
-              The six Poggenpohl collections and reference kitchens from around
+              The Poggenpohl collections and reference kitchens from around
               the world. These are manufacturer images, not Atelier Living
               Group projects.
             </p>

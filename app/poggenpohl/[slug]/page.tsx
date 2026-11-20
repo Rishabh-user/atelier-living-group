@@ -5,8 +5,10 @@ import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
+import FilmSection from "@/components/FilmSection";
 import JsonLd from "@/components/JsonLd";
 import Reveal from "@/components/Reveal";
+import { collectionPhotos, filmsFor } from "@/content/media";
 import { Button } from "@/components/ui/button";
 import { getProduct, products } from "@/content/products";
 import { phone, phoneHref } from "@/content/site";
@@ -236,11 +238,45 @@ export default async function ProductPage({
       </section>
       ) : null}
 
+      {(collectionPhotos[product.slug] ?? []).length >= 4 ? (
+        <section className="section-pad pdp-more" aria-label={`More ${product.name} photography`}>
+          <div className="shell">
+            <Reveal className="ed-head">
+              <p className="eyebrow dark">More photography</p>
+              <h2>{product.name}, in more rooms.</h2>
+            </Reveal>
+            <ul className="pdp-more-grid">
+              {collectionPhotos[product.slug].map((image) => (
+                <li key={image.src}>
+                  <figure>
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={image.width}
+                      height={image.height}
+                      sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                    />
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
+
+      <FilmSection
+        id="films"
+        title={`${product.name} on film.`}
+        films={filmsFor(product.slug)}
+        lead
+        tone="dark"
+      />
+
       <section className="area-section section-pad" aria-label="Visit the showroom">
         <div className="shell area-grid">
           <Reveal>
             <p className="eyebrow">See it in person</p>
-            <h2>Plan a visit to the Terminus showroom.</h2>
+            <h2>Plan a visit to the Terminus 100 showroom.</h2>
             <p>
               Handle the fronts, compare finishes in real light and talk the
               plan through with the person who will specify it. Private

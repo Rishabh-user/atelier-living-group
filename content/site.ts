@@ -24,7 +24,7 @@ export const phone = "404-912-9996";
 export const phoneHref = "tel:+14049129996";
 
 export const address = {
-  building: "Terminus",
+  building: "Terminus 100",
   street: "3280 Peachtree Rd NE, Suite 125",
   city: "Atlanta",
   region: "GA",
@@ -38,10 +38,17 @@ export const address = {
 };
 
 export const hours = [
-  { day: "Monday – Friday", time: "9:00 AM – 5:00 PM" },
+  { day: "Monday", time: "9:00 AM – 5:00 PM" },
+  { day: "Tuesday", time: "9:00 AM – 5:00 PM" },
+  { day: "Wednesday", time: "9:00 AM – 5:00 PM" },
+  { day: "Thursday", time: "9:00 AM – 5:00 PM" },
+  { day: "Friday", time: "9:00 AM – 5:00 PM" },
   { day: "Saturday", time: "10:00 AM – 4:00 PM" },
   { day: "Sunday", time: "Closed" },
 ];
+
+/** The catalogue page: a 3D viewer plus the PDF downloads. */
+export const catalogHref = "/catalogue";
 
 export const images = {
   hero: "/images/hero.webp",
@@ -204,7 +211,7 @@ export const journey = [
     imageAlt: "A Poggenpohl drawer fitted with timber inserts for knives, graters and spoons",
     copy: "Private showroom consultations reveal fully custom cabinetry, finishes, storage systems, surfaces and the detail that separates good from exceptional.",
     detail: [
-      "A private session across seven Poggenpohl displays in the Terminus showroom.",
+      "A private session across seven Poggenpohl displays in the Terminus 100 showroom.",
       "Door samples, finish chips and surfaces compared side by side in real light.",
       "Storage systems opened, handled and tested against how you actually cook.",
       "Appliance performance and panel integration discussed in confidence.",
@@ -311,9 +318,9 @@ export const seoServices = [
 
 export const showroomHighlights = [
   {
-    value: "Terminus",
+    value: "Terminus 100",
     label: "Buckhead showroom address",
-    copy: "Visit the Poggenpohl showroom in the Terminus building at 3280 Peachtree Rd NE, Suite 125, Atlanta, GA 30305.",
+    copy: "Visit the Poggenpohl showroom in the Terminus 100 building at 3280 Peachtree Rd NE, Suite 125, Atlanta, GA 30305.",
   },
   {
     value: "7",
@@ -379,7 +386,7 @@ export const collectionCards = [
     line: "Wing-inspired fronts with light in the handle strip.",
   },
   {
-    name: "Solitaire",
+    name: "SOLITAIRE",
     href: "/poggenpohl/solitaire",
     image: "/products/solitaire/solitaire-03.jpg",
     line: "Showcase cabinets, ONE A Wine and the Stage series.",
@@ -446,10 +453,10 @@ export const faqs = [
   {
     question: "Where is the Poggenpohl showroom in Atlanta?",
     answer:
-      "The Poggenpohl showroom is located in the Terminus building at 3280 Peachtree Rd NE, Suite 125, Atlanta, GA 30305. Private consultations can be scheduled for homeowners, architects, designers, builders and developers.",
+      "The Poggenpohl showroom is located in the Terminus 100 building at 3280 Peachtree Rd NE, Suite 125, Atlanta, GA 30305. Private consultations can be scheduled for homeowners, architects, designers, builders and developers.",
   },
   {
-    question: "What can I see in the Terminus showroom?",
+    question: "What can I see in the Terminus 100 showroom?",
     answer:
       "The showroom includes seven kitchen displays along with a broad library of door samples, finish chips, surfaces, cabinetry details and material references for luxury kitchen planning.",
   },

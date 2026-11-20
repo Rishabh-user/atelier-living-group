@@ -5,6 +5,8 @@
  * Group installations and are captioned by place only.
  */
 
+import { collectionPhotos as newPhotos } from "@/content/media";
+
 export type GalleryItem = {
   src: string;
   width: number;
@@ -48,6 +50,34 @@ const collectionPhotos: GalleryItem[] = [
   c("taglio", "taglio-04", "TAGLIO", "retractable shelving system", 960, 1440),
 ];
 
+const NAMES: Record<string, string> = {
+  taglio: "TAGLIO",
+  alvolo: "ALVOLO",
+  solitaire: "Solitaire",
+  modo: "+MODO",
+  segmento: "+SEGMENTO",
+};
+
+/** The supplied photography, interleaved so neighbours differ in collection. */
+const suppliedPhotos: GalleryItem[] = (() => {
+  const lists = Object.entries(newPhotos);
+  const longest = Math.max(...lists.map(([, l]) => l.length));
+  const out: GalleryItem[] = [];
+  for (let i = 0; i < longest; i++) {
+    for (const [slug, list] of lists) {
+      const item = list[i];
+      if (!item) continue;
+      out.push({
+        ...item,
+        caption: NAMES[slug] ?? slug,
+        category: "collections",
+        href: `/poggenpohl/${slug}`,
+      });
+    }
+  }
+  return out;
+})();
+
 const projectPhotos: GalleryItem[] = ([
   { src: "/gallery/leidschendam-1.jpg", width: 1200, height: 1634, alt: "Poggenpohl kitchen, Leidschendam, NL: Kitchen island with a marble worktop and bar stools", caption: "Leidschendam, NL" },
   { src: "/gallery/leidschendam-2.jpg", width: 1600, height: 1067, alt: "Poggenpohl kitchen, Leidschendam, NL: Open kitchen with walnut-veneer tall units and a stone island", caption: "Leidschendam, NL" },
@@ -74,4 +104,8 @@ const projectPhotos: GalleryItem[] = ([
   category: "projects" as const,
 }));
 
-export const galleryItems: GalleryItem[] = [...collectionPhotos, ...projectPhotos];
+export const galleryItems: GalleryItem[] = [
+  ...collectionPhotos,
+  ...suppliedPhotos,
+  ...projectPhotos,
+];

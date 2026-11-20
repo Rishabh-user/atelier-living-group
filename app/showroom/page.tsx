@@ -29,7 +29,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "Poggenpohl Showroom in Buckhead, Atlanta",
   description:
-    "Visit the Poggenpohl showroom at Terminus, Buckhead: seven kitchen displays, a full finish library and private consultations.",
+    "Visit the Poggenpohl showroom at Terminus 100, Buckhead: seven kitchen displays, a full finish library and private consultations.",
   path: "/showroom",
   image: "/showroom/banner-1.jpg",
   imageWidth: 1400,
@@ -102,7 +102,7 @@ export default function ShowroomPage() {
       <PageBanner
         crumb="Showroom"
         title="Seven kitchens, one quiet room in Buckhead."
-        intro="The Terminus showroom is where the decisions actually get made: finishes in real light, drawers that open, proportions you can stand inside."
+        intro="The Terminus 100 showroom is where the decisions actually get made: finishes in real light, drawers that open, proportions you can stand inside."
         tag="3280 Peachtree Rd NE, Suite 125 — Buckhead, Atlanta"
         shots={showroomBanner}
         actions={
@@ -233,6 +233,7 @@ export default function ShowroomPage() {
 
       <section
         className="swatch-section section-pad"
+        id="materials"
         aria-label="Finish library"
       >
         <div className="shell">

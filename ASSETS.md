@@ -183,8 +183,8 @@ published 1000 x 1000 px. /services keeps its own imagery.
 |---|---|
 | `public/showroom/system-in-the-room.jpg` (1000 x 1000, a Poggenpohl showroom installation) | https://www.poggenpohl.com/media/09/20/f1/1690614289/home-planung-grundlagen-optimized_1920x1920.jpg |
 
-It is a Poggenpohl display concept, not a photograph of the Terminus showroom.
-Replace it with a photo of the Terminus showroom when one is available.
+It is a Poggenpohl display concept, not a photograph of the Terminus 100 showroom.
+Replace it with a photo of the Terminus 100 showroom when one is available.
 
 ## Consultation band (default image, homepage and inner pages)
 
@@ -217,7 +217,7 @@ images, from the poggenpohl.com homepage (retrieved 2026-11-03), downscaled to
 ## Showroom page
 
 The visit photo reuses `public/showroom/system-in-the-room.jpg` (a Poggenpohl
-display installation, not the Terminus showroom). The Fronts / Worktops /
+display installation, not the Terminus 100 showroom). The Fronts / Worktops /
 Interiors trio reuses `public/expertise/*`. Banner images, from the
 poggenpohl.com homepage (retrieved 2026-11-03), downscaled to 1400 px wide:
 
@@ -227,7 +227,7 @@ poggenpohl.com homepage (retrieved 2026-11-03), downscaled to 1400 px wide:
 | `public/showroom/banner-2.jpg` | https://www.poggenpohl.com/media/47/97/04/1690611283/intro-Medium-SEGMENTO_diamondgrey_neroassoluto_caleidoscope_6.webp |
 | `public/showroom/banner-3.jpg` | https://www.poggenpohl.com/media/01/ce/58/1690611272/intro-Medium-SEGMENTO_diamondgrey_neroassoluto_caleidoscope_11.webp |
 
-None of these shows the Terminus showroom itself. Replace them with photos of
+None of these shows the Terminus 100 showroom itself. Replace them with photos of
 the Atlanta showroom when available.
 
 ## Contact page
@@ -239,6 +239,112 @@ the Atlanta showroom when available.
 The other two banner plates and the card photo reuse files listed above
 (`products/segmento/segmento-07.jpg`, `products/taglio/taglio-09.jpg`,
 `showroom/system-in-the-room.jpg`).
+
+## Colours & Materiality page (/materials)
+
+| Local file | Source URL |
+|---|---|
+| `public/materials/materials-hero.jpg` (downscaled to 2200 px wide) | https://www.poggenpohl.com/media/79/03/80/1660293238/Poggenpohl_K_Muster_0580_Web_16-9.jpg |
+| `public/materials/fronts.jpg` (downscaled to 1400 px wide) | https://www.poggenpohl.com/media/3f/bb/8c/1632666376/Poggenpohl_Collection2021_VariationsOnWhite_009_web%202.jpg |
+| `public/materials/worktops.jpg` (downscaled to 1200 px wide) | https://www.poggenpohl.com/media/14/64/f1/1632316218/Poggenpohl_Website_Material_3.jpg |
+| `public/materials/wood.jpg` | https://www.poggenpohl.com/media/a3/aa/a4/1631203964/Bildschirmfoto%202021-08-17%20um%2015.26%203.jpg |
+
+Page copy is written for Atelier from the themes on poggenpohl.com's Colours
+& Materiality page.
+
+## Footer awards (every page)
+
+The three artwork files below were rasterised and cut into the nine individual
+marks in `public/awards/*.png` so they sit on one baseline; the award names are
+live text in the footer.
+
+| Source artwork (not stored) | Marks cut from it |
+|---|---|
+| https://www.poggenpohl.com/media/21/26/26/1694527889/awards-row-1.svg | german-design, german-brand, designpreis |
+| https://www.poggenpohl.com/media/b0/cc/85/1694527889/awards-row-2.svg | iconic, interior-innovation, red-dot |
+| https://www.poggenpohl.com/media/60/b9/d3/1694527889/awards-row-3.svg | if-design, good-design, superbrands |
+
+These are awards won by Poggenpohl, so the footer labels them "Poggenpohl
+awards". Their owners' logos should be covered by the brand approval.
+
+## Supplied collection photography and films
+
+Supplied by the client in the folders ALVOLO, MODO, SEGMENTO, SOLITAIRE and
+TAGLIO. The originals (about 27 GB, with many language versions and duplicates)
+were moved out of the project to `D:\Targeticon\atelier-raw-assets\` so they are
+not deployed. Only the files below are used.
+
+### Photographs
+
+Re-encoded to JPEG (quality 76, progressive, max 1920 px wide, or 1200 px wide
+for portrait). Photos that duplicated an image already on the site were left
+out. Used on the collection pages ("More photography") and on /our-work.
+
+| Local file | Original |
+|---|---|
+| `public/products/taglio/taglio-p02.jpg` | `Cam_13.jpg` (TAGLIO folder) |
+| `public/products/taglio/taglio-p03.jpg` | `Poggenpohl_in-house fair 2025_TAGLIO_Eiche natur (19).jpg` (TAGLIO folder) |
+| `public/products/taglio/taglio-p04.jpg` | `Cam_07.jpg` (TAGLIO folder) |
+| `public/products/taglio/taglio-p06.jpg` | `Cam_06.jpg` (TAGLIO folder) |
+| `public/products/alvolo/alvolo-p02.jpg` | `Poggenpohl_in-house fair 2025_ALVOLO_Eiche Chocolate (27).jpg` (ALVOLO folder) |
+| `public/products/solitaire/solitaire-p01.jpg` | `Cuore_Contour_pebblegrey_shellbeigegrey_inalcoaleapiedranatural_showcase_1.jpg` (SOLITAIRE folder) |
+| `public/products/solitaire/solitaire-p02.jpg` | `Cuore_Contour_pebblegrey_shellbeigegrey_inalcoaleapiedranatural_showcase_3.jpg` (SOLITAIRE folder) |
+| `public/products/solitaire/solitaire-p03.jpg` | `High-MODO_champagnesilver_dektonstonikaargaxgloss_stage_14.jpg` (SOLITAIRE folder) |
+| `public/products/solitaire/solitaire-p04.jpg` | `Poggenpohl_in-house fair 2025_ONE A Wine (10).jpg` (SOLITAIRE folder) |
+| `public/products/solitaire/solitaire-p05.jpg` | `Poggenpohl_in-house fair 2025_ONE A Wine (9).jpg` (SOLITAIRE folder) |
+| `public/products/solitaire/solitaire-p06.jpg` | `High-SEGMENTO_palebottlegreen_hotrolledstainlesssteel_13.jpg` (SOLITAIRE folder) |
+| `public/products/solitaire/solitaire-p07.jpg` | `Stage_Landscape.jpg` (SOLITAIRE folder) |
+| `public/products/solitaire/solitaire-p08.jpg` | `SEGMENTO_smokedoakdark_naturalstone_tajmahal_frame6_11.jpg` (SOLITAIRE folder) |
+| `public/products/modo/modo-p01.jpg` | `MODO_Calacatta-Viola_LNMC-3630-polarweiss.jpg` (MODO folder) |
+| `public/products/modo/modo-p02.jpg` | `High-MODO_champagnesilver_dektonstonikaargaxgloss_stage_11.jpg` (MODO folder) |
+| `public/products/modo/modo-p04.jpg` | `High-MODO_polarwhite_calacattagoldpolished_nuttreegrey_1.jpg` (MODO folder) |
+| `public/products/modo/modo-p05.jpg` | `MODO_polarwhite_calacattagoldpolished_nuttreegrey_6.jpg` (MODO folder) |
+| `public/products/modo/modo-p06.jpg` | `High-MODO_vantablack_rossolepanto_11.jpg` (MODO folder) |
+| `public/products/modo/modo-p07.jpg` | `MODO_palebottlegreenmattvelvet_eucalyptusmuscatlightbrown_naturalstone_blackmusk_2.jpg` (MODO folder) |
+| `public/products/modo/modo-p09.jpg` | `High-MODO_vantablack_rossolepanto_skyline.jpg` (MODO folder) |
+| `public/products/segmento/segmento-p01.jpg` | `+SEGMENTO Y0836.jpg` (SEGMENTO folder) |
+| `public/products/segmento/segmento-p02.jpg` | `PoggenPohl_3535_Print.jpg` (SEGMENTO folder) |
+| `public/products/segmento/segmento-p03.jpg` | `SEGMENTO_diamondgrey_neroassoluto_10.jpg` (SEGMENTO folder) |
+| `public/products/segmento/segmento-p04.jpg` | `SEGMENTO_diamondgrey_neroassoluto_11.jpg` (SEGMENTO folder) |
+| `public/products/segmento/segmento-p05.jpg` | `SEGMENTO_smokedoakdark_naturalstone_tajmahal_frame6_14.jpg` (SEGMENTO folder) |
+| `public/products/segmento/segmento-p07.jpg` | `Segmento_Courtyard_Landscape.jpg` (SEGMENTO folder) |
+| `public/products/segmento/segmento-p08.jpg` | `SEGMENTO_saltwhite_glassceramicpolarwhite_15.jpg` (SEGMENTO folder) |
+| `public/products/taglio/taglio-p09.jpg` | `Cam_05.jpg` (TAGLIO folder) |
+| `public/products/alvolo/alvolo-p08.jpg` | `Poggenpohl_in-house fair 2025_ALVOLO_Eiche Chocolate (30).jpg` (ALVOLO folder) |
+
+### Films
+
+Re-encoded to H.264 720p (CRF 28, AAC 96 kbps, fast-start). The poster is a
+1280 px frame from the film. They play from a poster on /our-work, the
+homepage and the collection pages, and load nothing until played.
+
+| Local file | Original | Length |
+|---|---|---|
+| `public/video/films/taglio-film.mp4` + `.jpg` poster | `TAGLIO/TAGLIO_Final_Web.mp4` | 1:03 |
+| `public/video/films/solitaire-collectors-delight.mp4` + `.jpg` poster | `SOLITAIRE/Collectors_Delight_Shortversion.mp4` | 0:25 |
+| `public/video/films/modo-splendor-of-elements.mp4` + `.jpg` poster | `MODO/Splendor_of_Elements_Shortversion.mp4` | 0:25 |
+| `public/video/films/modo-gravity-of-light.mp4` + `.jpg` poster | `MODO/Gravity of Light_+MODO Study_56sec_Music.mp4` | 0:56 |
+| `public/video/films/segmento-delicious-welcome.mp4` + `.jpg` poster | `SEGMENTO/Poggenpohl Product Clip_DeliciousWelcome_HD 1080p.mp4` | 1:47 |
+| `public/video/films/segmento-pavia.mp4` + `.jpg` poster | `SEGMENTO/+SEGMENTO_ProductClip_Pavia.mp4` | 2:18 |
+| `public/video/films/modo-portrait-of-an-icon.mp4` + `.jpg` poster | `MODO/+MODO Portrait of an Icon_1080p.mp4` | 3:56 |
+
+Not used, and left out on purpose: other language versions of the same films,
+the vertical 9:16 social cuts, the 15-30 second teasers, the long video tours
+(0.5-2 GB each), the product PDF and the remaining photographs.
+
+## Catalogue page (/catalogue)
+
+Supplied by the client. The two PDFs were renamed for clean download URLs and
+are served unchanged. For the 3D viewer each PDF was also rendered to WebP page
+images (the Kitchen Architecture PDF stores two-page spreads, so each spread was
+split into its left and right page).
+
+| Local file | Notes |
+|---|---|
+| `public/catalogue/poggenpohl-kitchen-architecture-catalogue.pdf` | Was `Poggenpohl_Catalogue_Kitchen_Architecture_EN.pdf`, 68 PDF pages, 8.2 MB |
+| `public/catalogue/one-a-poggenpohl-folder.pdf` | Was `ONE A x Poggenpohl_Folder.pdf`, 2 pages, 4.9 MB |
+| `public/catalogue/pages/kitchen/001-134.webp` | 134 viewer pages (cover, 132 inner pages, back cover), about 11 MB in total, 1341 x 1934 px each |
+| `public/catalogue/pages/one-a/001-002.webp` | 2 viewer pages |
 
 ## Image processing
 

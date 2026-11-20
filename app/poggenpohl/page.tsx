@@ -90,7 +90,7 @@ const collections = [
     copy: "Inspired by inclined wing surfaces, with light hidden in the handle strip and a stainless worktop and sink in one piece.",
   },
   {
-    name: "Solitaire",
+    name: "SOLITAIRE",
     href: "/poggenpohl/solitaire",
     image: "/products/solitaire/solitaire-03.jpg",
     copy: "Showcase cabinets, the ONE A Wine and the Stage series: confident characters for your home, with space for beloved objects.",

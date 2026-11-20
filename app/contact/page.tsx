@@ -64,7 +64,7 @@ export default async function ContactPage({
         crumb="Contact"
         title="Start the conversation."
         intro="Tell us about the residence and what you are planning. We reply within one business day, and the first conversation carries no obligation."
-        tag="Terminus Showroom — Buckhead, Atlanta"
+        tag="Terminus 100 Showroom — Buckhead, Atlanta"
         shots={contactBanner}
         actions={
           <>

@@ -40,7 +40,7 @@ export default function ConsultationBand({
           ariaLabel="Private consultation request"
         />
         <p className="contact-note">
-          Temporary direct line: <a href={phoneHref}>{phone}</a>
+          Prefer to talk? Call us on <a href={phoneHref}>{phone}</a>
         </p>
       </div>
     </section>

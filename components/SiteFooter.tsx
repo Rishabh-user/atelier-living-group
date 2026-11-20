@@ -11,19 +11,55 @@ import {
   phoneHref,
 } from "@/content/site";
 
+/** Awards won by Poggenpohl (see ASSETS.md). Marks are cut from the artwork so
+ *  they can share one baseline; the names are real text. */
+const awards = [
+  { file: "german-design", label: "German Design Award", w: 245, h: 320 },
+  { file: "german-brand", label: "German Brand Award", w: 260, h: 320 },
+  { file: "designpreis", label: "Designpreis der BRD", w: 320, h: 306 },
+  { file: "iconic", label: "Iconic Award", w: 248, h: 320 },
+  { file: "interior-innovation", label: "Interior Innovation Award", w: 247, h: 320 },
+  { file: "red-dot", label: "Red Dot Design Award", w: 320, h: 320 },
+  { file: "if-design", label: "iF Product Design Award", w: 320, h: 320 },
+  { file: "good-design", label: "Good Design Award", w: 320, h: 320 },
+  { file: "superbrands", label: "Superbrands Germany", w: 320, h: 137 },
+];
+
 export default function SiteFooter() {
   return (
     <footer className="footer surface-dark footer-v2">
       <div className="shell">
+        <section className="footer-awards" aria-label="Poggenpohl awards">
+          <p className="footer-awards-title">Poggenpohl awards</p>
+          <ul>
+            {awards.map((award) => (
+              <li key={award.file}>
+                <span className="footer-awards-mark">
+                  <Image
+                    src={`/awards/${award.file}.png`}
+                    alt=""
+                    width={award.w}
+                    height={award.h}
+                    unoptimized
+                  />
+                </span>
+                <span className="footer-awards-name">{award.label}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <div className="footer-v2-grid">
           <div className="footer-v2-brand">
-            <Image
-              src="/brand/atelier-logo-on-dark.png"
-              alt="Atelier Living Group"
-              width={1600}
-              height={595}
-            />
-            <span>Spaces That Inspire</span>
+            <div className="footer-v2-lockup">
+              <Image
+                src="/brand/atelier-logo-on-dark.png"
+                alt="Atelier Living Group"
+                width={1600}
+                height={595}
+              />
+              <span>Spaces That Inspire</span>
+            </div>
             <a className="footer-v2-call footer-v2-call-sm" href={phoneHref}>
               <Phone aria-hidden="true" />
               {phone}
@@ -74,7 +110,7 @@ export default function SiteFooter() {
           <div className="footer-v2-col footer-v2-visit">
             <h3>Visit</h3>
             <address>
-              <strong>Terminus Showroom</strong>
+              <strong>Terminus 100 Showroom</strong>
               {address.street}
               <br />
               {address.city}, {address.region} {address.postalCode}

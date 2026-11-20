@@ -21,7 +21,7 @@ export default function ServiceAreasPage() {
         crumb="Service areas"
         title="Serving Atlanta, North Georgia and selected residences across Georgia."
         intro="Atelier Living Group works with homeowners, architects, interior designers, builders and developers seeking luxury German kitchens, custom cabinetry, premium appliances and kitchen remodeling in the Atlanta and Georgia market."
-        tag="Terminus Showroom, Buckhead"
+        tag="Terminus 100 Showroom, Buckhead"
         shots={[
           { src: "/products/alvolo/alvolo-11.jpg", alt: "Poggenpohl ALVOLO kitchen" },
           { src: "/products/modo/modo-07.jpg", alt: "Poggenpohl +MODO kitchen" },

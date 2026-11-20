@@ -4,7 +4,9 @@ import { ArrowRight, Phone } from "lucide-react";
 import type { ReactNode } from "react";
 
 import ConsultationInvite from "@/components/ConsultationInvite";
+import FilmSection from "@/components/FilmSection";
 import Reveal from "@/components/Reveal";
+import { films } from "@/content/media";
 import { Button } from "@/components/ui/button";
 import {
   address,
@@ -33,7 +35,7 @@ const featured = [
     line: "Wing-inspired fronts with light in the handle.",
   },
   {
-    name: "Solitaire",
+    name: "SOLITAIRE",
     href: "/poggenpohl/solitaire",
     image: "/products/solitaire/solitaire-03.jpg",
     width: 1000,
@@ -45,17 +47,144 @@ const featured = [
 const experience = [
   {
     label: "Inspire",
+    image: "/products/alvolo/alvolo-03.jpg",
+    alt: "A Poggenpohl glass display cabinet lit from within, holding a few objects",
+    width: 960,
+    height: 1440,
     copy: "We begin with atmosphere, light, proportion and the way a space should change daily life.",
   },
   {
     label: "Experience",
+    image: "/products/segmento/segmento-08.jpg",
+    alt: "A Poggenpohl stone worktop and basin with a bronze tap, a finish to touch",
+    width: 1200,
+    height: 1634,
     copy: "Private showroom consultations bring materials, finishes and storage into your hands.",
   },
   {
     label: "Plan",
+    image: "/products/alvolo/alvolo-05.jpg",
+    alt: "A long Poggenpohl kitchen drawn in perspective down a dark room",
+    width: 960,
+    height: 1440,
     copy: "Design intent becomes drawings, specifications and a clear path to installation.",
   },
 ];
+
+type Tile = {
+  name: string;
+  line: string;
+  href: string;
+  image: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
+/** Poggenpohl's design concepts, each with its own page. */
+const concepts: Tile[] = [
+  {
+    name: "+MODO",
+    line: "A culinary workbench and a stage for kitchen living.",
+    href: "/poggenpohl/modo",
+    image: "/products/modo/modo-08.jpg",
+    alt: "Poggenpohl +MODO island with a drawer of fresh produce under a stone worktop",
+    width: 1200,
+    height: 1634,
+  },
+  {
+    name: "+SEGMENTO",
+    line: "Calm objectivity, meaningful details.",
+    href: "/poggenpohl/segmento",
+    image: "/products/segmento/segmento-01.jpg",
+    alt: "Poggenpohl +SEGMENTO white island with a slim shelf behind",
+    width: 1024,
+    height: 1280,
+  },
+  {
+    name: "+VENOVO",
+    line: "Kitchen furniture, free to move.",
+    href: "/poggenpohl/venovo",
+    image: "/products/venovo/venovo-03.jpg",
+    alt: "Poggenpohl +VENOVO island in sage green beside a window wall",
+    width: 1000,
+    height: 1000,
+  },
+];
+
+/** Materials are seen and touched in the showroom, so they link there. */
+const materials: Tile[] = [
+  {
+    name: "Worktops",
+    line: "Stone, ceramic and engineered surfaces.",
+    href: "/materials#worktops",
+    image: "/products/modo/modo-00.jpg",
+    alt: "A red marble worktop on a Poggenpohl island",
+    width: 1920,
+    height: 1080,
+  },
+  {
+    name: "Fronts",
+    line: "Lacquer, veneer and anodised metal.",
+    href: "/materials#fronts",
+    image: "/products/venovo/venovo-01.jpg",
+    alt: "Poggenpohl amber lacquer fronts with built-in appliances",
+    width: 1358,
+    height: 1358,
+  },
+  {
+    name: "Wood",
+    line: "Walnut and oak, chosen for the grain.",
+    href: "/materials#wood",
+    image: "/products/solitaire/solitaire-01.jpg",
+    alt: "Poggenpohl walnut cabinetry with lit glass shelves",
+    width: 1000,
+    height: 1500,
+  },
+];
+
+/** Same layout as Collections: eyebrow, heading, three tall cards. */
+function TileSection({
+  id,
+  eyebrow,
+  heading,
+  items,
+}: {
+  id: string;
+  eyebrow: string;
+  heading: string;
+  items: Tile[];
+}) {
+  return (
+    <section className="collections-ed collections-ed-next" id={id}>
+      <div className="shell">
+        <Reveal className="ed-head">
+          <p className="eyebrow dark">{eyebrow}</p>
+          <h2>{heading}</h2>
+        </Reveal>
+        <ul className="ed-grid">
+          {items.map((item, i) => (
+            <Reveal as="li" key={item.name} delay={i * 100}>
+              <Link href={item.href} scroll={false}>
+                <span className="ed-media">
+                  <Image
+                    src={item.image}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    sizes="(max-width: 860px) 100vw, 30vw"
+                  />
+                </span>
+                <span className="ed-name">{item.name}</span>
+                <span className="ed-line">{item.line}</span>
+              </Link>
+            </Reveal>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
 
 export default function HomePage({ hero }: { hero: ReactNode }) {
   return (
@@ -157,6 +286,26 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
         </Reveal>
       </section>
 
+      <TileSection
+        id="design-concepts"
+        eyebrow="Design concepts"
+        heading="Three ways to think about the kitchen."
+        items={concepts}
+      />
+      <TileSection
+        id="materials"
+        eyebrow="Materials"
+        heading="Surfaces you can feel before you choose."
+        items={materials}
+      />
+
+      <FilmSection
+        id="films"
+        title="See the collections move."
+        films={films.filter((f) => ["taglio-film", "modo-gravity-of-light", "segmento-pavia"].includes(f.id))}
+        tone="dark"
+      />
+
       {/* 05 · The Atelier experience */}
       <section className="atelier-ex" id="experience">
         <div className="shell">
@@ -167,6 +316,15 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
           <ol className="ex-list">
             {experience.map((step, i) => (
               <Reveal as="li" key={step.label} delay={i * 100}>
+                <div className="img-fx ex-media">
+                  <Image
+                    src={step.image}
+                    alt={step.alt}
+                    width={step.width}
+                    height={step.height}
+                    sizes="(max-width: 860px) 100vw, 30vw"
+                  />
+                </div>
                 <span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                 <h3>{step.label}</h3>
                 <p>{step.copy}</p>
@@ -195,7 +353,7 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
             curated world of materials in the heart of Buckhead.
           </p>
           <address>
-            <strong>Terminus Buckhead</strong>
+            <strong>Terminus 100 Buckhead</strong>
             {address.street}, {address.city}, {address.region}{" "}
             {address.postalCode}
           </address>
@@ -244,6 +402,7 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
           <ConsultationInvite />
         </Reveal>
       </section>
+
     </>
   );
 }

@@ -249,7 +249,7 @@ export const products: Product[] = [
   },
   {
     slug: "solitaire",
-    name: "Solitaire",
+    name: "SOLITAIRE",
     tagline: "Confident characters for your home.",
     intro:
       "Like a glass treasure chest, the Showcase series gives special objects a protected place. Exquisite collections and beloved everyday things sit behind a glass door with subdued LED lighting, framed to stand out or to recede. Around it, the ONE A Wine and the Stage series complete a family of pieces with real character.",

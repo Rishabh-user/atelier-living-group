@@ -22,6 +22,8 @@ const routes: { path: string; priority: number }[] = [
   { path: "/faq", priority: 0.6 },
   { path: "/service-areas", priority: 0.6 },
   { path: "/showroom", priority: 0.9 },
+  { path: "/materials", priority: 0.8 },
+  { path: "/catalogue", priority: 0.7 },
   { path: "/process", priority: 0.8 },
   { path: "/contact", priority: 0.8 },
 ];

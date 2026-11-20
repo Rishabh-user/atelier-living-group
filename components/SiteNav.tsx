@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Phone, X } from "lucide-react";
+import { ArrowRight, Menu, Phone, X } from "lucide-react";
 
-import { navLinks, phone, phoneHref } from "@/content/site";
+import {
+  catalogHref,
+  collectionCards,
+  navLinks,
+  phone,
+  phoneHref,
+} from "@/content/site";
 import { useIsomorphicLayoutEffect } from "@/lib/use-isomorphic-layout-effect";
 
 /**
@@ -39,6 +45,9 @@ export default function SiteNav() {
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // The Poggenpohl panel. Opened by hovering or focusing its link and closed by
+  // leaving the bar, so the pointer can travel from the link down into the panel.
+  const [megaOpen, setMegaOpen] = useState(false);
 
   useIsomorphicLayoutEffect(() => {
     const publishNavHeight = () => {
@@ -115,14 +124,26 @@ export default function SiteNav() {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!megaOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMegaOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [megaOpen]);
+
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <nav
       className="site-nav"
-      data-scrolled={alwaysSolid || scrolled || menuOpen ? "true" : "false"}
+      data-scrolled={
+        alwaysSolid || scrolled || menuOpen || megaOpen ? "true" : "false"
+      }
       aria-label="Primary navigation"
+      onMouseLeave={() => setMegaOpen(false)}
     >
       <Link
         className="brand"
@@ -159,16 +180,23 @@ export default function SiteNav() {
       </Link>
 
       <div className="nav-links">
-        {navLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            scroll={false}
-            aria-current={isActive(link.href) ? "page" : undefined}
-          >
-            {link.label}
-          </Link>
-        ))}
+        {navLinks.map((link) => {
+          const hasMega = link.href === "/poggenpohl";
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              scroll={false}
+              aria-current={isActive(link.href) ? "page" : undefined}
+              aria-haspopup={hasMega ? "true" : undefined}
+              aria-expanded={hasMega ? megaOpen : undefined}
+              onMouseEnter={() => setMegaOpen(hasMega)}
+              onFocus={() => setMegaOpen(hasMega)}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
         <a className="nav-cta nav-phone" href={phoneHref}>
           <Phone aria-hidden="true" />
           {phone}
@@ -186,17 +214,161 @@ export default function SiteNav() {
         <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
       </button>
 
+
+      <div
+        className="mega"
+        data-open={megaOpen}
+        aria-hidden={!megaOpen}
+        onFocus={() => setMegaOpen(true)}
+      >
+        <div className="mega-inner">
+          <div className="mega-col">
+            <p className="mega-title">Collections</p>
+            <ul>
+              {collectionCards.map((card) => (
+                <li key={card.href}>
+                  <Link
+                    href={card.href}
+                    scroll={false}
+                    tabIndex={megaOpen ? 0 : -1}
+                    onClick={() => setMegaOpen(false)}
+                  >
+                    {card.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mega-col">
+            <p className="mega-title">Inspiration</p>
+            <ul>
+              <li>
+                <Link
+                  href="/materials"
+                  scroll={false}
+                  tabIndex={megaOpen ? 0 : -1}
+                  onClick={() => setMegaOpen(false)}
+                >
+                  Colours &amp; Materiality
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/our-work"
+                  scroll={false}
+                  tabIndex={megaOpen ? 0 : -1}
+                  onClick={() => setMegaOpen(false)}
+                >
+                  Our Work
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="mega-col">
+            <p className="mega-title">Poggenpohl</p>
+            <ul>
+              <li>
+                <Link
+                  href="/poggenpohl"
+                  scroll={false}
+                  tabIndex={megaOpen ? 0 : -1}
+                  onClick={() => setMegaOpen(false)}
+                >
+                  All collections
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/showroom"
+                  scroll={false}
+                  tabIndex={megaOpen ? 0 : -1}
+                  onClick={() => setMegaOpen(false)}
+                >
+                  Our showroom
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <Link
+            className="mega-card"
+            href={catalogHref}
+            scroll={false}
+            tabIndex={megaOpen ? 0 : -1}
+            onClick={() => setMegaOpen(false)}
+          >
+            <Image
+              src="/products/segmento/segmento-07.jpg"
+              alt=""
+              fill
+              sizes="300px"
+            />
+            <span className="mega-card-copy">
+              <strong>View the Catalogue</strong>
+              <span>
+                More <ArrowRight aria-hidden="true" />
+              </span>
+            </span>
+          </Link>
+
+          <Link
+            className="mega-card"
+            href="/contact?interest=visit#enquiry"
+            scroll={false}
+            tabIndex={megaOpen ? 0 : -1}
+            onClick={() => setMegaOpen(false)}
+          >
+            <Image
+              src="/showroom/system-in-the-room.jpg"
+              alt=""
+              fill
+              sizes="300px"
+            />
+            <span className="mega-card-copy">
+              <strong>Request a meeting</strong>
+              <span>
+                More <ArrowRight aria-hidden="true" />
+              </span>
+            </span>
+          </Link>
+        </div>
+      </div>
+
       <div className="nav-drawer" id="site-menu" data-open={menuOpen}>
         {navLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            scroll={false}
-            aria-current={isActive(link.href) ? "page" : undefined}
-            onClick={() => setMenuOpen(false)}
-          >
-            {link.label}
-          </Link>
+          <Fragment key={link.href}>
+            <Link
+              href={link.href}
+              scroll={false}
+              aria-current={isActive(link.href) ? "page" : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              {link.label}
+            </Link>
+            {link.href === "/poggenpohl" ? (
+              <div className="nav-drawer-sub">
+                {collectionCards.map((card) => (
+                  <Link
+                    key={card.href}
+                    href={card.href}
+                    scroll={false}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {card.name}
+                  </Link>
+                ))}
+                <Link
+                  href="/materials"
+                  scroll={false}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Colours &amp; Materiality
+                </Link>
+              </div>
+            ) : null}
+          </Fragment>
         ))}
         <a href={phoneHref} onClick={() => setMenuOpen(false)}>
           {phone}
