@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
       // Nothing to index behind the form endpoint.
-      disallow: "/api/",
+      disallow: ["/api/", "/admin"],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
     host: siteUrl,

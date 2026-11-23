@@ -43,17 +43,40 @@ TURSO_DATABASE_URL=file:./local.db
 - `drizzle/` — generated SQL migrations.
 - `ASSETS.md` — source URL of every Poggenpohl photograph, for brand approval.
 
-## Form emails (Mailjet)
+## Form emails (Gmail)
 
-Every form posts to `/api/inquiry`, which emails `MAIL_TO` through Mailjet
-(replying to that email answers the visitor) and sends the visitor a short
-confirmation. All settings live in `.env.local` / Vercel env vars, see
-`.env.example`. The sender in `MAIL_FROM_EMAIL` must be verified in Mailjet
-(add the domain and its SPF/DKIM records for best deliverability).
+Every form posts to `/api/inquiry`, which emails `MAIL_TO` through Gmail (SMTP,
+via `lib/mail.ts`) and sends the visitor a short confirmation. Replying to the
+team email answers the visitor. All settings live in `.env.local` / Vercel env
+vars, see `.env.example`.
 
-The database below is optional. With Mailjet and/or Turso configured, an
-enquiry counts as received if either succeeds; with neither, the forms return
-a 503 with the phone-number fallback.
+Set `GMAIL_APP_PASSWORD` to a Google **App password** (the account needs
+2-Step Verification on), not the normal sign-in password.
+
+The database below is optional. With Gmail and/or Turso configured, an enquiry
+counts as received if either succeeds; with neither, the forms return a 503
+with the phone-number fallback.
+
+## Blog and admin
+
+The journal lives at `/blog` and is written in `/admin` (one admin, no extra
+hosting: posts are stored in Turso, images in Vercel Blob).
+
+Set these in `.env.local` and in Vercel (**Settings > Environment Variables**):
+
+| Variable | What it is |
+|---|---|
+| `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` | The database. `file:./local.db` is enough locally. |
+| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | The admin login. Use a long password. |
+| `ADMIN_SESSION_SECRET` | 24+ random characters that sign the login cookie. |
+| `BLOB_READ_WRITE_TOKEN` | Image uploads. In Vercel: Storage > Create > Blob, then connect it to the project. Without it, uploads only work locally. |
+
+- Sign in at `/admin`. Write in Markdown, add a cover and inline images, choose a
+  category, then **Publish** or **Save draft**. Drafts are never public.
+- Publishing refreshes `/blog`, the post page and the sitemap at once.
+- Raw HTML in a post is shown as text, never run. `/admin` is excluded from
+  search engines and every admin page and the upload endpoint need the login.
+- The `posts` table is created automatically on first use.
 
 ## Database
 
@@ -80,8 +103,8 @@ rather than failing silently.
 1. Import the GitHub repo at [vercel.com/new](https://vercel.com/new). Vercel
    detects Next.js automatically — no `vercel.json` is needed.
 2. Add environment variables under **Settings → Environment Variables**:
-   - `MAILJET_API_KEY`, `MAILJET_SECRET_KEY`, `MAIL_FROM_EMAIL`, `MAIL_FROM_NAME`, `MAIL_TO`
-   - optional: `MAIL_AUTOREPLY`, `MAILJET_SANDBOX`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
+   - `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `MAIL_FROM_NAME`, `MAIL_TO`
+   - optional: `MAIL_AUTOREPLY`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
    - `NEXT_PUBLIC_SITE_URL` (your production domain)
 3. Deploy.
 

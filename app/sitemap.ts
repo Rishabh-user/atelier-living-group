@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { siteUrl } from "@/content/site";
+import { categoryHref, listCategoriesSafe, listPublished } from "@/lib/blog";
 
 /**
  * Generated rather than kept as a static file so the origin always matches
@@ -24,17 +25,36 @@ const routes: { path: string; priority: number }[] = [
   { path: "/showroom", priority: 0.9 },
   { path: "/materials", priority: 0.8 },
   { path: "/catalogue", priority: 0.7 },
+  { path: "/blog", priority: 0.7 },
   { path: "/process", priority: 0.8 },
   { path: "/contact", priority: 0.8 },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
+  const posts = await listPublished({ limit: 500 });
+  const categoryList = await listCategoriesSafe();
 
-  return routes.map(({ path, priority }) => ({
+  const pages = routes.map(({ path, priority }) => ({
     url: `${siteUrl}${path}`,
     lastModified,
-    changeFrequency: path === "/" ? "weekly" : "monthly",
+    changeFrequency: (path === "/" ? "weekly" : "monthly") as "weekly" | "monthly",
     priority,
   }));
+
+  const categories = categoryList.map(({ name }) => ({
+    url: `${siteUrl}${categoryHref(name)}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
+
+  const articles = posts.map((post) => ({
+    url: `${siteUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.updatedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...pages, ...categories, ...articles];
 }

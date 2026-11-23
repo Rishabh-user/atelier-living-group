@@ -13,6 +13,7 @@ export type BannerShot = { src: string; alt: string };
  */
 export default function PageBanner({
   crumb,
+  trail,
   title,
   intro,
   tag,
@@ -20,6 +21,8 @@ export default function PageBanner({
   actions,
 }: {
   crumb: string;
+  /** Pages between Home and this one, for example Blog on a category page. */
+  trail?: { label: string; href: string }[];
   title: string;
   intro: string;
   tag: string;
@@ -53,6 +56,12 @@ export default function PageBanner({
             <nav className="crumbs" aria-label="Breadcrumb">
               <Link href="/">Home</Link>
               <span aria-hidden="true">/</span>
+              {trail?.map((step) => (
+                <span key={step.href} className="crumb-step">
+                  <Link href={step.href}>{step.label}</Link>
+                  <span aria-hidden="true">/</span>
+                </span>
+              ))}
               <span aria-current="page">{crumb}</span>
             </nav>
             <h1>{title}</h1>

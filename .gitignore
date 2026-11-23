@@ -41,3 +41,6 @@ yarn-error.log*
 # local database and TypeScript build cache
 /local.db
 *.tsbuildinfo
+
+# images uploaded through /admin while developing locally
+/public/uploads/

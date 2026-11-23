@@ -2,7 +2,7 @@ import { getDb, isDatabaseConfigured } from "@/db";
 import { inquiries } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
-import { isMailConfigured, sendEnquiryEmails } from "@/lib/mailjet";
+import { isMailConfigured, sendEnquiryEmails } from "@/lib/mail";
 
 // Submissions must never be cached or statically evaluated.
 export const dynamic = "force-dynamic";
@@ -134,7 +134,7 @@ export async function POST(request: Request): Promise<Response> {
 
   if (!mailConfigured && !dbConfigured) {
     console.error(
-      "inquiry received but neither Mailjet nor a database is configured",
+      "inquiry received but neither Gmail nor a database is configured",
       { source, name, email, phone, projectType },
     );
     return json({ ok: false, message: fallbackMessage }, 503);

@@ -263,6 +263,16 @@ export default function SiteNav() {
                   Our Work
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/blog"
+                  scroll={false}
+                  tabIndex={megaOpen ? 0 : -1}
+                  onClick={() => setMegaOpen(false)}
+                >
+                  Blog
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -183,6 +183,7 @@ export const navLinks = [
   { href: "/services", label: "Kitchens" },
   { href: "/poggenpohl", label: "Poggenpohl" },
   { href: "/our-work", label: "Our Work" },
+  { href: "/blog", label: "Blog" },
   { href: "/showroom", label: "Showroom" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

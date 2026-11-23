@@ -35,6 +35,10 @@ const nextConfig: NextConfig = {
     // Served in preference order. AVIF is roughly 20-30% smaller than WebP at
     // the same quality, and every browser that lacks it falls through.
     formats: ["image/avif", "image/webp"],
+    // Blog images uploaded in /admin are stored in Vercel Blob.
+    remotePatterns: [
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+    ],
   },
 };
 

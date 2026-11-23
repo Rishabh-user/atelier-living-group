@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Geist, Geist_Mono } from "next/font/google";
 
+import SiteChrome from "@/components/SiteChrome";
 import SiteFooter from "@/components/SiteFooter";
 import SiteNav from "@/components/SiteNav";
 import StartAtTop from "@/components/StartAtTop";
@@ -103,9 +104,9 @@ export default function RootLayout({
           Skip to content
         </a>
         <StartAtTop />
-        <SiteNav />
-        <main id="main">{children}</main>
-        <SiteFooter />
+        <SiteChrome nav={<SiteNav />} footer={<SiteFooter />}>
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );
