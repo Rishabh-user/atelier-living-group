@@ -376,6 +376,13 @@ export default function SiteNav() {
                 >
                   Colours &amp; Materiality
                 </Link>
+                <Link
+                  href={catalogHref}
+                  scroll={false}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Catalogue
+                </Link>
               </div>
             ) : null}
           </Fragment>

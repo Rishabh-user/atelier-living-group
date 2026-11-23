@@ -17,7 +17,7 @@ export function pageMetadata({
   image = "/og.png",
   imageWidth = 1200,
   imageHeight = 630,
-  imageAlt = "Atelier Living Group — luxury German kitchens in Atlanta",
+  imageAlt = "Poggenpohl Atlanta: luxury German kitchens in Buckhead, by Atelier Living Group",
 }: {
   /** Page title without the site-name suffix; the layout template adds it. */
   title: string;

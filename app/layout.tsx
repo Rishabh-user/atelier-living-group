@@ -36,11 +36,11 @@ export const metadata: Metadata = {
   title: {
     // Kept under ~60 characters so the brand is not cut off in results; the
     // fuller keyword set lives in the h1 and description.
-    default: "Luxury German Kitchens & Cabinetry | Atelier Living Group",
+    default: "Poggenpohl Atlanta | Luxury German Kitchens in Buckhead",
     template: "%s | Atelier Living Group",
   },
   description:
-    "Exclusive Poggenpohl dealer for Atlanta and Georgia. Luxury kitchens, premium remodeling, high-end appliances and custom German cabinetry in Buckhead.",
+    "Discover bespoke German kitchens at Poggenpohl Atlanta. Visit our Buckhead showroom to explore cabinetry, finishes, and layouts tailored to the way you live.",
   applicationName: "Atelier Living Group",
   authors: [{ name: "Atelier Living Group", url: siteUrl }],
   creator: "Atelier Living Group",
@@ -61,11 +61,20 @@ export const metadata: Metadata = {
   // The phone number is already a tel: link; leaving auto-detection on lets
   // iOS Safari restyle it and other numerals on the page.
   formatDetection: { telephone: false, address: false, email: false },
-  icons: { icon: "/favicon.png", shortcut: "/favicon.png", apple: "/favicon.png" },
+  // The Atelier Living Group leaf mark, in the sizes browsers and phones ask for.
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.png", sizes: "256x256", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   openGraph: {
-    title: "Luxury German Kitchens, Custom Cabinetry & Appliances Atlanta",
+    title: "Poggenpohl Atlanta | Luxury German Kitchens in Buckhead",
     description:
-      "Atelier Living Group is the exclusive Poggenpohl dealer for Atlanta and Georgia, specializing in luxury kitchens, premium remodeling, high-end appliances and fully custom German cabinetry.",
+      "Discover bespoke German kitchens at Poggenpohl Atlanta. Visit our Buckhead showroom to explore cabinetry, finishes, and layouts tailored to the way you live.",
     url: "/",
     siteName: "Atelier Living Group",
     images: [
@@ -73,7 +82,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Atelier Living Group — luxury German kitchens in Atlanta",
+        alt: "Poggenpohl Atlanta: luxury German kitchens in Buckhead, by Atelier Living Group",
       },
     ],
     locale: "en_US",
@@ -81,9 +90,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxury German Kitchens, Custom Cabinetry & Appliances Atlanta",
+    title: "Poggenpohl Atlanta | Luxury German Kitchens in Buckhead",
     description:
-      "Exclusive Poggenpohl dealer for Atlanta and Georgia. Luxury kitchen design-build, premium remodeling, high-end appliances and custom German cabinetry.",
+      "Discover bespoke German kitchens at Poggenpohl Atlanta. Visit our Buckhead showroom to explore cabinetry, finishes, and layouts tailored to the way you live.",
     images: ["/og.png"],
   },
 };

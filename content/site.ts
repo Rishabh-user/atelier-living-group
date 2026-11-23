@@ -25,11 +25,11 @@ export const phoneHref = "tel:+14049129996";
 
 export const address = {
   building: "Terminus 100",
-  street: "3280 Peachtree Rd NE, Suite 125",
+  street: "3280 Peachtree Rd, Unit 125",
   city: "Atlanta",
   region: "GA",
   postalCode: "30305",
-  full: "3280 Peachtree Rd NE, Suite 125, Atlanta, GA 30305",
+  full: "3280 Peachtree Rd, Unit 125, Atlanta, GA 30305",
   // The showroom's own Google Maps listing.
   mapsUrl:
     "https://www.google.com/maps/place/Poggenpohl+Atlanta+%7C+Kitchen+Design+Studio/@33.8444362,-84.3739979,17z/data=!3m2!4b1!5s0x88f505f5c93c8b43:0x7edf0a3a151cedb5!4m6!3m5!1s0x88f505f5b1ae12bf:0x51c13cbc4525987f!8m2!3d33.8444362!4d-84.3714176!16s%2Fg%2F1tzlzt74",
@@ -321,7 +321,7 @@ export const showroomHighlights = [
   {
     value: "Terminus 100",
     label: "Buckhead showroom address",
-    copy: "Visit the Poggenpohl showroom in the Terminus 100 building at 3280 Peachtree Rd NE, Suite 125, Atlanta, GA 30305.",
+    copy: "Visit the Poggenpohl showroom in the Terminus 100 building at 3280 Peachtree Rd, Unit 125, Atlanta, GA 30305.",
   },
   {
     value: "7",
@@ -454,7 +454,7 @@ export const faqs = [
   {
     question: "Where is the Poggenpohl showroom in Atlanta?",
     answer:
-      "The Poggenpohl showroom is located in the Terminus 100 building at 3280 Peachtree Rd NE, Suite 125, Atlanta, GA 30305. Private consultations can be scheduled for homeowners, architects, designers, builders and developers.",
+      "The Poggenpohl showroom is located in the Terminus 100 building at 3280 Peachtree Rd, Unit 125, Atlanta, GA 30305. Private consultations can be scheduled for homeowners, architects, designers, builders and developers.",
   },
   {
     question: "What can I see in the Terminus 100 showroom?",
@@ -526,7 +526,7 @@ export const structuredData = [
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "3280 Peachtree Rd NE Suite 125",
+      streetAddress: "3280 Peachtree Rd Unit 125",
       addressLocality: "Atlanta",
       addressRegion: "GA",
       postalCode: "30305",

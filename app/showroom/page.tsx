@@ -103,7 +103,7 @@ export default function ShowroomPage() {
         crumb="Showroom"
         title="Seven kitchens, one quiet room in Buckhead."
         intro="The Terminus 100 showroom is where the decisions actually get made: finishes in real light, drawers that open, proportions you can stand inside."
-        tag="3280 Peachtree Rd NE, Suite 125 — Buckhead, Atlanta"
+        tag="3280 Peachtree Rd, Unit 125 — Buckhead, Atlanta"
         shots={showroomBanner}
         actions={
           <>

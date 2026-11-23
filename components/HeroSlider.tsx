@@ -12,10 +12,17 @@ type Slide = {
   id: string;
   kicker: string;
   title: string;
-  line: string;
   cta: { label: string; href: string };
   alt: string;
   image: string;
+  /**
+   * Which Poggenpohl logo suits the corner of this photograph: "light" is the
+   * white mark for dark images, "dark" the black mark for pale ones. All three
+   * photographs are dark where the logo sits (measured), so all use the light mark.
+   */
+  logo: "light" | "dark";
+  /** The first slide carries the logo larger. */
+  logoSize: "large" | "regular";
   /** Separate crops so a phone shows the subject, not the middle of a wide frame. */
   posDesktop: string;
   posMobile: string;
@@ -24,12 +31,13 @@ type Slide = {
 const slides: Slide[] = [
   {
     id: "brand",
-    kicker: "Poggenpohl Atlanta by Atelier Living Group",
-    title: "A New Standard of Living.",
-    line: "German engineering. Timeless design. Exceptional craftsmanship.",
-    cta: { label: "Explore Poggenpohl", href: "/poggenpohl" },
+    kicker: "Poggenpohl Atlanta",
+    title: "An Extraordinary Kitchen Begins With You",
+    cta: { label: "Book a Showroom Consultation", href: "/contact?interest=visit#enquiry" },
     alt: "Poggenpohl TAGLIO kitchen with sculpted, faceted fronts",
     image: "/products/taglio/taglio-09.jpg",
+    logo: "light",
+    logoSize: "large",
     posDesktop: "50% 50%",
     posMobile: "42% 50%",
   },
@@ -37,10 +45,11 @@ const slides: Slide[] = [
     id: "lifestyle",
     kicker: "Lifestyle",
     title: "Designed Around You.",
-    line: "Beautifully considered spaces. Created for the way you live.",
     cta: { label: "Discover Our Approach", href: "/about" },
     alt: "Poggenpohl +VENOVO island with a warm orange tall unit and built-in appliances",
     image: "/products/venovo/venovo-02.jpg",
+    logo: "light",
+    logoSize: "regular",
     posDesktop: "50% 60%",
     posMobile: "38% 50%",
   },
@@ -48,10 +57,11 @@ const slides: Slide[] = [
     id: "showroom",
     kicker: "Showroom experience",
     title: "Experience Poggenpohl in Atlanta.",
-    line: "Explore extraordinary kitchens and the possibilities of personalized design.",
     cta: { label: "Visit Our Showroom", href: "/showroom" },
     alt: "Poggenpohl +SEGMENTO kitchen with a dark fluted island under a skylight",
     image: "/products/segmento/segmento-00.jpg",
+    logo: "light",
+    logoSize: "regular",
     posDesktop: "50% 50%",
     posMobile: "46% 50%",
   },
@@ -137,7 +147,8 @@ export default function HeroSlider() {
             <div className="hero-shade" />
             <div className="hero-stage">
               <Image
-                className="brand-logo on-dark hero-poggenpohl"
+                className={`brand-logo hero-poggenpohl ${slide.logo === "light" ? "on-dark" : ""}`}
+                data-size={slide.logoSize}
                 src="/brand/poggenpohl-logo-black.svg"
                 alt="Poggenpohl"
                 width={75}
@@ -146,7 +157,6 @@ export default function HeroSlider() {
               />
               <p className="hero-kicker">{slide.kicker}</p>
               <Title>{slide.title}</Title>
-              <p className="hero-lede">{slide.line}</p>
               <div className="hero-actions">
                 <Button asChild variant="light" size="wide">
                   <Link href={slide.cta.href} scroll={false}>

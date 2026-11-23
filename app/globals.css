@@ -5031,7 +5031,7 @@ main:has(.invite-section:last-child) + .footer-v2 > .shell {
 
 .footer-awards-name {
   color: var(--stone);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.14em;
   line-height: 1.5;
   text-transform: uppercase;
@@ -5238,7 +5238,8 @@ main:has(.invite-section:last-child) + .footer-v2 > .shell {
 }
 
 .nav-drawer .nav-drawer-sub a {
-  color: var(--stone);
+  /* --stone is a light tone made for dark bands; the drawer is pale */
+  color: #4a453d;
   font-size: 12px;
   padding: 12px 0;
 }
@@ -6952,5 +6953,120 @@ main:has(.invite-section:last-child) + .footer-v2 > .shell {
 .crumbs .crumb-step {
   display: inline-flex;
   gap: inherit;
+}
+
+
+/* The first-slide headline is a full sentence, so it wraps. */
+.hero .hero-stage h1 {
+  /* Wide enough for "An Extraordinary / Kitchen Begins / With You". */
+  max-width: 18ch;
+  white-space: normal;
+}
+
+/* Brand signature under the Poggenpohl Atlanta introduction. */
+.brand-signature {
+  border-top: 1px solid var(--line);
+  color: #6b665e;
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.5vw, 20px);
+  font-style: italic;
+  letter-spacing: 0.04em;
+  margin: var(--s4) 0 0;
+  max-width: none;
+  padding-top: var(--s4);
+}
+
+@media (min-width: 640px) {
+  .heritage-copy .brand-signature {
+    white-space: nowrap;
+  }
+}
+
+/* The intro now carries a paragraph, so its heading is not oversized. */
+.heritage-copy h2 {
+  font-size: clamp(48px, 6vw, 96px);
+}
+
+/* First slide: the Poggenpohl mark leads. */
+.hero-poggenpohl[data-size="large"] {
+  margin-bottom: var(--s4);
+  width: clamp(76px, 6.5vw, 100px);
+}
+
+.hero-slider .hero-actions {
+  margin-top: var(--s5);
+}
+
+/* ============================================================
+   Responsive audit fixes
+   ============================================================ */
+
+/* Catalogue viewer: the grid column must be allowed to shrink to the screen,
+   otherwise a long line of text widens it and pushes the book off to one side
+   on phones. */
+.cat-viewer {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.cat-viewer > * {
+  min-width: 0;
+}
+
+.cat-meta p {
+  max-width: 100%;
+}
+
+/* Opening hours stay on one line, even at 320px. */
+.hours-table td {
+  white-space: nowrap;
+}
+
+/* Phones and small tablets: nothing set below 11px, and links that stand on
+   their own get a comfortable tap height. */
+@media (max-width: 800px) {
+  .footer-awards-name,
+  .spaces-credit,
+  .visit-badge > span,
+  .pdp-hero-specs span {
+    font-size: 11px;
+  }
+
+  .text-link,
+  .hero-link,
+  .service-row-cta,
+  .footer-v2-directions,
+  .contact-card-phone {
+    align-items: center;
+    display: inline-flex;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 420px) {
+  .hours-table th,
+  .hours-table td {
+    padding-left: 0;
+    padding-right: 10px;
+  }
+}
+
+/* Catalogue controls: on narrow phones the page label takes its own row. */
+@media (max-width: 480px) {
+  .cat-controls {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .cat-controls p {
+    flex-basis: 100%;
+    min-width: 0;
+    order: -1;
+  }
+
+  .cat-controls .cat-full,
+  .cat-controls .cat-zoom-level {
+    margin-left: 0;
+  }
 }
 

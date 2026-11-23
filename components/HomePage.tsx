@@ -216,16 +216,19 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
             height={48}
             unoptimized
           />
-          <p className="eyebrow dark">German design heritage</p>
+          <p className="eyebrow dark">Poggenpohl Atlanta</p>
           <h2>Since 1892.</h2>
           <p>
-            Over a century of design innovation, engineering precision, and a
-            relentless pursuit of excellence.
+            At Poggenpohl Atlanta, we bring German craftsmanship and a personal approach to kitchen design. Visit our Buckhead showroom to experience the materials firsthand, see how the cabinetry moves, and work with our design team to create a kitchen that feels distinctly yours.
           </p>
-          <Link className="text-link" href="/poggenpohl" scroll={false}>
-            Discover Poggenpohl
-            <ArrowRight aria-hidden="true" />
-          </Link>
+          <Button asChild variant="default" size="wide">
+            <Link href="/contact?interest=visit#enquiry" scroll={false}>
+              Book a Showroom Consultation
+            </Link>
+          </Button>
+          <p className="brand-signature">
+            Atelier Living Group &middot; Spaces That Inspire
+          </p>
         </Reveal>
       </section>
 
