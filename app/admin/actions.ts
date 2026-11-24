@@ -94,7 +94,7 @@ function textField(formData: FormData, name: string, limit: number): string {
 /** Only our own uploads or an https image may be used as a cover. */
 function cleanImage(value: string): string | null {
   if (!value) return null;
-  if (value.startsWith("/uploads/") || /^https:\/\//i.test(value)) return value.slice(0, 500);
+  if (value.startsWith("/media/") || value.startsWith("/uploads/") || /^https:\/\//i.test(value)) return value.slice(0, 500);
   return null;
 }
 

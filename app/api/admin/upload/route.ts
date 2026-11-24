@@ -1,9 +1,8 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
-
 import { put } from "@vercel/blob";
 
 import { isAdmin } from "@/lib/admin-auth";
+import { saveMedia } from "@/lib/media";
+import { isBlogDbConfigured } from "@/db/blog-db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,9 +21,10 @@ const json = (body: unknown, status = 200) =>
   Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
 /**
- * Image upload for the blog editor. Admin only. Files go to Vercel Blob when
- * BLOB_READ_WRITE_TOKEN is set; in local development without a token they are
- * written to public/uploads so the editor still works offline.
+ * Image upload for the blog editor. Admin only. Files are stored in the
+ * database and served from /media/<id>/<name>, a relative address that works on
+ * localhost and on the live site. Vercel Blob is used instead only when
+ * BLOB_READ_WRITE_TOKEN is set.
  */
 export async function POST(request: Request) {
   if (!(await isAdmin())) return json({ error: "Sign in again to upload." }, 401);
@@ -64,18 +64,18 @@ export async function POST(request: Request) {
       return json({ url: blob.url });
     }
 
-    if (process.env.NODE_ENV === "production") {
+    if (!isBlogDbConfigured()) {
       return json(
-        { error: "Image storage is not set up. Add BLOB_READ_WRITE_TOKEN (Vercel Blob)." },
+        { error: "Images are stored in the database. Set TURSO_DATABASE_URL and TURSO_AUTH_TOKEN." },
         503,
       );
     }
-
-    const local = `${stamp}-${safe}-${Date.now().toString(36)}.${extension}`;
-    const dir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(dir, { recursive: true });
-    await writeFile(path.join(dir, local), Buffer.from(await file.arrayBuffer()));
-    return json({ url: `/uploads/${local}` });
+    const saved = await saveMedia({
+      name: `${safe}.${extension}`,
+      mime: file.type,
+      bytes: Buffer.from(await file.arrayBuffer()),
+    });
+    return json({ url: saved.url });
   } catch (error) {
     console.error("admin: upload failed", error);
     return json({ error: "The upload failed. Try again." }, 500);

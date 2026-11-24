@@ -69,3 +69,14 @@ export const adminUsers = sqliteTable("admin_users", {
 });
 
 export type AdminUser = typeof adminUsers.$inferSelect;
+
+/** Blog images uploaded in /admin, stored as base64 so they live with the rest of the data. */
+export const media = sqliteTable("media", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  mime: text("mime").notNull(),
+  size: integer("size").notNull(),
+  /** Base64 of the file. */
+  data: text("data").notNull(),
+  createdAt: text("created_at").notNull(),
+});

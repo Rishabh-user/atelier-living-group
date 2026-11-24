@@ -67,6 +67,17 @@ export function ensureSchema(): Promise<{ categoriesCreated: boolean }> {
         )
       `);
 
+      await db.run(sql`
+        CREATE TABLE IF NOT EXISTS media (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          mime TEXT NOT NULL,
+          size INTEGER NOT NULL,
+          data TEXT NOT NULL,
+          created_at TEXT NOT NULL
+        )
+      `);
+
       return { categoriesCreated: !categoriesExisted };
     })().catch((error) => {
       ready = null;
