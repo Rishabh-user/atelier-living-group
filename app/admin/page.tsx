@@ -3,6 +3,7 @@ import Link from "next/link";
 import { setStatusAction } from "@/app/admin/actions";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { requireAdmin } from "@/lib/admin-auth";
+import { describeError } from "@/lib/describe-error";
 import { blogAvailable, formatDate, listAll } from "@/lib/blog";
 
 export default async function AdminHome() {
@@ -13,10 +14,8 @@ export default async function AdminHome() {
       <div className="adm-card adm-empty">
         <h1>Connect a database</h1>
         <p>
-          Posts are stored in your Turso database. Set <code>TURSO_DATABASE_URL</code>{" "}
-          (and <code>TURSO_AUTH_TOKEN</code> for a remote database) in the
-          environment, then restart. For local work, <code>file:./local.db</code> is
-          enough.
+          Posts are stored in your Turso database. Set <code>TURSO_DATABASE_URL</code> and{" "}
+          <code>TURSO_AUTH_TOKEN</code> in the environment, then restart.
         </p>
       </div>
     );
@@ -28,7 +27,9 @@ export default async function AdminHome() {
     posts = await listAll();
   } catch (error) {
     console.error("admin: could not list posts", error);
-    failure = "The database could not be reached. Check TURSO_DATABASE_URL and TURSO_AUTH_TOKEN.";
+    // Only admins see this page, so the reason is shown to save a trip to the logs.
+    const reason = describeError(error);
+    failure = `The database could not be reached. Check TURSO_DATABASE_URL and TURSO_AUTH_TOKEN.${reason ? ` Reason: ${reason}` : ""}`;
   }
 
   const published = posts.filter((p) => p.status === "published").length;

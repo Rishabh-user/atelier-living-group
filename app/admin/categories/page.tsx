@@ -3,6 +3,7 @@ import Link from "next/link";
 import CategoryForm from "@/components/admin/CategoryForm";
 import DeleteCategoryButton from "@/components/admin/DeleteCategoryButton";
 import { requireAdmin } from "@/lib/admin-auth";
+import { describeError } from "@/lib/describe-error";
 import { blogAvailable, categoryHref, listCategoriesWithCounts } from "@/lib/blog";
 
 const FLASH: Record<string, string> = {
@@ -24,8 +25,8 @@ export default async function CategoriesPage({
       <div className="adm-card adm-empty">
         <h1>Connect a database</h1>
         <p>
-          Categories are stored in your Turso database. Set <code>TURSO_DATABASE_URL</code>{" "}
-          in the environment, then restart.
+          Categories are stored in your Turso database. Set <code>TURSO_DATABASE_URL</code> and{" "}
+          <code>TURSO_AUTH_TOKEN</code> in the environment, then restart.
         </p>
       </div>
     );
@@ -37,7 +38,8 @@ export default async function CategoriesPage({
     rows = await listCategoriesWithCounts();
   } catch (error) {
     console.error("admin: could not list categories", error);
-    failure = "The database could not be reached.";
+    const reason = describeError(error);
+    failure = `The database could not be reached.${reason ? ` Reason: ${reason}` : ""}`;
   }
 
   return (

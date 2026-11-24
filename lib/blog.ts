@@ -2,7 +2,7 @@ import "server-only";
 
 import { and, desc, eq, ne, sql } from "drizzle-orm";
 
-import { getDb, isDatabaseConfigured } from "@/db";
+import { ensureSchema, getBlogDb, isBlogDbConfigured } from "@/db/blog-db";
 import { categories, posts, type CategoryRow, type Post } from "@/db/schema";
 
 export type CategoryInfo = { name: string; intro: string; description: string };
@@ -59,64 +59,23 @@ export const MAX = {
   categoryText: 220,
 } as const;
 
-/** The posts table is created on first use, as the inquiries table is. */
-let ready: Promise<void> | null = null;
-
+/**
+ * The tables are created on first use (see db/blog-db.ts). The starting
+ * categories are added once, when their table is first created, so deleting
+ * one in /admin is never undone.
+ */
 async function ensureTable(): Promise<void> {
-  if (!ready) {
-    ready = (async () => {
-      const db = getDb();
-      await db.run(sql`
-        CREATE TABLE IF NOT EXISTS posts (
-          id integer PRIMARY KEY AUTOINCREMENT,
-          slug text NOT NULL UNIQUE,
-          title text NOT NULL,
-          excerpt text NOT NULL DEFAULT '',
-          content text NOT NULL DEFAULT '',
-          cover_image text,
-          cover_alt text,
-          category text NOT NULL DEFAULT 'Design',
-          status text NOT NULL DEFAULT 'draft',
-          seo_description text,
-          published_at text,
-          created_at text NOT NULL,
-          updated_at text NOT NULL
-        )
-      `);
-      await db.run(
-        sql`CREATE INDEX IF NOT EXISTS posts_status_published ON posts (status, published_at)`,
-      );
-
-      // Categories: seeded with the defaults only when the table is first
-      // created, so deleting one in /admin is never undone.
-      const existing = await db.all(
-        sql`SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'categories'`,
-      );
-      if (existing.length === 0) {
-        await db.run(sql`
-          CREATE TABLE categories (
-            id integer PRIMARY KEY AUTOINCREMENT,
-            name text NOT NULL UNIQUE,
-            intro text NOT NULL DEFAULT '',
-            description text NOT NULL DEFAULT '',
-            created_at text NOT NULL
-          )
-        `);
-        const now = new Date().toISOString();
-        for (const item of DEFAULT_CATEGORIES) {
-          await db.insert(categories).values({ ...item, createdAt: now });
-        }
-      }
-    })().catch((error) => {
-      ready = null;
-      throw error;
-    });
+  const { categoriesCreated } = await ensureSchema();
+  if (categoriesCreated) {
+    const now = new Date().toISOString();
+    for (const item of DEFAULT_CATEGORIES) {
+      await getBlogDb().insert(categories).values({ ...item, createdAt: now });
+    }
   }
-  return ready;
 }
 
 export function blogAvailable(): boolean {
-  return isDatabaseConfigured();
+  return isBlogDbConfigured();
 }
 
 export function slugify(value: string): string {
@@ -160,7 +119,7 @@ export async function listPublished(options?: {
     const conditions = [eq(posts.status, "published")];
     if (options?.category) conditions.push(eq(posts.category, options.category));
     if (options?.excludeId) conditions.push(ne(posts.id, options.excludeId));
-    return await getDb()
+    return await getBlogDb()
       .select()
       .from(posts)
       .where(and(...conditions))
@@ -179,7 +138,7 @@ export async function countPublished(category?: string): Promise<number> {
     await ensureTable();
     const conditions = [eq(posts.status, "published")];
     if (category) conditions.push(eq(posts.category, category));
-    const [row] = await getDb()
+    const [row] = await getBlogDb()
       .select({ n: sql<number>`count(*)` })
       .from(posts)
       .where(and(...conditions));
@@ -193,7 +152,7 @@ export async function getPublishedBySlug(slug: string): Promise<Post | null> {
   if (!blogAvailable()) return null;
   try {
     await ensureTable();
-    const [row] = await getDb()
+    const [row] = await getBlogDb()
       .select()
       .from(posts)
       .where(and(eq(posts.slug, slug), eq(posts.status, "published")))
@@ -209,12 +168,12 @@ export async function getPublishedBySlug(slug: string): Promise<Post | null> {
 
 export async function listAll(): Promise<Post[]> {
   await ensureTable();
-  return getDb().select().from(posts).orderBy(desc(posts.updatedAt));
+  return getBlogDb().select().from(posts).orderBy(desc(posts.updatedAt));
 }
 
 export async function getById(id: number): Promise<Post | null> {
   await ensureTable();
-  const [row] = await getDb().select().from(posts).where(eq(posts.id, id)).limit(1);
+  const [row] = await getBlogDb().select().from(posts).where(eq(posts.id, id)).limit(1);
   return row ?? null;
 }
 
@@ -232,7 +191,7 @@ export type PostInput = {
 
 /** A slug that no other post uses: "my-post", then "my-post-2", ... */
 async function freeSlug(base: string, ownId?: number): Promise<string> {
-  const db = getDb();
+  const db = getBlogDb();
   let candidate = base || "post";
   for (let n = 2; n < 200; n++) {
     const [clash] = await db
@@ -249,7 +208,7 @@ async function freeSlug(base: string, ownId?: number): Promise<string> {
 /** Creates (no id) or updates a post and returns it. */
 export async function savePost(input: PostInput, id?: number): Promise<Post> {
   await ensureTable();
-  const db = getDb();
+  const db = getBlogDb();
   const now = new Date().toISOString();
   const slug = await freeSlug(slugify(input.slug || input.title), id);
 
@@ -264,12 +223,13 @@ export async function savePost(input: PostInput, id?: number): Promise<Post> {
         updatedAt: now,
       })
       .returning();
+    if (!created) throw new Error("The post could not be saved.");
     return created;
   }
 
   const existing = await getById(id);
   if (!existing) throw new Error("That post no longer exists.");
-  const [updated] = await db
+  await db
     .update(posts)
     .set({
       ...input,
@@ -280,8 +240,9 @@ export async function savePost(input: PostInput, id?: number): Promise<Post> {
         input.status === "published" ? (existing.publishedAt ?? now) : existing.publishedAt,
       updatedAt: now,
     })
-    .where(eq(posts.id, id))
-    .returning();
+    .where(eq(posts.id, id));
+  const updated = await getById(id);
+  if (!updated) throw new Error("The post could not be saved.");
   return updated;
 }
 
@@ -290,15 +251,16 @@ export async function setStatus(id: number, status: "draft" | "published"): Prom
   const existing = await getById(id);
   if (!existing) throw new Error("That post no longer exists.");
   const now = new Date().toISOString();
-  const [updated] = await getDb()
+  await getBlogDb()
     .update(posts)
     .set({
       status,
       publishedAt: status === "published" ? (existing.publishedAt ?? now) : existing.publishedAt,
       updatedAt: now,
     })
-    .where(eq(posts.id, id))
-    .returning();
+    .where(eq(posts.id, id));
+  const updated = await getById(id);
+  if (!updated) throw new Error("That post no longer exists.");
   return updated;
 }
 
@@ -306,7 +268,7 @@ export async function deletePost(id: number): Promise<Post | null> {
   await ensureTable();
   const existing = await getById(id);
   if (!existing) return null;
-  await getDb().delete(posts).where(eq(posts.id, id));
+  await getBlogDb().delete(posts).where(eq(posts.id, id));
   return existing;
 }
 
@@ -318,7 +280,7 @@ export async function listCategoriesSafe(): Promise<CategoryInfo[]> {
   if (!blogAvailable()) return DEFAULT_CATEGORIES;
   try {
     await ensureTable();
-    const rows = await getDb().select().from(categories).orderBy(categories.name);
+    const rows = await getBlogDb().select().from(categories).orderBy(categories.name);
     return rows.map(({ name, intro, description }) => ({ name, intro, description }));
   } catch (error) {
     console.error("blog: could not list categories", error);
@@ -347,7 +309,7 @@ export type CategoryWithCounts = CategoryRow & { total: number; published: numbe
 /** For the admin: every category with how many posts use it. */
 export async function listCategoriesWithCounts(): Promise<CategoryWithCounts[]> {
   await ensureTable();
-  const db = getDb();
+  const db = getBlogDb();
   const rows = await db.select().from(categories).orderBy(categories.name);
   const counts = await db
     .select({
@@ -365,7 +327,7 @@ export async function listCategoriesWithCounts(): Promise<CategoryWithCounts[]> 
 
 export async function getCategoryById(id: number): Promise<CategoryRow | null> {
   await ensureTable();
-  const [row] = await getDb().select().from(categories).where(eq(categories.id, id)).limit(1);
+  const [row] = await getBlogDb().select().from(categories).where(eq(categories.id, id)).limit(1);
   return row ?? null;
 }
 
@@ -374,7 +336,7 @@ export type CategoryInput = { name: string; intro: string; description: string }
 /** Creates (no id) or updates a category. Renaming moves its posts with it. */
 export async function saveCategory(input: CategoryInput, id?: number): Promise<CategoryRow> {
   await ensureTable();
-  const db = getDb();
+  const db = getBlogDb();
   const slug = slugify(input.name);
   if (!slug) throw new Error("Use letters or numbers in the name.");
 
@@ -388,19 +350,18 @@ export async function saveCategory(input: CategoryInput, id?: number): Promise<C
       .insert(categories)
       .values({ ...input, createdAt: new Date().toISOString() })
       .returning();
+    if (!created) throw new Error("The category could not be saved.");
     return created;
   }
 
   const existing = await getCategoryById(id);
   if (!existing) throw new Error("That category no longer exists.");
-  const [updated] = await db
-    .update(categories)
-    .set(input)
-    .where(eq(categories.id, id))
-    .returning();
+  await db.update(categories).set(input).where(eq(categories.id, id));
   if (existing.name !== input.name) {
     await db.update(posts).set({ category: input.name }).where(eq(posts.category, existing.name));
   }
+  const updated = await getCategoryById(id);
+  if (!updated) throw new Error("The category could not be saved.");
   return updated;
 }
 
@@ -409,7 +370,7 @@ export async function deleteCategory(id: number): Promise<{ ok: true } | { ok: f
   await ensureTable();
   const existing = await getCategoryById(id);
   if (!existing) return { ok: true };
-  const [inUse] = await getDb()
+  const [inUse] = await getBlogDb()
     .select({ n: sql<number>`count(*)` })
     .from(posts)
     .where(eq(posts.category, existing.name));
@@ -420,6 +381,6 @@ export async function deleteCategory(id: number): Promise<{ ok: true } | { ok: f
       error: `${n} ${n === 1 ? "post uses" : "posts use"} "${existing.name}". Move ${n === 1 ? "it" : "them"} to another category first.`,
     };
   }
-  await getDb().delete(categories).where(eq(categories.id, id));
+  await getBlogDb().delete(categories).where(eq(categories.id, id));
   return { ok: true };
 }

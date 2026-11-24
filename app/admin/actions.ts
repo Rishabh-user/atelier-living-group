@@ -6,14 +6,21 @@ import { revalidatePath } from "next/cache";
 
 import {
   SESSION_COOKIE,
-  checkCredentials,
+  authenticate,
   clearLoginFailures,
+  currentAdminId,
   createSessionValue,
   isAdminConfigured,
   loginBlocked,
   noteLoginFailure,
   requireAdmin,
 } from "@/lib/admin-auth";
+import {
+  changePassword,
+  createUser,
+  deleteUser,
+  usersAvailable,
+} from "@/lib/admin-users";
 import {
   MAX,
   blogAvailable,
@@ -39,7 +46,7 @@ export async function login(_: FormState, formData: FormData): Promise<FormState
   if (!isAdminConfigured()) {
     return {
       error:
-        "The admin is not set up yet. Add ADMIN_EMAIL, ADMIN_PASSWORD and ADMIN_SESSION_SECRET (24+ characters) to the environment.",
+        "The admin is not set up yet. Add ADMIN_SESSION_SECRET (24+ characters) to the environment.",
     };
   }
 
@@ -54,7 +61,8 @@ export async function login(_: FormState, formData: FormData): Promise<FormState
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
-  if (!checkCredentials(email, password)) {
+  const userId = await authenticate(email, password);
+  if (userId === null) {
     noteLoginFailure(key);
     await wait(700); // slows down guessing
     // The email is handed back so the field is not emptied when the form resets.
@@ -62,7 +70,7 @@ export async function login(_: FormState, formData: FormData): Promise<FormState
   }
 
   clearLoginFailures(key);
-  const { value, maxAge } = createSessionValue();
+  const { value, maxAge } = createSessionValue(userId);
   (await cookies()).set(SESSION_COOKIE, value, {
     httpOnly: true,
     sameSite: "strict",
@@ -103,7 +111,7 @@ function refresh(slug?: string) {
 export async function savePostAction(_: FormState, formData: FormData): Promise<FormState> {
   await requireAdmin();
   if (!blogAvailable()) {
-    return { error: "No database is connected, so posts cannot be saved. Set TURSO_DATABASE_URL." };
+    return { error: "No database is connected, so posts cannot be saved. Set TURSO_DATABASE_URL and TURSO_AUTH_TOKEN." };
   }
 
   const title = textField(formData, "title", MAX.title);
@@ -171,7 +179,7 @@ export async function deletePostAction(formData: FormData): Promise<void> {
 /** Create or update a category. `id` is in the form when editing. */
 export async function saveCategoryAction(_: FormState, formData: FormData): Promise<FormState> {
   await requireAdmin();
-  if (!blogAvailable()) return { error: "No database is connected. Set TURSO_DATABASE_URL." };
+  if (!blogAvailable()) return { error: "No database is connected. Set TURSO_DATABASE_URL and TURSO_AUTH_TOKEN." };
 
   const name = textField(formData, "name", MAX.categoryName);
   if (name.length < 2) return { error: "Give the category a name (at least 2 characters)." };
@@ -208,4 +216,52 @@ export async function deleteCategoryAction(_: FormState, formData: FormData): Pr
   refresh();
   revalidatePath("/blog", "layout");
   redirect("/admin/categories?saved=deleted");
+}
+
+// ---- Logins -----------------------------------------------------------------
+
+/** Add a login (email and password), or set a new password when `id` is present. */
+export async function saveUserAction(_: FormState, formData: FormData): Promise<FormState> {
+  await requireAdmin();
+  if (!usersAvailable()) return { error: "No database is connected. Set TURSO_DATABASE_URL and TURSO_AUTH_TOKEN." };
+
+  const password = String(formData.get("password") ?? "");
+  const rawId = Number(formData.get("id"));
+  const id = Number.isInteger(rawId) && rawId > 0 ? rawId : undefined;
+
+  try {
+    if (id) {
+      if (password !== String(formData.get("confirm") ?? "")) {
+        return { error: "The two passwords do not match." };
+      }
+      await changePassword(id, password);
+    } else {
+      if (password !== String(formData.get("confirm") ?? "")) {
+        return { error: "The two passwords do not match.", email: String(formData.get("email") ?? "") };
+      }
+      await createUser(String(formData.get("email") ?? ""), password);
+    }
+  } catch (error) {
+    console.error("admin: login save failed", error);
+    return {
+      error: error instanceof Error ? error.message : "The login could not be saved.",
+      email: String(formData.get("email") ?? ""),
+    };
+  }
+
+  revalidatePath("/admin/users");
+  redirect(`/admin/users?saved=${id ? "password" : "created"}`);
+}
+
+export async function deleteUserAction(_: FormState, formData: FormData): Promise<FormState> {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id)) return {};
+  if ((await currentAdminId()) === id) {
+    return { error: "You are signed in as this login. Sign in as another one to remove it." };
+  }
+  const result = await deleteUser(id);
+  if (!result.ok) return { error: result.error };
+  revalidatePath("/admin/users");
+  redirect("/admin/users?saved=deleted");
 }

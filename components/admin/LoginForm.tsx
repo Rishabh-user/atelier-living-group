@@ -11,9 +11,8 @@ export default function LoginForm({ configured }: { configured: boolean }) {
     <form action={action} className="adm-login-form">
       {!configured ? (
         <p className="adm-flash adm-flash-error" role="alert">
-          The admin is not set up yet. Add <code>ADMIN_EMAIL</code>,{" "}
-          <code>ADMIN_PASSWORD</code> and <code>ADMIN_SESSION_SECRET</code> to the
-          environment, then restart.
+          The admin is not set up yet. Add <code>ADMIN_SESSION_SECRET</code> (24+
+          characters) to the environment, then restart.
         </p>
       ) : null}
       {state.error ? (

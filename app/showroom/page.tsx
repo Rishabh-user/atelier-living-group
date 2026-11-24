@@ -9,12 +9,14 @@ import {
   Phone,
 } from "lucide-react";
 
+import ProjectGallery from "@/components/ProjectGallery";
 import ConsultationBand from "@/components/ConsultationBand";
 import Counter from "@/components/Counter";
 import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
+import { showroomProject, showroomProjects } from "@/content/showroom-projects";
 import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import {
   address,
@@ -116,6 +118,23 @@ export default function ShowroomPage() {
           </>
         }
       />
+
+      <section className="projects section-pad" id="projects" aria-label="Projects">
+        <div className="shell">
+          <Reveal>
+            <div className="section-heading">
+              <p className="eyebrow dark">Our projects</p>
+              <h2>Kitchens we have built, and the room they come from.</h2>
+            </div>
+          </Reveal>
+          <div className="projects-list">
+            <ProjectGallery project={showroomProject} index={0} />
+            {showroomProjects.map((project, i) => (
+              <ProjectGallery key={project.slug} project={project} index={i + 1} />
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="section-pad" id="visit">
         <div className="shell visit-grid">

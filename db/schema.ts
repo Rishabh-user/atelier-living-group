@@ -20,21 +20,19 @@ export const inquiries = sqliteTable("inquiries", {
 export type Inquiry = typeof inquiries.$inferSelect;
 export type NewInquiry = typeof inquiries.$inferInsert;
 
-/**
- * Blog posts written in /admin. The body is Markdown; it is rendered without
- * raw HTML, so what is stored can never inject markup into a page.
- */
+
+/** Blog posts written in /admin. The body is Markdown, rendered without raw HTML. */
 export const posts = sqliteTable("posts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
   /** Short summary for cards, search results and social previews. */
-  excerpt: text("excerpt").notNull().default(""),
+  excerpt: text("excerpt").notNull(),
   /** Markdown. */
-  content: text("content").notNull().default(""),
+  content: text("content").notNull(),
   coverImage: text("cover_image"),
   coverAlt: text("cover_alt"),
-  category: text("category").notNull().default("Design"),
+  category: text("category").notNull(),
   /** draft | published */
   status: text("status").notNull().default("draft"),
   /** Optional override for the meta description. */
@@ -46,21 +44,28 @@ export const posts = sqliteTable("posts", {
 });
 
 export type Post = typeof posts.$inferSelect;
-export type NewPost = typeof posts.$inferInsert;
 
 /**
  * Blog categories, managed in /admin. A post stores its category by name, and
- * the category page address is the slug of that name, so renaming a category
- * moves its posts and its page together.
+ * the category page address is the slug of that name.
  */
 export const categories = sqliteTable("categories", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull().unique(),
-  /** One line under the heading on the category page. */
-  intro: text("intro").notNull().default(""),
-  /** Meta description for search results. */
-  description: text("description").notNull().default(""),
+  intro: text("intro").notNull(),
+  description: text("description").notNull(),
   createdAt: text("created_at").notNull(),
 });
 
 export type CategoryRow = typeof categories.$inferSelect;
+
+/** People who can sign in to /admin. Passwords are stored as scrypt hashes. */
+export const adminUsers = sqliteTable("admin_users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: text("created_at").notNull(),
+  lastLoginAt: text("last_login_at"),
+});
+
+export type AdminUser = typeof adminUsers.$inferSelect;

@@ -59,24 +59,31 @@ with the phone-number fallback.
 
 ## Blog and admin
 
-The journal lives at `/blog` and is written in `/admin` (one admin, no extra
-hosting: posts are stored in Turso, images in Vercel Blob).
+The blog lives at `/blog` and is written in `/admin`. Posts, categories and the
+admin logins are stored in the **Turso (libSQL)** database; images go to Vercel
+Blob.
 
 Set these in `.env.local` and in Vercel (**Settings > Environment Variables**):
 
 | Variable | What it is |
 |---|---|
-| `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` | The database. `file:./local.db` is enough locally. |
-| `ADMIN_EMAIL`, `ADMIN_PASSWORD` | The admin login. Use a long password. |
+| `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` | The Turso database (also used for form submissions). The token must be a **database** token (Turso dashboard > your database > Generate token, read and write), not a platform API token. For local work, `TURSO_DATABASE_URL=file:./local.db` needs no token. |
+| `DB_SSL` | `true` if the host requires TLS. |
 | `ADMIN_SESSION_SECRET` | 24+ random characters that sign the login cookie. |
 | `BLOB_READ_WRITE_TOKEN` | Image uploads. In Vercel: Storage > Create > Blob, then connect it to the project. Without it, uploads only work locally. |
 
+- The tables (`posts`, `categories`, `admin_users`) are created automatically on
+  first use. The five starting categories are added once.
 - Sign in at `/admin`. Write in Markdown, add a cover and inline images, choose a
   category, then **Publish** or **Save draft**. Drafts are never public.
+- **Logins**: `/admin/users` adds logins and changes passwords. Passwords are
+  stored as scrypt hashes, never in plain text. The last login cannot be removed.
+  Create the first login (or reset a lost password) from the project folder:
+  `npm run admin:create -- you@example.com "a-long-password"`. It writes straight
+  to the database named in `TURSO_DATABASE_URL`.
 - Publishing refreshes `/blog`, the post page and the sitemap at once.
 - Raw HTML in a post is shown as text, never run. `/admin` is excluded from
-  search engines and every admin page and the upload endpoint need the login.
-- The `posts` table is created automatically on first use.
+  search engines, and every admin page and the upload endpoint need the login.
 
 ## Database
 
@@ -104,7 +111,9 @@ rather than failing silently.
    detects Next.js automatically — no `vercel.json` is needed.
 2. Add environment variables under **Settings → Environment Variables**:
    - `GMAIL_USER`, `GMAIL_APP_PASSWORD`, `MAIL_FROM_NAME`, `MAIL_TO`
-   - optional: `MAIL_AUTOREPLY`, `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
+   - `ADMIN_SESSION_SECRET`, `BLOB_READ_WRITE_TOKEN`
+   - `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` (form submissions, blog and admin)
+   - optional: `MAIL_AUTOREPLY`
    - `NEXT_PUBLIC_SITE_URL` (your production domain)
 3. Deploy.
 

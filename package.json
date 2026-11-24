@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint .",
     "db:generate": "drizzle-kit generate",
+    "admin:create": "node --env-file=.env.local scripts/create-admin.mjs",
     "images:compress": "node scripts/compress-images.mjs"
   },
   "dependencies": {

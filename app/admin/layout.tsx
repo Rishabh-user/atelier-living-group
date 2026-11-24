@@ -33,6 +33,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin">Posts</Link>
             <Link href="/admin/new">New post</Link>
             <Link href="/admin/categories">Categories</Link>
+            <Link href="/admin/users">Logins</Link>
             <Link href="/blog" target="_blank">
               View blog ↗
             </Link>

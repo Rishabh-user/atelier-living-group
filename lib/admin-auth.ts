@@ -4,16 +4,26 @@ import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import {
+  burnHashTime,
+  getUserByEmail,
+  getUserById,
+  touchLogin,
+  usersAvailable,
+  verifyPassword,
+} from "@/lib/admin-users";
+
 /**
- * One admin, configured entirely from the environment:
+ * Admin logins live in the database (the `admin_users` table, passwords hashed
+ * with scrypt) and are managed on /admin/users.
  *
- *   ADMIN_EMAIL           the login email
- *   ADMIN_PASSWORD        the login password
- *   ADMIN_SESSION_SECRET  a long random string that signs the session cookie
+ * The only environment setting is ADMIN_SESSION_SECRET: a long random string
+ * (24+ characters) that signs the login cookie. Changing it signs everyone
+ * out. Create the first login with `npm run admin:create`.
  *
- * A successful login sets an HttpOnly, SameSite=Strict cookie holding an
- * expiry time and an HMAC of it. Nothing is stored server side, so it works on
- * Vercel's serverless functions. Changing ADMIN_SESSION_SECRET signs everyone out.
+ * A successful login sets an HttpOnly, SameSite=Strict cookie holding the user
+ * id, an expiry time and an HMAC of both. Nothing is stored server side, so it
+ * works on Vercel's serverless functions.
  */
 
 export const SESSION_COOKIE = "alg_admin";
@@ -23,13 +33,9 @@ function env(name: string): string {
   return (process.env[name] ?? "").trim();
 }
 
-/** True when all three settings are present and the secret is long enough. */
+/** True when the cookie secret is set; without it nobody can sign in. */
 export function isAdminConfigured(): boolean {
-  return Boolean(
-    env("ADMIN_EMAIL") &&
-      env("ADMIN_PASSWORD") &&
-      env("ADMIN_SESSION_SECRET").length >= 24,
-  );
+  return env("ADMIN_SESSION_SECRET").length >= 24;
 }
 
 const digest = (value: string) => createHash("sha256").update(value).digest();
@@ -39,37 +45,65 @@ function same(a: string, b: string): boolean {
   return timingSafeEqual(digest(a), digest(b));
 }
 
-export function checkCredentials(email: string, password: string): boolean {
-  if (!isAdminConfigured()) return false;
-  // Both are always compared so the time taken does not reveal which was wrong.
-  const emailOk = same(email.trim().toLowerCase(), env("ADMIN_EMAIL").toLowerCase());
-  const passwordOk = same(password, env("ADMIN_PASSWORD"));
-  return emailOk && passwordOk;
+/**
+ * Checks an email and password against the database. Returns the user id or null.
+ */
+export async function authenticate(email: string, password: string): Promise<number | null> {
+  if (!isAdminConfigured() || !usersAvailable()) return null;
+  try {
+    const user = await getUserByEmail(email);
+    if (!user) {
+      await burnHashTime(password);
+      return null;
+    }
+    if (!(await verifyPassword(password, user.passwordHash))) return null;
+    await touchLogin(user.id);
+    return user.id;
+  } catch (error) {
+    console.error("admin: login could not use the database", error);
+    return null;
+  }
 }
 
-function sign(expires: number): string {
+function sign(userId: number, expires: number): string {
   return createHmac("sha256", env("ADMIN_SESSION_SECRET"))
-    .update(`v1.${expires}`)
+    .update(`v2.${userId}.${expires}`)
     .digest("base64url");
 }
 
-export function createSessionValue(): { value: string; maxAge: number } {
+export function createSessionValue(userId: number): { value: string; maxAge: number } {
   const expires = Math.floor(Date.now() / 1000) + SESSION_SECONDS;
-  return { value: `${expires}.${sign(expires)}`, maxAge: SESSION_SECONDS };
+  return { value: `${userId}.${expires}.${sign(userId, expires)}`, maxAge: SESSION_SECONDS };
 }
 
-function verifySessionValue(value: string | undefined): boolean {
-  if (!value || !isAdminConfigured()) return false;
-  const [expiresText, signature] = value.split(".");
+/** The user id inside a valid cookie, or null. */
+function readSession(value: string | undefined): number | null {
+  if (!value || !isAdminConfigured()) return null;
+  const [idText, expiresText, signature] = value.split(".");
+  const userId = Number(idText);
   const expires = Number(expiresText);
-  if (!signature || !Number.isFinite(expires)) return false;
-  if (expires < Math.floor(Date.now() / 1000)) return false;
-  return same(signature, sign(expires));
+  if (!signature || !Number.isInteger(userId) || userId < 0 || !Number.isFinite(expires)) return null;
+  if (expires < Math.floor(Date.now() / 1000)) return null;
+  return same(signature, sign(userId, expires)) ? userId : null;
+}
+
+/** The signed-in user's id (0 for the emergency login), or null. */
+export async function currentAdminId(): Promise<number | null> {
+  const userId = readSession((await cookies()).get(SESSION_COOKIE)?.value);
+  if (userId === null) return null;
+  if (userId > 0 && usersAvailable()) {
+    try {
+      // A login that has been removed stops working at once.
+      if (!(await getUserById(userId))) return null;
+    } catch {
+      // Database trouble: keep the session so the dashboard can explain it.
+    }
+  }
+  return userId;
 }
 
 export async function isAdmin(): Promise<boolean> {
-  const store = await cookies();
-  return verifySessionValue(store.get(SESSION_COOKIE)?.value);
+  return (await currentAdminId()) !== null;
 }
 
 /** For admin pages and actions: send anyone who is not signed in to the login. */

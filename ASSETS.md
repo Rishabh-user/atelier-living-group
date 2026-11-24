@@ -349,3 +349,7 @@ split into its left and right page).
 ## Image processing
 
 All photographs under `public/` were re-encoded (mozjpeg, quality 78, max 1920 px wide) to cut page weight. No cropping or colour changes were applied.
+
+## Showroom projects
+
+Photos in `public/showroom/projects/<slug>/` (1800px max, JPEG q78). Raw originals moved to `D:\Targeticontelier-raw-assets\showroom`. Text and image order: `content/showroom-projects.ts`.
