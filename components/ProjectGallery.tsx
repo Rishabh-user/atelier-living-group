@@ -12,7 +12,7 @@ export default function ProjectGallery({
   index,
 }: {
   project: ShowroomProject;
-  index: number;
+  index?: number;
 }) {
   const { images } = project;
   const [open, setOpen] = useState<number | null>(null);
@@ -63,9 +63,11 @@ export default function ProjectGallery({
   return (
     <article className="project" id={project.slug}>
       <Reveal className="project-intro">
-        <span className="project-num" aria-hidden="true">
-          {String(index + 1).padStart(2, "0")}
-        </span>
+        {index === undefined ? null : (
+          <span className="project-num" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        )}
         <div>
           <p className="project-place">{project.place}</p>
           <h3>{project.title}</h3>

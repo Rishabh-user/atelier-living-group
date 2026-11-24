@@ -1,5 +1,5 @@
 /**
- * Completed Atelier Living Group projects, shown on /our-work.
+ * Completed Atelier Living Group projects, shown on /media.
  *
  * Add a project here to publish it: nothing else in the code needs to change.
  * Only list projects Atelier delivered, with permission to publish the

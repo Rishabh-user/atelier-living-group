@@ -255,12 +255,12 @@ export default function SiteNav() {
               </li>
               <li>
                 <Link
-                  href="/our-work"
+                  href="/media"
                   scroll={false}
                   tabIndex={megaOpen ? 0 : -1}
                   onClick={() => setMegaOpen(false)}
                 >
-                  Our Work
+                  Media
                 </Link>
               </li>
               <li>
@@ -297,6 +297,16 @@ export default function SiteNav() {
                   onClick={() => setMegaOpen(false)}
                 >
                   Our showroom
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/our-work"
+                  scroll={false}
+                  tabIndex={megaOpen ? 0 : -1}
+                  onClick={() => setMegaOpen(false)}
+                >
+                  Our Work
                 </Link>
               </li>
             </ul>

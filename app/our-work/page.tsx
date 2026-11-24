@@ -1,30 +1,26 @@
-import Image from "next/image";
 import type { Metadata } from "next";
-import Link from "next/link";
-
+import ProjectGallery from "@/components/ProjectGallery";
 import ConsultationBand from "@/components/ConsultationBand";
-import FilmSection from "@/components/FilmSection";
-import GalleryGrid from "@/components/GalleryGrid";
 import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import { Button } from "@/components/ui/button";
-import { galleryItems } from "@/content/gallery";
-import { films } from "@/content/media";
-import { projects } from "@/content/projects";
+import { showroomProject, showroomProjects } from "@/content/showroom-projects";
 import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
+import { phone, phoneHref } from "@/content/site";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Our Work | Poggenpohl Atlanta",
+  title: "Our Work | Poggenpohl Kitchens in Atlanta",
   description:
-    "Spaces designed with Atelier Living Group, and Poggenpohl kitchen photography from the six collections and reference projects around the world.",
+    "Recent Poggenpohl kitchens from Atelier Living Group in Atlanta and beyond: photography and a short note on each project.",
   path: "/our-work",
-  image: "/products/taglio/taglio-09.jpg",
-  imageWidth: 1920,
-  imageHeight: 1080,
-  imageAlt: "Poggenpohl TAGLIO kitchen with faceted fronts",
+  image: "/showroom/projects/rilman/2.jpg",
+  imageWidth: 1800,
+  imageHeight: 1200,
+  imageAlt:
+    "A contemporary courtyard house with a pool and a walnut-toned Poggenpohl kitchen",
 });
 
-const ld = [
+const workLd = [
   breadcrumbLd([
     { name: "Home", path: "/" },
     { name: "Our Work", path: "/our-work" },
@@ -33,89 +29,47 @@ const ld = [
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "@id": abs("/our-work"),
-    name: "Our Work",
+    name: "Our Work | Poggenpohl Kitchens in Atlanta",
     url: abs("/our-work"),
-    publisher: { "@id": abs("/#business") },
+      primaryImageOfPage: abs("/showroom/projects/rilman/2.jpg"),
   },
 ];
 
 export default function OurWorkPage() {
   return (
     <>
-      <JsonLd data={ld} />
+      <JsonLd data={workLd} />
 
       <PageBanner
         crumb="Our Work"
-        title="Spaces shaped by architecture, materials and the people who live in them."
-        intro="A collection of thoughtfully designed spaces, each shaped by its architecture, materials, and the people who call it home."
-        tag="Atlanta + Georgia"
+        title="Kitchens we have built, and the rooms they belong to."
+        intro="A selection of recent Poggenpohl kitchens, each with a short note on the space and the way it was planned."
+        tag="Atlanta + Tennessee"
         shots={[
-          { src: "/products/taglio/taglio-09.jpg", alt: "Poggenpohl TAGLIO kitchen with faceted fronts" },
-          { src: "/gallery/leidschendam-2.jpg", alt: "Poggenpohl kitchen with walnut-veneer tall units and a stone island" },
-          { src: "/gallery/munich-3.jpg", alt: "Poggenpohl dark kitchen with a central island and ring pendants" },
+          { src: "/showroom/projects/rilman/2.jpg", alt: "A contemporary courtyard house with a pool and a walnut-toned Poggenpohl kitchen" },
+          { src: "/showroom/projects/w-conway/1.jpg", alt: "A dark textured Poggenpohl kitchen with a bright white island" },
+          { src: "/showroom/projects/granny-white-pike/1.jpg", alt: "A bright white Poggenpohl kitchen with a timber-topped breakfast bar" },
         ]}
+        actions={
+          <>
+            <Button asChild variant="default" size="wide">
+              <a href="/showroom">Visit the showroom</a>
+            </Button>
+            <Button asChild variant="outline" size="wide">
+              <a href={phoneHref}>Call {phone}</a>
+            </Button>
+          </>
+        }
       />
 
-      <section className="section-pad work-projects" id="projects">
+      <section className="projects section-pad" id="projects" aria-label="Projects">
         <div className="shell">
-          <div className="section-heading">
-            <p className="eyebrow dark">Atelier projects</p>
-            <h2>Spaces We&apos;ve Created</h2>
+          <div className="projects-list">
+            <ProjectGallery project={showroomProject} index={0} />
+            {showroomProjects.map((project, i) => (
+              <ProjectGallery key={project.slug} project={project} index={i + 1} />
+            ))}
           </div>
-          {projects.length ? (
-            <ul className="work-grid">
-              {projects.map((project) => (
-                <li key={project.slug}>
-                  <Image
-                    src={project.image}
-                    alt={project.imageAlt}
-                    width={project.width}
-                    height={project.height}
-                    sizes="(max-width: 860px) 100vw, 50vw"
-                  />
-                  <h3>{project.title}</h3>
-                  <p>{project.location}</p>
-                  <p>{project.summary}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="work-empty">
-              <p>
-                Our Atlanta project case studies are being prepared with full
-                photography and credits. In the meantime, the Terminus 100 showroom
-                is the best place to see the work in person.
-              </p>
-              <Button asChild variant="default" size="wide">
-                <Link href="/showroom" scroll={false}>
-                  Visit the showroom
-                </Link>
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <FilmSection
-        id="films"
-        title="Poggenpohl on film."
-        films={films}
-        lead
-        tone="dark"
-      />
-
-      <section className="section-pad gallery-section" id="inspiration">
-        <div className="shell">
-          <div className="section-heading">
-            <p className="eyebrow dark">Inspiration</p>
-            <h2>Poggenpohl photography.</h2>
-            <p>
-              The Poggenpohl collections and reference kitchens from around
-              the world. These are manufacturer images, not Atelier Living
-              Group projects.
-            </p>
-          </div>
-          <GalleryGrid items={galleryItems} />
         </div>
       </section>
 

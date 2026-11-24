@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // The old /gallery page is now /our-work.
+  // /gallery is now /media.
   async redirects() {
-    return [{ source: "/gallery", destination: "/our-work", permanent: true }];
+    return [
+      { source: "/gallery", destination: "/media", permanent: true },
+    ];
   },
 
   // Do not advertise the framework in a response header.

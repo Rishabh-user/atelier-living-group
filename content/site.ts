@@ -182,9 +182,10 @@ export const contactSteps = [
 export const navLinks = [
   { href: "/services", label: "Kitchens" },
   { href: "/poggenpohl", label: "Poggenpohl" },
-  { href: "/our-work", label: "Our Work" },
-  { href: "/blog", label: "Blog" },
   { href: "/showroom", label: "Showroom" },
+  { href: "/our-work", label: "Our Work" },
+  { href: "/media", label: "Media" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];

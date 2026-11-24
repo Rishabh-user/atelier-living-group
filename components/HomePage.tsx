@@ -278,10 +278,10 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
           />
           <div className="spaces-scrim" />
           <div className="spaces-copy">
-            <p className="eyebrow">Our Work</p>
+            <p className="eyebrow">Media</p>
             <h2>Spaces that inspire.</h2>
-            <Link className="hero-link" href="/our-work" scroll={false}>
-              Explore Our Work
+            <Link className="hero-link" href="/media" scroll={false}>
+              Explore Media
               <ArrowRight aria-hidden="true" />
             </Link>
           </div>

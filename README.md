@@ -24,19 +24,19 @@ TURSO_DATABASE_URL=file:./local.db
 ## Shape
 
 - `app/` — routes: `/` (homepage), `/about`, `/services` (shown as "Kitchens"),
-  `/poggenpohl` and `/poggenpohl/[slug]` (one page per collection), `/our-work`,
-  `/showroom`, `/contact`, `/faq`, `/service-areas`, `/process`, plus
-  `app/api/inquiry/route.ts`. `/gallery` redirects to `/our-work`.
+  `/poggenpohl` and `/poggenpohl/[slug]` (one page per collection), `/media`,
+  `/showroom`, `/our-work`, `/contact`, `/faq`, `/service-areas`, `/process`, plus
+  `app/api/inquiry/route.ts`. `/gallery` redirects to `/media`.
 - `content/site.ts` — site-wide copy and data: phone, address, **opening hours**,
   navigation, services, FAQs and the business structured data. **It is imported
   by a client component, so it must not read Node-only globals at the top
   level.**
 - `content/products.ts` — the six collection pages. Add or edit a collection
   here; the page template renders whatever is listed.
-- `content/projects.ts` — completed Atelier projects for `/our-work`. Empty until
+- `content/projects.ts` — completed Atelier projects for `/media`. Empty until
   real, credited project photography is available. Do not list manufacturer
   images here.
-- `content/gallery.ts` — Poggenpohl photography shown on `/our-work`.
+- `content/gallery.ts` — Poggenpohl photography shown on `/media`.
 - `components/` — shared UI; `components/ui/` is shadcn/ui. The homepage hero is
   `HeroSlider` and the sections are in `HomePage`.
 - `db/` — Drizzle schema and the libSQL client.
