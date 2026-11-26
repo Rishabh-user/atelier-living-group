@@ -1,3 +1,4 @@
+import { phone } from "@/content/site";
 import { getDb, isDatabaseConfigured } from "@/db";
 import { inquiries } from "@/db/schema";
 import { sql } from "drizzle-orm";
@@ -75,8 +76,7 @@ async function ensureTable(db: ReturnType<typeof getDb>): Promise<void> {
   `);
 }
 
-const fallbackMessage =
-  "We could not send that request right now. Please call 404-912-9996 and we will take the details directly.";
+const fallbackMessage = `We could not send that request right now. Please call ${phone} and we will take the details directly.`;
 
 export async function POST(request: Request): Promise<Response> {
   let payload: Payload;

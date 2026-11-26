@@ -91,11 +91,13 @@ export default async function BlogPage({
         shots={banner}
       />
 
-      <nav className="blog-filter-bar" aria-label="Blog categories">
-        <div className="shell">
-          <CategoryFilters categories={categories} />
-        </div>
-      </nav>
+      {categories.length > 0 ? (
+        <nav className="blog-filter-bar" aria-label="Blog categories">
+          <div className="shell">
+            <CategoryFilters categories={categories} />
+          </div>
+        </nav>
+      ) : null}
 
       <PostGrid
         posts={posts}

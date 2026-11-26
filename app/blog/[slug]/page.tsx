@@ -47,10 +47,15 @@ export async function generateMetadata({
         }
       : {}),
   });
+  const seoTitle = post.seoTitle?.trim();
   return {
     ...base,
+    // An SEO title is used exactly as written, without the site-name suffix.
+    ...(seoTitle ? { title: { absolute: seoTitle } } : {}),
+    twitter: { ...base.twitter, ...(seoTitle ? { title: seoTitle } : {}) },
     openGraph: {
       ...base.openGraph,
+      ...(seoTitle ? { title: seoTitle } : {}),
       type: "article",
       publishedTime: post.publishedAt ?? undefined,
       modifiedTime: post.updatedAt,
@@ -63,7 +68,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await getPublishedBySlug(slug);
   if (!post) notFound();
 
-  const related = await listPublished({ limit: 3, excludeId: post.id, category: post.category });
+  const related = await listPublished({
+    limit: 3,
+    excludeId: post.id,
+    ...(post.category ? { category: post.category } : {}),
+  });
   const more =
     related.length >= 3
       ? related
@@ -76,7 +85,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     breadcrumbLd([
       { name: "Home", path: "/" },
       { name: "Blog", path: "/blog" },
-      { name: post.category, path: categoryHref(post.category) },
+      ...(post.category ? [{ name: post.category, path: categoryHref(post.category) }] : []),
       { name: post.title, path: `/blog/${post.slug}` },
     ]),
     {
@@ -107,12 +116,18 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <Link href="/">Home</Link>
               <span aria-hidden="true">/</span>
               <Link href="/blog">Blog</Link>
-              <span aria-hidden="true">/</span>
-              <Link href={categoryHref(post.category)}>{post.category}</Link>
+              {post.category ? (
+                <>
+                  <span aria-hidden="true">/</span>
+                  <Link href={categoryHref(post.category)}>{post.category}</Link>
+                </>
+              ) : null}
             </nav>
-            <p className="post-category">
-              <Link href={categoryHref(post.category)}>{post.category}</Link>
-            </p>
+            {post.category ? (
+              <p className="post-category">
+                <Link href={categoryHref(post.category)}>{post.category}</Link>
+              </p>
+            ) : null}
             <h1>{post.title}</h1>
             {post.excerpt ? <p className="post-standfirst">{post.excerpt}</p> : null}
             <p className="post-meta">

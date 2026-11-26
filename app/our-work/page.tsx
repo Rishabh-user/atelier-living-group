@@ -42,7 +42,7 @@ export default function OurWorkPage() {
 
       <PageBanner
         crumb="Our Work"
-        title="Kitchens we have built, and the rooms they belong to."
+        title="Portfolio"
         intro="A selection of recent Poggenpohl kitchens, each with a short note on the space and the way it was planned."
         tag="Atlanta + Tennessee"
         shots={[

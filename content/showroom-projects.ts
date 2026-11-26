@@ -11,6 +11,13 @@ export type ShowroomProject = {
   title: string;
   place: string;
   description: string;
+  /**
+   * Optional credits, shown under the description. Add only what applies,
+   * for example { role: "Architect", name: "Name or firm" }. Leave out to show nothing.
+   */
+  credits?: { role: string; name: string }[];
+  /** Optional photographer credit for the project's photos. */
+  photography?: string;
   images: ProjectImage[];
 };
 

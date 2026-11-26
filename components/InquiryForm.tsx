@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, Loader2, Mail, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import Link from "next/link";
+
+import { phone, phoneHref } from "@/content/site";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -58,7 +61,7 @@ const FORM: {
   /** Two-column field grid on wider screens. */
   twoUp?: boolean;
 } = {
-    submit: "Request consultation",
+    submit: "Let’s Talk",
     twoUp: true,
     fields: [
       {
@@ -170,7 +173,7 @@ export default function InquiryForm({
       setStatus("idle");
     } catch {
       setFormMessage(
-        "We could not reach the server. Please check your connection or call 404-912-9996.",
+        `We could not reach the server. Please check your connection or call ${phone}.`,
       );
       setStatus("idle");
     }
@@ -203,8 +206,8 @@ export default function InquiryForm({
           <p className="text-[15px] leading-relaxed opacity-80">
             A member of Atelier Living Group will be in touch shortly to arrange
             your private consultation. For anything urgent, call{" "}
-            <a className="border-b border-current" href="tel:+14049129996">
-              404-912-9996
+            <a className="border-b border-current" href={phoneHref}>
+              {phone}
             </a>
             .
           </p>
@@ -342,6 +345,12 @@ export default function InquiryForm({
           </>
         )}
       </Button>
+
+      <p className="form-privacy">
+        <Link href="/privacy" scroll={false}>
+          Privacy Policy
+        </Link>
+      </p>
 
       <p
         className="mt-3 text-[13px] leading-relaxed text-destructive empty:mt-0"

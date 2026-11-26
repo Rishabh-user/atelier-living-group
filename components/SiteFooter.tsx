@@ -6,7 +6,7 @@ import {
   address,
   collectionCards,
   hours,
-  navLinks,
+  footerLinks,
   phone,
   phoneHref,
 } from "@/content/site";
@@ -84,7 +84,7 @@ export default function SiteFooter() {
           <nav aria-label="Footer navigation" className="footer-v2-col">
             <h3>Explore</h3>
             <ul>
-              {navLinks.map((link) => (
+              {footerLinks.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} scroll={false}>
                     {link.label}
@@ -144,6 +144,7 @@ export default function SiteFooter() {
             <Link href="/faq" scroll={false}>FAQ</Link>
             <Link href="/service-areas" scroll={false}>Service areas</Link>
             <Link href="/process" scroll={false}>Our process</Link>
+            <Link href="/privacy" scroll={false}>Privacy Policy</Link>
           </span>
           <a href="#main">
             Back to top

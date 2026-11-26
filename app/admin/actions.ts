@@ -91,6 +91,17 @@ function textField(formData: FormData, name: string, limit: number): string {
   return typeof value === "string" ? value.trim().slice(0, limit) : "";
 }
 
+/** "/blog/my-post", "https://site.com/blog/my-post" or "my-post" all become "my-post". */
+function pathToSlug(value: string): string {
+  return value
+    .trim()
+    .replace(/^https?:\/\/[^/]+/i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/^\/+/, "")
+    .replace(/^blog\//i, "")
+    .replace(/\/+$/, "");
+}
+
 /** Only our own uploads or an https image may be used as a cover. */
 function cleanImage(value: string): string | null {
   if (!value) return null;
@@ -123,10 +134,13 @@ export async function savePostAction(_: FormState, formData: FormData): Promise<
     return { error: "Write some content before publishing." };
   }
 
+  // A category is optional. If one is chosen it must exist.
   const category = textField(formData, "category", MAX.categoryName);
-  const known = (await listCategoriesSafe()).map((item) => item.name);
-  if (!known.includes(category)) {
-    return { error: "Choose a category. Add one under Categories if the list is empty." };
+  if (category) {
+    const known = (await listCategoriesSafe()).map((item) => item.name);
+    if (!known.includes(category)) {
+      return { error: "That category does not exist. Pick one from the list or leave it empty." };
+    }
   }
   const rawId = Number(formData.get("id"));
   const id = Number.isInteger(rawId) && rawId > 0 ? rawId : undefined;
@@ -136,12 +150,13 @@ export async function savePostAction(_: FormState, formData: FormData): Promise<
     const saved = await savePost(
       {
         title,
-        slug: slugify(textField(formData, "slug", MAX.slug)),
+        slug: slugify(pathToSlug(textField(formData, "slug", 300))),
         excerpt: textField(formData, "excerpt", MAX.excerpt),
         content,
         coverImage: cleanImage(textField(formData, "coverImage", 500)),
         coverAlt: textField(formData, "coverAlt", MAX.alt) || null,
         category,
+        seoTitle: textField(formData, "seoTitle", MAX.seoTitle) || null,
         seoDescription: textField(formData, "seoDescription", MAX.seo) || null,
         status: intent,
       },

@@ -22,7 +22,7 @@ export default async function EditPostPage({
   if (!post) notFound();
   const categories = (await listCategoriesSafe()).map((item) => item.name);
   // A post keeps its category even if the list no longer has it.
-  if (!categories.includes(post.category)) categories.push(post.category);
+  if (post.category && !categories.includes(post.category)) categories.push(post.category);
 
   return (
     <>
@@ -48,6 +48,7 @@ export default async function EditPostPage({
           coverImage: post.coverImage ?? "",
           coverAlt: post.coverAlt ?? "",
           category: post.category,
+          seoTitle: post.seoTitle ?? "",
           seoDescription: post.seoDescription ?? "",
           status: post.status === "published" ? "published" : "draft",
         }}

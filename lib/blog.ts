@@ -54,7 +54,8 @@ export const MAX = {
   excerpt: 300,
   content: 120_000,
   alt: 200,
-  seo: 200,
+  seo: 320,
+  seoTitle: 120,
   categoryName: 40,
   categoryText: 220,
 } as const;
@@ -185,6 +186,7 @@ export type PostInput = {
   coverImage: string | null;
   coverAlt: string | null;
   category: string;
+  seoTitle: string | null;
   seoDescription: string | null;
   status: "draft" | "published";
 };

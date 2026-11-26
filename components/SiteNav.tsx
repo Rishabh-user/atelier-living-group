@@ -253,26 +253,6 @@ export default function SiteNav() {
                   Colours &amp; Materiality
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/media"
-                  scroll={false}
-                  tabIndex={megaOpen ? 0 : -1}
-                  onClick={() => setMegaOpen(false)}
-                >
-                  Media
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  scroll={false}
-                  tabIndex={megaOpen ? 0 : -1}
-                  onClick={() => setMegaOpen(false)}
-                >
-                  Blog
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -347,7 +327,7 @@ export default function SiteNav() {
               sizes="300px"
             />
             <span className="mega-card-copy">
-              <strong>Request a meeting</strong>
+              <strong>Let’s Talk</strong>
               <span>
                 More <ArrowRight aria-hidden="true" />
               </span>

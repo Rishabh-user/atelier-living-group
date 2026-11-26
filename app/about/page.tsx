@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import ConsultationBand from "@/components/ConsultationBand";
 import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
+import TeamSection from "@/components/TeamSection";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
 import { journey, phone, phoneHref } from "@/content/site";
@@ -40,7 +41,7 @@ export default function AboutPage() {
         actions={
           <>
             <Button asChild variant="default" size="wide">
-              <Link href="/contact#enquiry" scroll={false}>Book a Private Consultation</Link>
+              <Link href="/contact#enquiry" scroll={false}>Let’s Talk</Link>
             </Button>
             <Button asChild variant="outline" size="wide">
               <a href={phoneHref}>Call {phone}</a>
@@ -86,6 +87,8 @@ export default function AboutPage() {
           </ol>
         </div>
       </section>
+
+      <TeamSection />
 
       <ConsultationBand />
     </>

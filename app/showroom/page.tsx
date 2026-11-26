@@ -10,15 +10,18 @@ import {
 } from "lucide-react";
 
 import ConsultationBand from "@/components/ConsultationBand";
+import DisplayGallery from "@/components/DisplayGallery";
 import Counter from "@/components/Counter";
 import JsonLd from "@/components/JsonLd";
 import PageBanner from "@/components/PageBanner";
 import Reveal from "@/components/Reveal";
 import { Button } from "@/components/ui/button";
+import { displayCount, displayWord, displayWordCap, showroomDisplays } from "@/content/showroom-displays";
 import { abs, breadcrumbLd, pageMetadata } from "@/lib/seo";
 import {
   address,
   hours,
+  visitInfo,
   materials,
   showroomBanner,
   phone,
@@ -29,7 +32,7 @@ import {
 export const metadata: Metadata = pageMetadata({
   title: "Poggenpohl Showroom in Buckhead, Atlanta",
   description:
-    "Visit the Poggenpohl showroom at Terminus 100, Buckhead: seven kitchen displays, a full finish library and private consultations.",
+    `Visit the Poggenpohl showroom at Terminus 100, Buckhead: ${displayWord} kitchen displays, a full finish library and private consultations.`,
   path: "/showroom",
   image: "/showroom/banner-1.jpg",
   imageWidth: 1400,
@@ -101,9 +104,9 @@ export default function ShowroomPage() {
 
       <PageBanner
         crumb="Showroom"
-        title="Seven kitchens, one quiet room in Buckhead."
+        title={`${displayWordCap} kitchens, one quiet room in Buckhead.`}
         intro="The Terminus 100 showroom is where the decisions actually get made: finishes in real light, drawers that open, proportions you can stand inside."
-        tag="3280 Peachtree Rd, Unit 125 — Buckhead, Atlanta"
+        tag={`${address.street} — Buckhead, ${address.city}`}
         shots={showroomBanner}
         actions={
           <>
@@ -116,6 +119,24 @@ export default function ShowroomPage() {
           </>
         }
       />
+
+      <section className="projects section-pad" id="displays" aria-label="Kitchen displays">
+        <div className="shell">
+          <Reveal>
+            <div className="section-heading">
+              <p className="eyebrow dark">The displays</p>
+              <h2>
+                {displayWordCap} kitchens to open, touch and compare.
+              </h2>
+              <p>
+                Each display shows a different Poggenpohl kitchen at full scale.
+                Click a photo to see more of it.
+              </p>
+            </div>
+          </Reveal>
+          <DisplayGallery displays={showroomDisplays} />
+        </div>
+      </section>
 
       <section className="section-pad" id="visit">
         <div className="shell visit-grid">
@@ -177,11 +198,34 @@ export default function ShowroomPage() {
             />
             <div className="visit-badge">
               <strong>
-                <Counter value={7} />
+                <Counter value={displayCount} />
               </strong>
               <span>Kitchen displays</span>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      <section className="arrival section-pad" id="arrival" aria-label="Parking and entrance">
+        <div className="shell">
+          <Reveal>
+            <div className="section-heading">
+              <p className="eyebrow dark">Getting here</p>
+              <h2>Parking and entrance.</h2>
+            </div>
+          </Reveal>
+          <div className="arrival-grid">
+            {[visitInfo.parking, visitInfo.entrance]
+              .filter((block) => block.lines.length > 0)
+              .map((block, i) => (
+                <Reveal key={block.title} delay={i * 80} className="arrival-card">
+                  <h3>{block.title}</h3>
+                  {block.lines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </Reveal>
+              ))}
+          </div>
         </div>
       </section>
 

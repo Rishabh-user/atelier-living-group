@@ -1,3 +1,4 @@
+import { privacyPublished } from "@/content/privacy";
 import type { MetadataRoute } from "next";
 
 import { siteUrl } from "@/content/site";
@@ -29,6 +30,7 @@ const routes: { path: string; priority: number }[] = [
   { path: "/blog", priority: 0.7 },
   { path: "/process", priority: 0.8 },
   { path: "/contact", priority: 0.8 },
+  ...(privacyPublished ? [{ path: "/privacy", priority: 0.3 }] : []),
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

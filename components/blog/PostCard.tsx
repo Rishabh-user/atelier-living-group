@@ -31,8 +31,12 @@ export default function PostCard({
         </span>
         <span className="blog-card-body">
           <span className="blog-card-meta">
-            {post.category}
-            <i aria-hidden="true" />
+            {post.category ? (
+              <>
+                {post.category}
+                <i aria-hidden="true" />
+              </>
+            ) : null}
             {formatDate(post.publishedAt)}
             <i aria-hidden="true" />
             {readingMinutes(post.content)} min read

@@ -96,7 +96,7 @@ export default async function AdminHome() {
                     </Link>
                     <small>/blog/{post.slug}</small>
                   </td>
-                  <td>{post.category}</td>
+                  <td>{post.category || <span className="adm-muted">None</span>}</td>
                   <td>
                     <span className="adm-badge" data-status={post.status}>
                       {post.status === "published" ? "Published" : "Draft"}

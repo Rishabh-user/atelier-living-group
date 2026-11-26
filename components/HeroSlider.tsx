@@ -12,6 +12,8 @@ type Slide = {
   id: string;
   kicker: string;
   title: string;
+  /** Optional line beneath the headline. */
+  sub?: string;
   cta: { label: string; href: string };
   alt: string;
   image: string;
@@ -33,7 +35,8 @@ const slides: Slide[] = [
     id: "brand",
     kicker: "Poggenpohl Atlanta",
     title: "An Extraordinary Kitchen Begins With You",
-    cta: { label: "Book a Showroom Consultation", href: "/contact?interest=visit#enquiry" },
+    sub: "Bespoke German kitchens at our Buckhead showroom",
+    cta: { label: "Let’s Talk", href: "/contact?interest=visit#enquiry" },
     alt: "Poggenpohl TAGLIO kitchen with sculpted, faceted fronts",
     image: "/products/taglio/taglio-09.jpg",
     logo: "light",
@@ -157,6 +160,7 @@ export default function HeroSlider() {
               />
               <p className="hero-kicker">{slide.kicker}</p>
               <Title>{slide.title}</Title>
+              {slide.sub ? <p className="hero-sub">{slide.sub}</p> : null}
               <div className="hero-actions">
                 <Button asChild variant="light" size="wide">
                   <Link href={slide.cta.href} scroll={false}>

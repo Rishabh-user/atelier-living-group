@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
 
+import PhotoViewer from "@/components/PhotoViewer";
 import Reveal from "@/components/Reveal";
 import type { ShowroomProject } from "@/content/showroom-projects";
 
@@ -17,15 +17,13 @@ export default function ProjectGallery({
   const { images } = project;
   const [open, setOpen] = useState<number | null>(null);
   const opener = useRef<HTMLElement | null>(null);
-  const closeBtn = useRef<HTMLButtonElement>(null);
-  const touchX = useRef<number | null>(null);
 
   const src = (file: string) => `/showroom/projects/${project.slug}/${file}`;
   const alt = (i: number) =>
     `${project.title}: Poggenpohl kitchen, ${i === 0 ? "main view" : `view ${i + 1}`}`;
 
-  const show = (i: number, el?: HTMLElement | null) => {
-    if (el) opener.current = el;
+  const show = (i: number, el: HTMLElement) => {
+    opener.current = el;
     setOpen(i);
   };
   const close = useCallback(() => {
@@ -34,30 +32,10 @@ export default function ProjectGallery({
   }, []);
   const step = useCallback(
     (d: number) =>
-      setOpen((i) =>
-        i === null ? i : (i + d + images.length) % images.length,
-      ),
+      setOpen((i) => (i === null ? i : (i + d + images.length) % images.length)),
     [images.length],
   );
 
-  useEffect(() => {
-    if (open === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      else if (e.key === "ArrowRight") step(1);
-      else if (e.key === "ArrowLeft") step(-1);
-    };
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", onKey);
-    closeBtn.current?.focus();
-    return () => {
-      document.body.style.overflow = prev;
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open, close, step]);
-
-  const current = open === null ? null : images[open];
   const [lead, ...rest] = images;
 
   return (
@@ -72,6 +50,22 @@ export default function ProjectGallery({
           <p className="project-place">{project.place}</p>
           <h3>{project.title}</h3>
           <p className="project-copy">{project.description}</p>
+          {project.credits?.length || project.photography ? (
+            <dl className="project-credits">
+              {project.credits?.map((credit) => (
+                <div key={`${credit.role}-${credit.name}`}>
+                  <dt>{credit.role}</dt>
+                  <dd>{credit.name}</dd>
+                </div>
+              ))}
+              {project.photography ? (
+                <div>
+                  <dt>Photography</dt>
+                  <dd>{project.photography}</dd>
+                </div>
+              ) : null}
+            </dl>
+          ) : null}
         </div>
       </Reveal>
       <div className="project-gallery">
@@ -117,83 +111,19 @@ export default function ProjectGallery({
         </ul>
       </div>
 
-      {current && open !== null ? (
-        <div
-          className="plbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${project.title} photos`}
-          onTouchStart={(e) => {
-            touchX.current = e.touches[0]?.clientX ?? null;
-          }}
-          onTouchEnd={(e) => {
-            const start = touchX.current;
-            touchX.current = null;
-            const end = e.changedTouches[0]?.clientX;
-            if (start === null || end === undefined) return;
-            if (Math.abs(end - start) > 50) step(end < start ? 1 : -1);
-          }}
-        >
-          <button
-            type="button"
-            className="plbox-backdrop"
-            aria-hidden="true"
-            tabIndex={-1}
-            onClick={close}
-          />
-          <button
-            ref={closeBtn}
-            type="button"
-            className="plbox-btn plbox-close"
-            aria-label="Close"
-            onClick={close}
-          >
-            <X />
-          </button>
-          {images.length > 1 ? (
-            <>
-              <button
-                type="button"
-                className="plbox-btn plbox-prev"
-                aria-label="Previous photo"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  step(-1);
-                }}
-              >
-                <ChevronLeft />
-              </button>
-              <button
-                type="button"
-                className="plbox-btn plbox-next"
-                aria-label="Next photo"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  step(1);
-                }}
-              >
-                <ChevronRight />
-              </button>
-            </>
-          ) : null}
-          <figure>
-            <Image
-              key={current.file}
-              src={src(current.file)}
-              alt={alt(open)}
-              width={current.width}
-              height={current.height}
-              sizes="100vw"
-              unoptimized
-            />
-            <figcaption>
-              <strong>{project.title}</strong>
-              <span>
-                {open + 1} / {images.length}
-              </span>
-            </figcaption>
-          </figure>
-        </div>
+      {open !== null ? (
+        <PhotoViewer
+          images={images.map((image, i) => ({
+            src: src(image.file),
+            alt: alt(i),
+            width: image.width,
+            height: image.height,
+          }))}
+          index={open}
+          title={project.title}
+          onClose={close}
+          onStep={step}
+        />
       ) : null}
     </article>
   );

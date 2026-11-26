@@ -223,7 +223,7 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
           </p>
           <Button asChild variant="default" size="wide">
             <Link href="/contact?interest=visit#enquiry" scroll={false}>
-              Book a Showroom Consultation
+              Let’s Talk
             </Link>
           </Button>
           <p className="brand-signature">
@@ -371,7 +371,7 @@ export default function HomePage({ hero }: { hero: ReactNode }) {
           <div className="visit-actions">
             <Button asChild variant="default" size="wide">
               <Link href="/contact?interest=visit#enquiry" scroll={false}>
-                Book a Private Showroom Visit
+                Let’s Talk
               </Link>
             </Button>
             <a className="text-link" href={phoneHref}>

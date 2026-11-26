@@ -121,7 +121,7 @@ export default async function ProductPage({
           <p className="pdp-tagline">{product.tagline}</p>
           <div className="pdp-actions">
             <Button asChild variant="light" size="wide">
-              <a href="#consultation">Request a design consultation</a>
+              <a href="#consultation">Let’s Talk</a>
             </Button>
             <Button asChild variant="ghost" size="wide">
               <Link scroll={false} href="/showroom">

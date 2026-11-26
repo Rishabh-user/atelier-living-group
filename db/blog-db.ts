@@ -45,6 +45,11 @@ export function ensureSchema(): Promise<{ categoriesCreated: boolean }> {
           updated_at TEXT NOT NULL
         )
       `);
+      // Tables created before the SEO title existed get the column added.
+      const cols = await db.all(sql`PRAGMA table_info(posts)`);
+      if (!cols.some((c) => (c as { name?: string }).name === "seo_title")) {
+        await db.run(sql`ALTER TABLE posts ADD COLUMN seo_title TEXT`);
+      }
       await db.run(
         sql`CREATE INDEX IF NOT EXISTS posts_status_published ON posts (status, published_at)`,
       );

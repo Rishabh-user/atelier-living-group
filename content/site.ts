@@ -3,6 +3,8 @@
  * Keeping it here means a copy change lands in one file rather than five.
  */
 
+import { displayWord, displayWordCap, displayCount } from "./showroom-displays";
+
 /**
  * Canonical origin, used for metadata, Open Graph, JSON-LD, robots and the
  * sitemap. Everything derives from this one value, so pointing the site at a
@@ -30,11 +32,35 @@ export const address = {
   region: "GA",
   postalCode: "30305",
   full: "3280 Peachtree Rd, Unit 125, Atlanta, GA 30305",
+  /** Street line for schema.org, which wants no comma before the unit. */
+  schemaStreet: "3280 Peachtree Rd Unit 125",
   // The showroom's own Google Maps listing.
   mapsUrl:
     "https://www.google.com/maps/place/Poggenpohl+Atlanta+%7C+Kitchen+Design+Studio/@33.8444362,-84.3739979,17z/data=!3m2!4b1!5s0x88f505f5c93c8b43:0x7edf0a3a151cedb5!4m6!3m5!1s0x88f505f5b1ae12bf:0x51c13cbc4525987f!8m2!3d33.8444362!4d-84.3714176!16s%2Fg%2F1tzlzt74",
   latitude: 33.8444362,
   longitude: -84.3714176,
+};
+
+/**
+ * Arrival notes shown under "Parking and entrance" on /showroom. DRAFT: confirm
+ * the parking, valet and entrance wording with the building before publishing,
+ * then edit the lines below. An empty list hides its block.
+ */
+export const visitInfo = {
+  parking: {
+    title: "Parking",
+    lines: [
+      "Visitor parking is available at Terminus 100.",
+      "Tell us your arrival time when you book and we will send the latest directions with your confirmation.",
+    ],
+  },
+  entrance: {
+    title: "Entrance",
+    lines: [
+      `Our showroom is Unit 125 in the Terminus 100 building, ${address.street.split(",")[0]}.`,
+      "Come in through the main lobby and ask for Atelier Living Group, or call us on arrival and we will meet you.",
+    ],
+  },
 };
 
 export const hours = [
@@ -46,6 +72,37 @@ export const hours = [
   { day: "Saturday", time: "10:00 AM – 4:00 PM" },
   { day: "Sunday", time: "Closed" },
 ];
+
+/** "9:00 AM" -> "09:00" */
+function to24h(text: string): string {
+  const m = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(text.trim());
+  if (!m) return "";
+  let h = Number(m[1]) % 12;
+  if (m[3].toUpperCase() === "PM") h += 12;
+  return `${String(h).padStart(2, "0")}:${m[2]}`;
+}
+
+/** schema.org opening hours from `hours`, grouping days that share a time. Closed days are left out. */
+export function openingHoursSpec() {
+  const groups = new Map<string, string[]>();
+  for (const row of hours) {
+    const [from, to] = row.time.split(/\s*[\u2013-]\s*/);
+    const opens = from ? to24h(from) : "";
+    const closes = to ? to24h(to) : "";
+    if (!opens || !closes) continue;
+    const key = `${opens}|${closes}`;
+    groups.set(key, [...(groups.get(key) ?? []), row.day]);
+  }
+  return [...groups].map(([key, days]) => {
+    const [opens, closes] = key.split("|");
+    return {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: days.length === 1 ? days[0] : days,
+      opens,
+      closes,
+    };
+  });
+}
 
 /** The catalogue page: a 3D viewer plus the PDF downloads. */
 export const catalogHref = "/catalogue";
@@ -184,10 +241,16 @@ export const navLinks = [
   { href: "/poggenpohl", label: "Poggenpohl" },
   { href: "/showroom", label: "Showroom" },
   { href: "/our-work", label: "Our Work" },
-  { href: "/media", label: "Media" },
-  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+];
+
+/** The footer carries everything in the header plus Media and Blog. */
+export const footerLinks = [
+  ...navLinks.slice(0, -2),
+  { href: "/media", label: "Media" },
+  { href: "/blog", label: "Blog" },
+  ...navLinks.slice(-2),
 ];
 
 export const journey = [
@@ -213,7 +276,7 @@ export const journey = [
     imageAlt: "A Poggenpohl drawer fitted with timber inserts for knives, graters and spoons",
     copy: "Private showroom consultations reveal fully custom cabinetry, finishes, storage systems, surfaces and the detail that separates good from exceptional.",
     detail: [
-      "A private session across seven Poggenpohl displays in the Terminus 100 showroom.",
+      `A private session across ${displayWord} Poggenpohl displays in the ${address.building} showroom.`,
       "Door samples, finish chips and surfaces compared side by side in real light.",
       "Storage systems opened, handled and tested against how you actually cook.",
       "Appliance performance and panel integration discussed in confidence.",
@@ -322,12 +385,12 @@ export const showroomHighlights = [
   {
     value: "Terminus 100",
     label: "Buckhead showroom address",
-    copy: "Visit the Poggenpohl showroom in the Terminus 100 building at 3280 Peachtree Rd, Unit 125, Atlanta, GA 30305.",
+    copy: `Visit the Poggenpohl showroom in the ${address.building} building at ${address.full}.`,
   },
   {
-    value: "7",
+    value: String(displayCount),
     label: "Kitchen displays",
-    copy: "Seven showroom displays let clients experience Poggenpohl proportions, storage intelligence, finishes and architectural kitchen systems in person.",
+    copy: `${displayWordCap} showroom displays let clients experience Poggenpohl proportions, storage intelligence, finishes and architectural kitchen systems in person.`,
   },
   {
     value: "Library",
@@ -455,12 +518,12 @@ export const faqs = [
   {
     question: "Where is the Poggenpohl showroom in Atlanta?",
     answer:
-      "The Poggenpohl showroom is located in the Terminus 100 building at 3280 Peachtree Rd, Unit 125, Atlanta, GA 30305. Private consultations can be scheduled for homeowners, architects, designers, builders and developers.",
+      `The Poggenpohl showroom is located in the ${address.building} building at ${address.full}. Private consultations can be scheduled for homeowners, architects, designers, builders and developers.`,
   },
   {
     question: "What can I see in the Terminus 100 showroom?",
     answer:
-      "The showroom includes seven kitchen displays along with a broad library of door samples, finish chips, surfaces, cabinetry details and material references for luxury kitchen planning.",
+      `The showroom includes ${displayWord} kitchen displays along with a broad library of door samples, finish chips, surfaces, cabinetry details and material references for luxury kitchen planning.`,
   },
   {
     question: "What makes German cabinets different?",
@@ -501,36 +564,17 @@ export const structuredData = [
       "Exclusive Poggenpohl dealer for Atlanta and Georgia specializing in luxury kitchen design-build, premium remodeling, high-end appliances, custom cabinetry and German-made kitchen systems.",
     slogan: "Spaces That Inspire",
     logo: `${siteUrl}/brand/atelier-logo-on-light.png`,
-    telephone: "+14049129996",
+    telephone: phoneHref.replace("tel:", ""),
     priceRange: "$$$$",
     hasMap: address.mapsUrl,
-    // Mirrors the hours published on /showroom.
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-        ],
-        opens: "09:00",
-        closes: "17:00",
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: "Saturday",
-        opens: "10:00",
-        closes: "16:00",
-      },
-    ],
+    // Built from `hours` above, so the page and the search data cannot disagree.
+    openingHoursSpecification: openingHoursSpec(),
     address: {
       "@type": "PostalAddress",
-      streetAddress: "3280 Peachtree Rd Unit 125",
-      addressLocality: "Atlanta",
-      addressRegion: "GA",
-      postalCode: "30305",
+      streetAddress: address.schemaStreet,
+      addressLocality: address.city,
+      addressRegion: address.region,
+      postalCode: address.postalCode,
       addressCountry: "US",
     },
     geo: {

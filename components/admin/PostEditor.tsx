@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { savePostAction, type FormState } from "@/app/admin/actions";
@@ -15,12 +15,25 @@ type Initial = {
   coverImage: string;
   coverAlt: string;
   category: string;
+  seoTitle: string;
   seoDescription: string;
   status: "draft" | "published";
 };
 
-const slugify = (value: string) =>
+/** Accepts a pasted "/blog/my-post" or full address and keeps only the last part. */
+const cleanPath = (value: string) =>
   value
+    .replace(/^https?:\/\/[^/]+/i, "")
+    .replace(/[?#].*$/, "")
+    .replace(/^\/+/, "")
+    .replace(/^blog\//i, "");
+
+/** True for addresses on other websites (not this site, not a /path). */
+const isOutside = (url: string) =>
+  /^https?:\/\//i.test(url) && !/^https?:\/\/(www\.)?atelierlivinggroup\.com(\/|$)/i.test(url);
+
+const slugify = (value: string) =>
+  cleanPath(value)
     .normalize("NFKD")
     .replace(/[̀-ͯ]/g, "")
     .toLowerCase()
@@ -75,12 +88,103 @@ export default function PostEditor({
   const [title, setTitle] = useState(initial.title);
   const [slug, setSlug] = useState(initial.slug);
   const [slugTouched, setSlugTouched] = useState(isEdit);
+  const [seoTitle, setSeoTitle] = useState(initial.seoTitle);
+  const [seoDesc, setSeoDesc] = useState(initial.seoDescription);
   const [content, setContent] = useState(initial.content);
   const [cover, setCover] = useState(initial.coverImage);
   const [tab, setTab] = useState<"write" | "preview">("write");
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const area = useRef<HTMLTextAreaElement | null>(null);
+  const [linkBar, setLinkBar] = useState<{ start: number; end: number; text: string } | null>(null);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkError, setLinkError] = useState<string | null>(null);
+  const linkInput = useRef<HTMLInputElement | null>(null);
+  const [linkNewTab, setLinkNewTab] = useState(false);
+  const [linkNewTabTouched, setLinkNewTabTouched] = useState(false);
+  useEffect(() => {
+    if (linkBar) linkInput.current?.focus();
+  }, [linkBar]);
+
+  /** Remembers the selected text, then asks for the address. */
+  const openLink = () => {
+    const el = area.current;
+    if (!el) return;
+    setLinkBar({
+      start: el.selectionStart,
+      end: el.selectionEnd,
+      text: content.slice(el.selectionStart, el.selectionEnd),
+    });
+    setLinkUrl("");
+    setLinkError(null);
+    setLinkNewTab(false);
+    setLinkNewTabTouched(false);
+  };
+
+  /** Selecting different words while the link bar is open moves the link to them. */
+  const followSelection = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    if (!linkBar) return;
+    const el = event.currentTarget;
+    if (el.selectionStart !== el.selectionEnd) {
+      setLinkBar({
+        start: el.selectionStart,
+        end: el.selectionEnd,
+        text: el.value.slice(el.selectionStart, el.selectionEnd),
+      });
+    }
+  };
+
+  /** Turns the remembered selection into [text](address). */
+  const applyLink = () => {
+    if (!linkBar) return;
+    let url = linkUrl.trim();
+    if (!url) {
+      setLinkError("Paste or type the link address.");
+      return;
+    }
+    // Accept full addresses, site paths, anchors, mail and phone links; add https:// to a bare domain.
+    if (!/^(https?:\/\/|mailto:|tel:|\/|#)/i.test(url)) {
+      if (/^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(url)) url = `https://${url}`;
+      else {
+        setLinkError("Use an address like https://example.com, a page like /contact, or tel:+14049129996.");
+        return;
+      }
+    }
+    if (/[\s()]/.test(url)) {
+      setLinkError("The address cannot contain spaces or brackets.");
+      return;
+    }
+    // Offsets can be stale if the text changed after the bar opened, so check that the
+    // remembered words are still where we think; if not, find the nearest copy of them.
+    let { start, end } = linkBar;
+    const { text } = linkBar;
+    if (text && content.slice(start, end) !== text) {
+      const after = content.indexOf(text, start);
+      const before = content.lastIndexOf(text, start);
+      const found = after === -1 ? before : before === -1 ? after : start - before <= after - start ? before : after;
+      if (found === -1) {
+        setLinkError("The selected text has changed. Select the words again, then click Link.");
+        return;
+      }
+      start = found;
+      end = found + text.length;
+    }
+    const label = content.slice(start, end) || "link text";
+    // Outside links open in a new tab by default and site links in the same tab;
+    // a title of _blank or _self records a different choice.
+    const outside = isOutside(url);
+    const title = linkNewTab && !outside ? ' "_blank"' : !linkNewTab && outside ? ' "_self"' : "";
+    const next = content.slice(0, start) + `[${label}](${url}${title})` + content.slice(end);
+    setContent(next);
+    setLinkBar(null);
+    requestAnimationFrame(() => {
+      const el = area.current;
+      if (!el) return;
+      el.focus();
+      const caret = start + label.length + url.length + title.length + 4;
+      el.setSelectionRange(caret, caret);
+    });
+  };
 
   /** Wraps the selection, or inserts at the caret. */
   const insert = (before: string, after = "", placeholder = "") => {
@@ -194,7 +298,7 @@ export default function PostEditor({
             <button type="button" onClick={() => insert("*", "*", "italic")}>
               <em>I</em>
             </button>
-            <button type="button" onClick={() => insert("[", "](https://)", "link text")}>
+            <button type="button" onClick={openLink} aria-expanded={linkBar !== null}>
               Link
             </button>
             <button type="button" onClick={() => prefixLines("- ")}>List</button>
@@ -233,6 +337,61 @@ export default function PostEditor({
             </div>
           </div>
 
+          {linkBar ? (
+            <div className="adm-linkbar" role="group" aria-label="Add a link">
+              <span className="adm-linkbar-text">
+                {linkBar.text ? `Link “${linkBar.text.slice(0, 40)}” to:` : "Link address:"}
+              </span>
+              <input
+                ref={linkInput}
+                type="text"
+                inputMode="url"
+                value={linkUrl}
+                placeholder="https://… or /contact"
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setLinkUrl(value);
+                  setLinkError(null);
+                  // Until the box is touched, follow the usual default: outside links in a new tab.
+                  if (!linkNewTabTouched) setLinkNewTab(isOutside(value.trim()));
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    applyLink();
+                  } else if (event.key === "Escape") {
+                    setLinkBar(null);
+                    area.current?.focus();
+                  }
+                }}
+              />
+              <label className="adm-linkbar-tab">
+                <input
+                  type="checkbox"
+                  checked={linkNewTab}
+                  onChange={(event) => {
+                    setLinkNewTab(event.target.checked);
+                    setLinkNewTabTouched(true);
+                  }}
+                />
+                Open in a new tab
+              </label>
+              <button type="button" onClick={applyLink}>
+                Add link
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLinkBar(null);
+                  area.current?.focus();
+                }}
+              >
+                Cancel
+              </button>
+              {linkError ? <small role="alert">{linkError}</small> : null}
+            </div>
+          ) : null}
+
           <textarea
             ref={area}
             name="content"
@@ -240,6 +399,9 @@ export default function PostEditor({
             value={content}
             hidden={tab === "preview"}
             onChange={(event) => setContent(event.target.value)}
+            onSelect={followSelection}
+            onMouseUp={followSelection}
+            onKeyUp={followSelection}
             placeholder="Write in Markdown. Use the buttons above, or type ## for a heading and **bold**."
             spellCheck
           />
@@ -329,6 +491,7 @@ export default function PostEditor({
           <label className="adm-field">
             <span>Category</span>
             <select name="category" defaultValue={initial.category}>
+              <option value="">No category</option>
               {categories.map((c) => (
                 <option key={c}>{c}</option>
               ))}
@@ -345,11 +508,12 @@ export default function PostEditor({
             />
           </label>
           <label className="adm-field">
-            <span>Web address</span>
+            <span>URL path</span>
             <input
               name="slug"
               value={slug}
               maxLength={90}
+              placeholder="poggenpohl-atlanta-showroom-guide"
               onChange={(event) => {
                 setSlugTouched(true);
                 setSlug(slugify(event.target.value));
@@ -357,15 +521,36 @@ export default function PostEditor({
             />
             <small className="adm-muted">/blog/{slug || "…"}</small>
           </label>
+        </div>
+
+        <div className="adm-card">
+          <h2>Search (SEO)</h2>
           <label className="adm-field">
-            <span>Search description (optional)</span>
+            <span>SEO title</span>
+            <input
+              name="seoTitle"
+              value={seoTitle}
+              maxLength={120}
+              onChange={(event) => setSeoTitle(event.target.value)}
+              placeholder="Leave empty to use the post title."
+            />
+            <small className="adm-muted" data-over={seoTitle.length > 60}>
+              {seoTitle.length} characters. About 60 or fewer shows in full in Google.
+            </small>
+          </label>
+          <label className="adm-field">
+            <span>Meta description</span>
             <textarea
               name="seoDescription"
-              defaultValue={initial.seoDescription}
-              maxLength={200}
-              rows={3}
+              value={seoDesc}
+              maxLength={320}
+              rows={4}
+              onChange={(event) => setSeoDesc(event.target.value)}
               placeholder="Leave empty to use the summary."
             />
+            <small className="adm-muted" data-over={seoDesc.length > 160}>
+              {seoDesc.length} characters. About 150 to 160 shows in full in Google.
+            </small>
           </label>
         </div>
       </aside>

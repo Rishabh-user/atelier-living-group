@@ -118,7 +118,7 @@ export default function MaterialsPage() {
           <>
             <Button asChild variant="default" size="wide">
               <a href="/contact?interest=visit#enquiry">
-                Book a Private Showroom Visit
+                Let’s Talk
               </a>
             </Button>
             <a className="text-link" href={phoneHref}>

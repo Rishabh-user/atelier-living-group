@@ -27,7 +27,8 @@ export default async function NewPostPage() {
           content: "",
           coverImage: "",
           coverAlt: "",
-          category: categories[0] ?? "",
+          category: "",
+          seoTitle: "",
           seoDescription: "",
           status: "draft",
         }}

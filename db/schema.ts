@@ -35,6 +35,8 @@ export const posts = sqliteTable("posts", {
   category: text("category").notNull(),
   /** draft | published */
   status: text("status").notNull().default("draft"),
+  /** Optional override for the page title shown in search results. */
+  seoTitle: text("seo_title"),
   /** Optional override for the meta description. */
   seoDescription: text("seo_description"),
   /** ISO-8601 UTC. Set the first time a post is published. */

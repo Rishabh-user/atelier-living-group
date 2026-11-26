@@ -1,3 +1,4 @@
+import { displayWordCap } from "@/content/showroom-displays";
 import Image from "next/image";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -245,7 +246,7 @@ export default function PoggenpohlPage() {
               </li>
               <li>
                 <ArrowRight aria-hidden="true" />
-                Seven displays and a full finish library in Buckhead
+                {displayWordCap} displays and a full finish library in Buckhead
               </li>
               <li>
                 <ArrowRight aria-hidden="true" />
